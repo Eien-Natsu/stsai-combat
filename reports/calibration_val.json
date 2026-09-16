@@ -1,0 +1,121 @@
+{
+  "scope": "development/calibration data only; not a test evaluation",
+  "checkpoint": "runs/dev_base2/model/best.pt",
+  "data": [
+    "/workspaces/stsai_web/data/dev/val"
+  ],
+  "states": 330,
+  "battles": 24,
+  "death_rate_in_this_set": 0.13636363636363635,
+  "death_probability": {
+    "brier": 0.09014306529641579,
+    "brier_constant_rate_baseline": 0.11776859504132232,
+    "brier_skill_vs_baseline": 0.23457467362341688,
+    "nll": 0.2848921940309023,
+    "ece": 0.09253317974507808,
+    "bin_count": 10,
+    "reliability_table": [
+      {
+        "bin": [
+          0.0,
+          0.1
+        ],
+        "count": 209,
+        "mean_predicted": 0.06176077690349811,
+        "observed_rate": 0.0
+      },
+      {
+        "bin": [
+          0.1,
+          0.2
+        ],
+        "count": 9,
+        "mean_predicted": 0.1254107008377711,
+        "observed_rate": 0.0
+      },
+      {
+        "bin": [
+          0.2,
+          0.30000000000000004
+        ],
+        "count": 7,
+        "mean_predicted": 0.26869780463831766,
+        "observed_rate": 0.0
+      },
+      {
+        "bin": [
+          0.30000000000000004,
+          0.4
+        ],
+        "count": 97,
+        "mean_predicted": 0.3470479716959688,
+        "observed_rate": 0.4639175257731959
+      },
+      {
+        "bin": [
+          0.4,
+          0.5
+        ],
+        "count": 8,
+        "mean_predicted": 0.4102524071931839,
+        "observed_rate": 0.0
+      },
+      {
+        "bin": [
+          0.5,
+          0.6000000000000001
+        ],
+        "count": 0
+      },
+      {
+        "bin": [
+          0.6000000000000001,
+          0.7000000000000001
+        ],
+        "count": 0
+      },
+      {
+        "bin": [
+          0.7000000000000001,
+          0.8
+        ],
+        "count": 0
+      },
+      {
+        "bin": [
+          0.8,
+          0.9
+        ],
+        "count": 0
+      },
+      {
+        "bin": [
+          0.9,
+          1.0
+        ],
+        "count": 0
+      }
+    ]
+  },
+  "one_state_per_battle": {
+    "battles": 24,
+    "death_rate": 0.041666666666666664,
+    "brier": 0.05093068005859778,
+    "brier_clustered_bootstrap95": [
+      0.015290744477285043,
+      0.1884236855220496
+    ],
+    "ece": 0.09716074385990699
+  },
+  "utility_head": {
+    "mse_completed_only": 0.06268753886238572,
+    "completed_states": 330,
+    "truncated_states": 0,
+    "note": "truncated states carry no outcome and are excluded, not treated as deaths"
+  },
+  "caveats": [
+    "States inside one battle share an ending; the clustered figures are the honest ones.",
+    "Calibration is for the policy that produced these trajectories; another policy's leaf distribution is not covered by these numbers.",
+    "No temperature scaling was fitted. If one is added it must be fitted on an independent calibration set and reported separately."
+  ]
+}

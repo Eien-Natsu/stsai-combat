@@ -1,0 +1,81 @@
+{
+  "scope": "frozen diagnostic roots; not a strength measurement",
+  "checkpoint": "runs/dev_base2/model/best.pt",
+  "roots": 24,
+  "simulations": 64,
+  "modes": {
+    "cpu": {
+      "S": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 140.50199399935082,
+        "p95_ms": 349.3930853452184,
+        "mean_cutoff_fraction": 0.0
+      },
+      "P": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 286.6328505042475,
+        "p95_ms": 614.6394700474045,
+        "mean_cutoff_fraction": 0.0
+      },
+      "V": {
+        "evaluator_calls_total": 3120,
+        "evaluator_calls_per_decision": 130.0,
+        "decisions": 24,
+        "p50_ms": 169.6448410002631,
+        "p95_ms": 218.50820845575072,
+        "mean_cutoff_fraction": 1.0
+      },
+      "PV": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 158.78061699913815,
+        "p95_ms": 211.83521665225265,
+        "mean_cutoff_fraction": 1.0
+      }
+    },
+    "cuda": {
+      "S": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 136.3466784969205,
+        "p95_ms": 360.5466136476025,
+        "mean_cutoff_fraction": 0.0
+      },
+      "P": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 399.9089400022058,
+        "p95_ms": 643.8551094506693,
+        "mean_cutoff_fraction": 0.0
+      },
+      "V": {
+        "evaluator_calls_total": 3120,
+        "evaluator_calls_per_decision": 130.0,
+        "decisions": 24,
+        "p50_ms": 364.6844185059308,
+        "p95_ms": 477.3198846494779,
+        "mean_cutoff_fraction": 1.0
+      },
+      "PV": {
+        "evaluator_calls_total": 1560,
+        "evaluator_calls_per_decision": 65.0,
+        "decisions": 24,
+        "p50_ms": 354.1354294939083,
+        "p95_ms": 389.06381240012706,
+        "mean_cutoff_fraction": 1.0
+      }
+    }
+  },
+  "single_forward_batch1": {
+    "cpu_p50_ms": 1.3137150017428212,
+    "cuda_p50_ms": 8.19578549999278,
+    "note": "timed with synchronisation inside the region; batch of one"
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "scope": "development data only; never a frozen test manifest",
+  "checkpoint": "runs/dev_base/model/best.pt",
+  "data": [
+    "/workspaces/stsai_web/data/dev/val"
+  ],
+  "device": "cuda:0",
+  "states_total": 330,
+  "states_forced_single_action": 83,
+  "all": {
+    "states": 330,
+    "raw_top1": 0.6636363636363637,
+    "te_choice": 0.6606060606060606,
+    "tie_tolerant": 0.7121212121212122,
+    "class_agree": 0.706060606060606,
+    "kl": 0.08940029564052537,
+    "teacher_entropy": 0.9913732875091844,
+    "ce": 1.0807735831497098,
+    "visit_tie_rate": 0.1303030303030303
+  },
+  "decision_states": {
+    "states": 247,
+    "raw_top1": 0.5506072874493927,
+    "te_choice": 0.5465587044534413,
+    "tie_tolerant": 0.6153846153846154,
+    "class_agree": 0.6072874493927125,
+    "kl": 0.11944169053187602,
+    "teacher_entropy": 1.324506821368546,
+    "ce": 1.443948511900422,
+    "visit_tie_rate": 0.17408906882591094
+  },
+  "forced_states": {
+    "states": 83,
+    "raw_top1": 1.0,
+    "te_choice": 1.0,
+    "tie_tolerant": 1.0,
+    "class_agree": 1.0,
+    "kl": 0.0,
+    "teacher_entropy": 0.0,
+    "ce": 0.0,
+    "visit_tie_rate": 0.0
+  },
+  "metric_disagreement": {
+    "states_where_old_metric_and_teacher_choice_differ": 7,
+    "share_of_decision_states": 0.02834008097165992,
+    "note": "on these states policy.argmax() is not the action the search played"
+  },
+  "strata": {
+    "encounter:ACID_SLIME_S": {
+      "states": 24,
+      "raw_top1": 0.4583333333333333,
+      "te_choice": 0.375,
+      "tie_tolerant": 0.5416666666666666,
+      "class_agree": 0.375,
+      "kl": 0.15591484843753278,
+      "teacher_entropy": 1.8378447288138282,
+      "ce": 1.993759577251361,
+      "visit_tie_rate": 0.375
+    },
+    "encounter:BLUE_SLAVER": {
+      "states": 19,
+      "raw_top1": 0.3684210526315789,
+      "te_choice": 0.47368421052631576,
+      "tie_tolerant": 0.5263157894736842,
+      "class_agree": 0.5789473684210527,
+      "kl": 0.05005191134190873,
+      "teacher_entropy": 1.1594050032044223,
+      "ce": 1.2094569145463312,
+      "visit_tie_rate": 0.21052631578947367
+    },
+    "encounter:CULTIST": {
+      "states": 13,
+      "raw_top1": 0.6153846153846154,
+      "te_choice": 0.6923076923076923,
+      "tie_tolerant": 0.7692307692307693,
+      "class_agree": 0.8461538461538461,
+      "kl": 0.042491622985555574,
+      "teacher_entropy": 1.2040295192979047,
+      "ce": 1.2465211422834603,
+      "visit_tie_rate": 0.15384615384615385
+    },
+    "encounter:FUNGI_BEAST": {
+      "states": 9,
+      "raw_top1": 0.0,
+      "te_choice": 0.0,
+      "tie_tolerant": 0.0,
+      "class_agree": 0.2222222222222222,
+      "kl": 0.1191853852942586,
+      "teacher_entropy": 1.4133199365655358,
+      "ce": 1.5325053218597944,
+      "visit_tie_rate": 0.1111111111111111
+    },
+    "encounter:GREMLIN_NOB": {
+      "states": 32,
+      "raw_top1": 0.84375,
+      "te_choice": 0.84375,
+      "tie_tolerant": 0.875,
+      "class_agree": 0.875,
+      "kl": 0.10498701489632367,
+      "teacher_entropy": 1.1413569542281317,
+      "ce": 1.2463439691244553,
+      "visit_tie_rate": 0.03125
+    },
+    "encounter:JAW_WORM": {
+      "states": 28,
+      "raw_top1": 0.6071428571428571,
+      "te_choice": 0.6071428571428571,
+      "tie_tolerant": 0.6428571428571429,
+      "class_agree": 0.75,
+      "kl": 0.08946048970600325,
+      "teacher_entropy": 1.3145567057062995,
+      "ce": 1.4040171954123026,
+      "visit_tie_rate": 0.14285714285714285
+    },
+    "encounter:LAGAVULIN": {
+      "states": 15,
+      "raw_top1": 0.3333333333333333,
+      "te_choice": 0.3333333333333333,
+      "tie_tolerant": 0.3333333333333333,
+      "class_agree": 0.3333333333333333,
+      "kl": 0.08753194085632761,
+      "teacher_entropy": 1.3050120292131464,
+      "ce": 1.392543970069474,
+      "visit_tie_rate": 0.06666666666666667
+    },
+    "encounter:MAD_GREMLIN": {
+      "states": 9,
+      "raw_top1": 0.4444444444444444,
+      "te_choice": 0.4444444444444444,
+      "tie_tolerant": 0.5555555555555556,
+      "class_agree": 0.4444444444444444,
+      "kl": 0.35443628807034755,
+      "teacher_entropy": 1.4011494130332063,
+      "ce": 1.7555857011035538,
+      "visit_tie_rate": 0.1111111111111111
+    },
+    "encounter:RED_LOUSE": {
+      "states": 23,
+      "raw_top1": 0.5217391304347826,
+      "te_choice": 0.4782608695652174,
+      "tie_tolerant": 0.5652173913043478,
+      "class_agree": 0.5652173913043478,
+      "kl": 0.18771510158220064,
+      "teacher_entropy": 1.4092960181828407,
+      "ce": 1.5970111197650412,
+      "visit_tie_rate": 0.30434782608695654
+    },
+    "encounter:SENTRY": {
+      "states": 47,
+      "raw_top1": 0.5957446808510638,
+      "te_choice": 0.5957446808510638,
+      "tie_tolerant": 0.6382978723404256,
+      "class_agree": 0.5957446808510638,
+      "kl": 0.09983534082532564,
+      "teacher_entropy": 1.1092149430309526,
+      "ce": 1.2090502838562782,
+      "visit_tie_rate": 0.10638297872340426
+    },
+    "encounter:SNEAKY_GREMLIN": {
+      "states": 10,
+      "raw_top1": 0.5,
+      "te_choice": 0.5,
+      "tie_tolerant": 0.6,
+      "class_agree": 0.5,
+      "kl": 0.13343936214223504,
+      "teacher_entropy": 1.5798393729384508,
+      "ce": 1.7132787350806857,
+      "visit_tie_rate": 0.3
+    },
+    "encounter:SPIKE_SLIME_L": {
+      "states": 5,
+      "raw_top1": 0.8,
+      "te_choice": 0.8,
+      "tie_tolerant": 1.0,
+      "class_agree": 1.0,
+      "kl": 0.0390319861471653,
+      "teacher_entropy": 1.4719915701432889,
+      "ce": 1.5110235562904542,
+      "visit_tie_rate": 0.2
+    },
+    "encounter:SPIKE_SLIME_M": {
+      "states": 6,
+      "raw_top1": 0.8333333333333334,
+      "te_choice": 0.6666666666666666,
+      "tie_tolerant": 0.8333333333333334,
+      "class_agree": 0.6666666666666666,
+      "kl": 0.25101212970912457,
+      "teacher_entropy": 1.5696817050213079,
+      "ce": 1.8206938347304324,
+      "visit_tie_rate": 0.3333333333333333
+    },
+    "encounter:SPIKE_SLIME_S": {
+      "states": 7,
+      "raw_top1": 0.42857142857142855,
+      "te_choice": 0.42857142857142855,
+      "tie_tolerant": 0.5714285714285714,
+      "class_agree": 0.5714285714285714,
+      "kl": 0.11019667677049126,
+      "teacher_entropy": 1.4291521634558357,
+      "ce": 1.539348840226327,
+      "visit_tie_rate": 0.2857142857142857
+    },
+    "hp_band:high": {
+      "states": 86,
+      "raw_top1": 0.5348837209302325,
+      "te_choice": 0.5697674418604651,
+      "tie_tolerant": 0.6046511627906976,
+      "class_agree": 0.627906976744186,
+      "kl": 0.09655146786352879,
+      "teacher_entropy": 1.2180754684675705,
+      "ce": 1.3146269363310994,
+      "visit_tie_rate": 0.13953488372093023
+    },
+    "hp_band:low": {
+      "states": 30,
+      "raw_top1": 0.7333333333333333,
+      "te_choice": 0.7333333333333333,
+      "tie_tolerant": 0.8,
+      "class_agree": 0.7333333333333333,
+      "kl": 0.1237250636331737,
+      "teacher_entropy": 0.9921680159165738,
+      "ce": 1.1158930795497475,
+      "visit_tie_rate": 0.16666666666666666
+    },
+    "hp_band:mid": {
+      "states": 131,
+      "raw_top1": 0.5190839694656488,
+      "te_choice": 0.48854961832061067,
+      "tie_tolerant": 0.5801526717557252,
+      "class_agree": 0.5648854961832062,
+      "kl": 0.1334879344741579,
+      "teacher_entropy": 1.4704859092543707,
+      "ce": 1.6039738437285287,
+      "visit_tie_rate": 0.1984732824427481
+    },
+    "legal_actions:2-3": {
+      "states": 33,
+      "raw_top1": 0.6666666666666666,
+      "te_choice": 0.696969696969697,
+      "tie_tolerant": 0.7272727272727273,
+      "class_agree": 0.8181818181818182,
+      "kl": 0.034166261846566515,
+      "teacher_entropy": 0.49373330121993053,
+      "ce": 0.527899563066497,
+      "visit_tie_rate": 0.06060606060606061
+    },
+    "legal_actions:4-6": {
+      "states": 151,
+      "raw_top1": 0.5894039735099338,
+      "te_choice": 0.5960264900662252,
+      "tie_tolerant": 0.6490066225165563,
+      "class_agree": 0.6622516556291391,
+      "kl": 0.09690620397396435,
+      "teacher_entropy": 1.2838160683811382,
+      "ce": 1.3807222723551025,
+      "visit_tie_rate": 0.11920529801324503
+    },
+    "legal_actions:7+": {
+      "states": 63,
+      "raw_top1": 0.3968253968253968,
+      "te_choice": 0.3492063492063492,
+      "tie_tolerant": 0.47619047619047616,
+      "class_agree": 0.36507936507936506,
+      "kl": 0.218123398736001,
+      "teacher_entropy": 1.857202533527323,
+      "ce": 2.0753259322633237,
+      "visit_tie_rate": 0.36507936507936506
+    },
+    "turn_band:early": {
+      "states": 165,
+      "raw_top1": 0.5454545454545454,
+      "te_choice": 0.5454545454545454,
+      "tie_tolerant": 0.6121212121212121,
+      "class_agree": 0.6121212121212121,
+      "kl": 0.12364081600610392,
+      "teacher_entropy": 1.370213684371446,
+      "ce": 1.4938545003775499,
+      "visit_tie_rate": 0.1696969696969697
+    },
+    "turn_band:late": {
+      "states": 26,
+      "raw_top1": 0.7307692307692307,
+      "te_choice": 0.7307692307692307,
+      "tie_tolerant": 0.7692307692307693,
+      "class_agree": 0.7307692307692307,
+      "kl": 0.11256357413143493,
+      "teacher_entropy": 0.9379060202300372,
+      "ce": 1.0504695943614721,
+      "visit_tie_rate": 0.11538461538461539
+    },
+    "turn_band:mid": {
+      "states": 56,
+      "raw_top1": 0.48214285714285715,
+      "te_choice": 0.4642857142857143,
+      "tie_tolerant": 0.5535714285714286,
+      "class_agree": 0.5357142857142857,
+      "kl": 0.11026267844551642,
+      "teacher_entropy": 1.3693280434064523,
+      "ce": 1.4795907218519686,
+      "visit_tie_rate": 0.21428571428571427
+    }
+  },
+  "teacher_source": {
+    "stored": 330,
+    "reconstructed": 0
+  },
+  "caveats": [
+    "States within one battle are correlated; these are not independent samples.",
+    "Soft targets have a minimum achievable cross-entropy equal to the teacher entropy, not zero.",
+    "Teacher visits are not calibrated probabilities and are not optimal values."
+  ]
+}
