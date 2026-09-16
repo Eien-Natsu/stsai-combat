@@ -1,0 +1,378 @@
+{
+  "scope": "teacher label stability on replayed development roots; not a strength measurement",
+  "data": "/workspaces/stsai_web/data/dev/train",
+  "states_requested": 64,
+  "states_replayed": 64,
+  "search_seeds_per_state": 4,
+  "budgets": [
+    64,
+    256,
+    1024
+  ],
+  "replay_failures": [],
+  "by_budget": {
+    "64": {
+      "states": 64,
+      "pairwise_class_agreement": 0.7994791666666666,
+      "unanimous_states": 42,
+      "mean_pairwise_kl": 0.08055662287892809,
+      "mean_visit_tie_rate": 0.6640625,
+      "mean_cutoff_fraction": 0.0,
+      "mean_elapsed": 0.2251067145274419,
+      "simulations_per_state": 256
+    },
+    "256": {
+      "states": 64,
+      "pairwise_class_agreement": 0.8333333333333333,
+      "unanimous_states": 47,
+      "mean_pairwise_kl": 0.082251765441607,
+      "mean_visit_tie_rate": 0.4765625,
+      "mean_cutoff_fraction": 0.0,
+      "mean_elapsed": 0.9656559473160655,
+      "simulations_per_state": 1024
+    },
+    "1024": {
+      "states": 64,
+      "pairwise_class_agreement": 0.9296875,
+      "unanimous_states": 57,
+      "mean_pairwise_kl": 0.11993173901956969,
+      "mean_visit_tie_rate": 0.35546875,
+      "mean_cutoff_fraction": 0.0,
+      "mean_elapsed": 3.8845017595862714,
+      "simulations_per_state": 4096
+    }
+  },
+  "by_encounter": {
+    "64": {
+      "ACID_SLIME_L": {
+        "states": 4,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.004741037885872697
+      },
+      "ACID_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 0.611111111111111,
+        "mean_pairwise_kl": 0.004254841318158134
+      },
+      "ACID_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.008164564621148908
+      },
+      "BLUE_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.001846211218976111
+      },
+      "CULTIST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0002744798167815
+      },
+      "FAT_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.4706657473669038
+      },
+      "FUNGI_BEAST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0005862564082154166
+      },
+      "GREEN_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.003314551847664242
+      },
+      "GREMLIN_NOB": {
+        "states": 3,
+        "pairwise_class_agreement": 0.5,
+        "mean_pairwise_kl": 0.22807926616247173
+      },
+      "GREMLIN_WIZARD": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7222222222222223,
+        "mean_pairwise_kl": 0.14618870131958392
+      },
+      "JAW_WORM": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00034627781651008907
+      },
+      "LAGAVULIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.5,
+        "mean_pairwise_kl": 0.08700893474053994
+      },
+      "LOOTER": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.00031119364961229156
+      },
+      "MAD_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.6666666666666666,
+        "mean_pairwise_kl": 0.04877153536546842
+      },
+      "RED_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.0010264141275732955
+      },
+      "RED_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0005780779148653065
+      },
+      "SENTRY": {
+        "states": 3,
+        "pairwise_class_agreement": 0.38888888888888884,
+        "mean_pairwise_kl": 0.41569301854023727
+      },
+      "SNEAKY_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.3333333333333333,
+        "mean_pairwise_kl": 0.29203423263442496
+      },
+      "SPIKE_SLIME_L": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0008021936093688741
+      },
+      "SPIKE_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777777,
+        "mean_pairwise_kl": 0.0012761471064817078
+      },
+      "SPIKE_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0009972586509831884
+      }
+    },
+    "256": {
+      "ACID_SLIME_L": {
+        "states": 4,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00601778569782941
+      },
+      "ACID_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 0.6666666666666666,
+        "mean_pairwise_kl": 0.001049883520155167
+      },
+      "ACID_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777777,
+        "mean_pairwise_kl": 0.0031156860834247375
+      },
+      "BLUE_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.0008036696994516925
+      },
+      "CULTIST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00016233019421866925
+      },
+      "FAT_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7222222222222222,
+        "mean_pairwise_kl": 0.6360892409016853
+      },
+      "FUNGI_BEAST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0005504630078129387
+      },
+      "GREEN_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00034067627935359477
+      },
+      "GREMLIN_NOB": {
+        "states": 3,
+        "pairwise_class_agreement": 0.6666666666666666,
+        "mean_pairwise_kl": 0.16505433895335794
+      },
+      "GREMLIN_WIZARD": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7222222222222223,
+        "mean_pairwise_kl": 0.11873822292347401
+      },
+      "JAW_WORM": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0005105732199865425
+      },
+      "LAGAVULIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.11748970619025456
+      },
+      "LOOTER": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.0006393203464302419
+      },
+      "MAD_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.5555555555555556,
+        "mean_pairwise_kl": 0.246365908797857
+      },
+      "RED_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.00014469698637643345
+      },
+      "RED_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00031943770255875764
+      },
+      "SENTRY": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777777,
+        "mean_pairwise_kl": 0.12750646001128443
+      },
+      "SNEAKY_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.5555555555555555,
+        "mean_pairwise_kl": 0.3255468177402618
+      },
+      "SPIKE_SLIME_L": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0007416191982372759
+      },
+      "SPIKE_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.0009673271508499441
+      },
+      "SPIKE_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.000544236250146075
+      }
+    },
+    "1024": {
+      "ACID_SLIME_L": {
+        "states": 4,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.005486489284672996
+      },
+      "ACID_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0014184731360363581
+      },
+      "ACID_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.002725101823725467
+      },
+      "BLUE_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0011774260259296467
+      },
+      "CULTIST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00014250318788543663
+      },
+      "FAT_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7222222222222222,
+        "mean_pairwise_kl": 0.7679451621810603
+      },
+      "FUNGI_BEAST": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0007085790628800987
+      },
+      "GREEN_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0002695942242814146
+      },
+      "GREMLIN_NOB": {
+        "states": 3,
+        "pairwise_class_agreement": 0.8333333333333334,
+        "mean_pairwise_kl": 0.20332681565051525
+      },
+      "GREMLIN_WIZARD": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.08107740522019696
+      },
+      "JAW_WORM": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0005219564044122069
+      },
+      "LAGAVULIN": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.09151775704367131
+      },
+      "LOOTER": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.00039572148764777944
+      },
+      "MAD_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.9563021405630222
+      },
+      "RED_LOUSE": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.00017497530942850656
+      },
+      "RED_SLAVER": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0003099252538578585
+      },
+      "SENTRY": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777777,
+        "mean_pairwise_kl": 0.3971337893509661
+      },
+      "SNEAKY_GREMLIN": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777778,
+        "mean_pairwise_kl": 0.04440567776686072
+      },
+      "SPIKE_SLIME_L": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.000710966128336328
+      },
+      "SPIKE_SLIME_M": {
+        "states": 3,
+        "pairwise_class_agreement": 0.7777777777777777,
+        "mean_pairwise_kl": 0.0005106498366956163
+      },
+      "SPIKE_SLIME_S": {
+        "states": 3,
+        "pairwise_class_agreement": 1.0,
+        "mean_pairwise_kl": 0.0004538270471795954
+      }
+    }
+  },
+  "instructions": {
+    "budget_argument": 64,
+    "max_depth": 64,
+    "rollout_limit": 128
+  },
+  "elapsed_seconds": 1300.055396198004,
+  "caveats": [
+    "Agreement between teacher runs is an empirical reference for label stability, not a mathematical ceiling on student accuracy.",
+    "Root visits are not calibrated probabilities and the maximum Q is not the optimal value."
+  ]
+}

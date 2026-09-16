@@ -1,0 +1,261 @@
+{
+  "scope": "development states only; diagnostic decomposition, not a strength result",
+  "data": "/workspaces/stsai_web/data/dev/val_256",
+  "checkpoint": "runs/dev_relabel/model/best.pt",
+  "states": 24,
+  "teacher_seeds": 4,
+  "teacher_budget": 256,
+  "teacher_self_kl": 0.022835097557490597,
+  "mean_teacher_kl": 0.008191547840816887,
+  "student_kl": 0.08851173366128967,
+  "student_excess_kl_over_teacher_self": 0.06567663610379908,
+  "ratio_student_to_teacher_self": 3.8761268016678634,
+  "teacher_class_agreement": 0.8819444444444443,
+  "student_class_agreement": 0.6979166666666666,
+  "per_state": [
+    {
+      "episode_index": 0,
+      "step": 0,
+      "actions": 6,
+      "teacher_self_kl": 0.00024924699648553266,
+      "mean_teacher_kl": 9.34096458857169e-05,
+      "student_kl": 0.021660237351326196,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 1,
+      "step": 3,
+      "actions": 7,
+      "teacher_self_kl": 0.00025752808758266603,
+      "mean_teacher_kl": 9.640558424699858e-05,
+      "student_kl": 0.050586369657803276,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 2,
+      "step": 4,
+      "actions": 5,
+      "teacher_self_kl": 0.022981909233440692,
+      "mean_teacher_kl": 0.008408040326472323,
+      "student_kl": 0.040962546976759814,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 3,
+      "step": 4,
+      "actions": 7,
+      "teacher_self_kl": 0.0007780043015150276,
+      "mean_teacher_kl": 0.00029399717793030314,
+      "student_kl": 0.02185946589495547,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 4,
+      "step": 2,
+      "actions": 4,
+      "teacher_self_kl": 0.0005355412822376479,
+      "mean_teacher_kl": 0.00019372755707544977,
+      "student_kl": 0.0016059220014861784,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 6,
+      "step": 1,
+      "actions": 4,
+      "teacher_self_kl": 0.10041344085310804,
+      "mean_teacher_kl": 0.03614353952798525,
+      "student_kl": 0.00019832124088983282,
+      "student_class_agreement": 0.5,
+      "teacher_class_agreement": 0.3333333333333333
+    },
+    {
+      "episode_index": 6,
+      "step": 15,
+      "actions": 5,
+      "teacher_self_kl": 0.0042789245213479266,
+      "mean_teacher_kl": 0.0015581995607002299,
+      "student_kl": 0.009656640834963648,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 8,
+      "step": 1,
+      "actions": 5,
+      "teacher_self_kl": 0.0009659613385482831,
+      "mean_teacher_kl": 0.00036431985569125916,
+      "student_kl": 0.07507670149239917,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 9,
+      "step": 2,
+      "actions": 4,
+      "teacher_self_kl": 0.0003443721310146328,
+      "mean_teacher_kl": 0.0001309557882933762,
+      "student_kl": 0.0016427164017617513,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 9,
+      "step": 16,
+      "actions": 5,
+      "teacher_self_kl": 0.0,
+      "mean_teacher_kl": 0.0,
+      "student_kl": 0.02412247564893385,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 10,
+      "step": 9,
+      "actions": 7,
+      "teacher_self_kl": 0.14436187305248885,
+      "mean_teacher_kl": 0.052495933301744395,
+      "student_kl": 0.13735744094868957,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 0.3333333333333333
+    },
+    {
+      "episode_index": 10,
+      "step": 24,
+      "actions": 4,
+      "teacher_self_kl": 0.037312798751466154,
+      "mean_teacher_kl": 0.01290833627475836,
+      "student_kl": 0.08294458518670893,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 10,
+      "step": 39,
+      "actions": 4,
+      "teacher_self_kl": 0.0,
+      "mean_teacher_kl": 0.0,
+      "student_kl": 0.08026113394423876,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 11,
+      "step": 8,
+      "actions": 10,
+      "teacher_self_kl": 0.005683165664725741,
+      "mean_teacher_kl": 0.0019840951356184648,
+      "student_kl": 0.012813673710889154,
+      "student_class_agreement": 0.75,
+      "teacher_class_agreement": 0.5
+    },
+    {
+      "episode_index": 11,
+      "step": 22,
+      "actions": 5,
+      "teacher_self_kl": 0.0008035868949685249,
+      "mean_teacher_kl": 0.00025437584195956136,
+      "student_kl": 0.05987918042220244,
+      "student_class_agreement": 0.75,
+      "teacher_class_agreement": 0.5
+    },
+    {
+      "episode_index": 12,
+      "step": 2,
+      "actions": 4,
+      "teacher_self_kl": 0.0003538938440597085,
+      "mean_teacher_kl": 0.0001248794243558038,
+      "student_kl": 0.0013709442694986888,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 13,
+      "step": 5,
+      "actions": 6,
+      "teacher_self_kl": 0.00014288566292239204,
+      "mean_teacher_kl": 5.351843062561287e-05,
+      "student_kl": 0.01824624344708922,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 14,
+      "step": 1,
+      "actions": 4,
+      "teacher_self_kl": 0.11307102536643855,
+      "mean_teacher_kl": 0.0408027141323067,
+      "student_kl": 0.03436050795099701,
+      "student_class_agreement": 0.75,
+      "teacher_class_agreement": 0.5
+    },
+    {
+      "episode_index": 15,
+      "step": 1,
+      "actions": 11,
+      "teacher_self_kl": 0.0052352627786797085,
+      "mean_teacher_kl": 0.0019345781536861098,
+      "student_kl": 0.7806371028894116,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 17,
+      "step": 0,
+      "actions": 9,
+      "teacher_self_kl": 0.00025907567009604196,
+      "mean_teacher_kl": 9.726349889273463e-05,
+      "student_kl": 0.06474851017341515,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 18,
+      "step": 7,
+      "actions": 6,
+      "teacher_self_kl": 0.1090756126126209,
+      "mean_teacher_kl": 0.038315189437053615,
+      "student_kl": 0.06905175085334761,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 19,
+      "step": 4,
+      "actions": 6,
+      "teacher_self_kl": 0.00025441048433743593,
+      "mean_teacher_kl": 9.547059474341582e-05,
+      "student_kl": 0.09334549713641394,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 21,
+      "step": 3,
+      "actions": 5,
+      "teacher_self_kl": 0.0,
+      "mean_teacher_kl": 0.0,
+      "student_kl": 0.35835405811895626,
+      "student_class_agreement": 1.0,
+      "teacher_class_agreement": 1.0
+    },
+    {
+      "episode_index": 22,
+      "step": 12,
+      "actions": 4,
+      "teacher_self_kl": 0.0006838218516899636,
+      "mean_teacher_kl": 0.00024819892957958804,
+      "student_kl": 0.08353958131781465,
+      "student_class_agreement": 0.0,
+      "teacher_class_agreement": 1.0
+    }
+  ],
+  "caveats": [
+    "Teacher runs are not samples from a fixed distribution: more simulations also change the distribution, so the self-KL is an empirical floor, not a theorem.",
+    "All states come from one development split; these are correlated within a battle."
+  ]
+}
