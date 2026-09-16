@@ -41,6 +41,22 @@ static std::string card_name(CardId id) {
     for (const auto &p: allowed_cards) if (p.second == id) return p.first;
     throw std::runtime_error("Unsupported generated card: extend capability tests before widening whitelist");
 }
+static std::vector<std::string> split_csv(const std::string &text) {
+    std::vector<std::string> parts;
+    for (std::size_t start = 0; start <= text.size();) {
+        const auto comma = text.find(',', start);
+        const auto end = comma == std::string::npos ? text.size() : comma;
+        if (end > start) parts.push_back(text.substr(start, end - start));
+        if (comma == std::string::npos) break;
+        start = comma + 1;
+    }
+    return parts;
+}
+static std::string move_name(MMID move) {
+    const auto index = static_cast<std::size_t>(move);
+    return index < std::size(monsterMoveStrings) ? std::string(monsterMoveStrings[index])
+                                                 : std::string("INVALID");
+}
 static std::string card_type(CardType type) {
     switch(type) {
         case CardType::ATTACK: return "ATTACK";
@@ -156,7 +172,7 @@ public:
             e["intent"]=m.isAttacking() ? "ATTACK" : "BUFF";
             // Current intent and previous observed move. Never expose miscInfo,
             // stored future damage rolls, hidden seeds, or latent enemy plans.
-            e["observed_move"]=int(m.moveHistory[0]); e["previous_move"]=int(m.moveHistory[1]);
+            e["observed_move"]=move_name(m.moveHistory[0]); e["previous_move"]=move_name(m.moveHistory[1]);
             enemies.append(e);
             int ritual=m.getStatus<MonsterStatus::RITUAL>();
             if (ritual) { py::dict r; r["id"]="RITUAL"; r["owner"]=i; r["amount"]=ritual; powers.append(r); }
@@ -223,6 +239,10 @@ PYBIND11_MODULE(_lightspeed,m) {
         .def("step",&PilotBattle::step)
         .def("sample",&PilotBattle::sample);
     m.def("build_info",[](){py::dict d; d["revision"]=STSAI_ENGINE_REVISION;
+        // Local rule patches applied on top of `revision`; empty means the tree
+        // is byte-for-byte upstream. Tests assert against these hashes.
+        const std::string patches=STSAI_ENGINE_PATCHES;
+        d["patches"]=split_csv(patches);
         d["backend"]="lightspeed_pilot"; d["belief_model"]="independent_rng_approximation";
         d["game_differential_verified"]=false; return d;});
 }

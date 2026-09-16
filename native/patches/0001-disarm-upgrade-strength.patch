@@ -1,0 +1,15 @@
+diff --git a/src/combat/BattleContext.cpp b/src/combat/BattleContext.cpp
+index 965faef..3336125 100644
+--- a/src/combat/BattleContext.cpp
++++ b/src/combat/BattleContext.cpp
+@@ -1279,7 +1279,9 @@ void BattleContext::useSkillCard() {
+             break;
+ 
+         case CardId::DISARM:
+-            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, -2, false) );
++            // Disarm+ removes 3 Strength; the base card removes 2. Upstream
++            // ignored `up` here, so upgraded Disarm only ever removed 2.
++            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, up ? -3 : -2, false) );
+             break;
+ 
+         case CardId::DISCOVERY:

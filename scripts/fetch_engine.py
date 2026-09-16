@@ -10,8 +10,12 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from engine_patches import apply_all
+
 ROOT=Path(__file__).resolve().parents[1]
 URL="https://github.com/gamerpuppy/sts_lightspeed.git"
+PATCH_DIR=ROOT/"native"/"patches"
 
 def run(*args,cwd=None):
     return subprocess.check_output(args,cwd=cwd,text=True).strip()
@@ -30,7 +34,8 @@ def main():
     if fresh_clone:
         dest.parent.mkdir(parents=True,exist_ok=True)
         subprocess.run(["git","clone","--no-checkout",URL,str(dest)],check=True)
-    if not fresh_clone and run("git","status","--porcelain",cwd=dest): raise SystemExit("Upstream checkout is dirty; refusing to overwrite local work")
+    if not fresh_clone and run("git","status","--porcelain",cwd=dest) and not (lock.exists() and json.loads(lock.read_text()).get("patches")):
+        raise SystemExit("Upstream checkout is dirty; refusing to overwrite local work")
     subprocess.run(["git","fetch","origin",revision],cwd=dest,check=True)
     subprocess.run(["git","checkout","--detach",revision],cwd=dest,check=True)
     # The upstream bundled pybind11 is deliberately not used. Build against the
@@ -38,10 +43,15 @@ def main():
     subprocess.run(["git","submodule","update","--init","json"],cwd=dest,check=True)
     license_file=dest/"LICENSE.md"
     if not license_file.exists(): raise SystemExit("Missing upstream license; manual review required")
+    # Local rule fixes live as a patch series so the build records base + patches.
+    patches=[{"file":str(p.relative_to(ROOT)),"sha256":hashlib.sha256(p.read_bytes()).hexdigest()}
+             for p in sorted(PATCH_DIR.glob("*.patch"))]
     data={"url":URL,"revision":run("git","rev-parse","HEAD",cwd=dest),
           "json_submodule":run("git","rev-parse","HEAD",cwd=dest/"json"),
           "license_sha256":hashlib.sha256(license_file.read_bytes()).hexdigest(),
-          "lock_origin":"explicit_revision" if args.revision else "resolved_master_on_target_machine"}
+          "lock_origin":"explicit_revision" if args.revision else "resolved_master_on_target_machine",
+          "patches":patches}
+    apply_all(ROOT,dest,patches)
     lock.write_text(json.dumps(data,indent=2)+"\n",encoding="utf-8")
     print(json.dumps(data,indent=2));print("Next: python scripts/build_native.py")
 

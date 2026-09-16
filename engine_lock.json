@@ -3,5 +3,11 @@
   "revision": "7476a81954020087da31d41d16fddf475746ec2d",
   "json_submodule": "0b345b20c888f7dc8888485768e4bf9a6be29de0",
   "license_sha256": "accfd22486a9cc31c17760450036171962a2085dd94eaa905c5777509f05ca2a",
-  "lock_origin": "resolved_master_on_target_machine"
+  "lock_origin": "resolved_master_on_target_machine",
+  "patches": [
+    {
+      "file": "native/patches/0001-disarm-upgrade-strength.patch",
+      "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+    }
+  ]
 }
