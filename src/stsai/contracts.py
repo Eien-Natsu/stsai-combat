@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Any, Protocol, Callable
-from .util import canonical
+from .util import canonical, SCHEMA_VERSION
 
 Observation = dict[str, Any]
 Action = dict[str, Any]
@@ -26,7 +26,7 @@ def validate_public(obs: Observation) -> None:
         elif isinstance(x, (list, tuple)):
             for v in x: walk(v)
     walk(obs)
-    if obs.get("schema_version") != 1:
+    if obs.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("Unsupported observation schema")
     if not obs.get("terminal") and not obs.get("actions"):
         raise ValueError("Nonterminal observation has no legal actions")

@@ -1,6 +1,10 @@
 from __future__ import annotations
 import numpy as np
 
+# Bump when the utility or outcome target changes meaning; recorded in
+# collection settings and checkpoints.
+UTILITY_REVISION = 1
+
 OUTCOME_BINS = 11  # death plus 10 equally spaced surviving HP bin CENTRES
 
 def terminal_utility(obs: dict, potion_cost: float = .02) -> float:

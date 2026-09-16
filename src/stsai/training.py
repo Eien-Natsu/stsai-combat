@@ -72,7 +72,10 @@ def _move(batch,device): return {k:v.to(device,non_blocking=True) for k,v in bat
 
 def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
+    from .encoding import ENCODING_REVISION
+    from .util import SCHEMA_VERSION
     payload={"format_version":1,"model_config":asdict(model.config),"model_state":model.state_dict(),
+             "encoding_revision":ENCODING_REVISION,"observation_schema":SCHEMA_VERSION,
              "optimizer_state":optimizer.state_dict(),"step":step,"epoch":epoch,"best_val":best,
              "backend":backend,"train_config":config,"data_fingerprint":data_fingerprint,
              "torch_rng":torch.get_rng_state(),"python_rng":random.getstate()}

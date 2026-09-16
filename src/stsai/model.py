@@ -58,6 +58,13 @@ def load_checkpoint(path, device="cpu"):
     # Only load trusted locally generated checkpoints, even with weights_only.
     checkpoint = torch.load(path, map_location="cpu", weights_only=True)
     if checkpoint.get("format_version") != 1: raise ValueError("Unknown checkpoint format")
+    from .encoding import ENCODING_REVISION
+    from .util import SCHEMA_VERSION
+    # An old model must never be silently loaded under new input semantics.
+    for key, current in (("encoding_revision", ENCODING_REVISION), ("observation_schema", SCHEMA_VERSION)):
+        stored = checkpoint.get(key)
+        if stored is not None and stored != current:
+            raise ValueError(f"Checkpoint {key}={stored} but this build uses {current}; retrain or convert explicitly")
     model = CombatNet(ModelConfig(**checkpoint["model_config"]))
     model.load_state_dict(checkpoint["model_state"])
     model.to(resolve_device(device)); model.eval()

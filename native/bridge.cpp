@@ -118,6 +118,14 @@ static py::dict public_card(const CardInstance &c) {
 class PilotBattle {
     BattleContext bc{};
     int potions_used = 0;
+    // What the player watched the enemy do. moveHistory[] is a history of ROLLED
+    // moves, not of executed ones: a monster that keeps using the same move is
+    // never re-rolled, so moveHistory[1] goes stale (a Cultist attacking every
+    // turn still reports INCANTATION). Track the move that was current during the
+    // last turn we saw instead; that is the one the player watched resolve.
+    mutable int seen_turn = -1;
+    mutable std::array<MMID, 8> last_planned{};
+    mutable std::array<MMID, 8> last_executed{};
 public:
     PilotBattle() = default;
     PilotBattle(const PilotBattle&) = default;
@@ -182,8 +190,17 @@ public:
         return out;
     }
     py::dict observe() const {
-        check_supported_state(); py::dict o,p; py::list enemies,hand,draw,discard,exhaust,acts,powers,relics;
-        o["schema_version"]=1; o["backend"]="lightspeed_pilot";
+        check_supported_state();
+        if (bc.turn != seen_turn) {
+            for (int i=0; i<bc.monsters.monsterCount && i<int(last_planned.size()); ++i) {
+                if (seen_turn >= 0) last_executed[i] = last_planned[i];
+                last_planned[i] = bc.monsters.arr[i].moveHistory[0];
+            }
+            seen_turn = bc.turn;
+        }
+        py::dict o,p; py::list enemies,hand,draw,discard,exhaust,acts,powers,relics;
+        // Must match stsai.util.SCHEMA_VERSION; validate_public rejects a mismatch.
+        o["schema_version"]=2; o["backend"]="lightspeed_pilot";
         o["turn"]=bc.turn; o["phase"]="PLAYER_NORMAL"; o["ascension"]=bc.ascension;
         p["hp"]=bc.player.curHp; p["max_hp"]=bc.player.maxHp;
         p["block"]=bc.player.block; p["energy"]=bc.player.energy;
@@ -208,9 +225,22 @@ public:
                 e["hits"]=damage.attackCount;
             } else { e["intent_damage"]=0; e["hits"]=0; }
             e["intent"]=m.isAttacking() ? "ATTACK" : "BUFF";
-            // Current intent and previous observed move. Never expose miscInfo,
-            // stored future damage rolls, hidden seeds, or latent enemy plans.
-            e["observed_move"]=move_name(m.moveHistory[0]); e["previous_move"]=move_name(m.moveHistory[1]);
+            // Only the ALREADY EXECUTED move is exported. The plan for the
+            // coming turn is deliberately not: for several enemies two different
+            // moves produce the same visible intent (Jaw Worm Chomp and Thrash
+            // both show "attack N"), so naming it would hand the model the exact
+            // action the game never revealed.
+            MMID executed = (seen_turn > 0 && i < int(last_executed.size()))
+                            ? last_executed[i] : MMID::INVALID;
+            // A battle can end on the enemy's own action -- a Looter escaping
+            // never gets a next turn -- and the player still watched that move.
+            // A dead enemy may have been killed before it acted, so only a
+            // surviving one confirms the move it was holding.
+            if (bc.outcome != Outcome::UNDECIDED && m.curHp > 0 && i < int(last_planned.size()))
+                executed = last_planned[i];
+            e["previous_move"]=move_name(executed);
+            // Never expose miscInfo, stored future damage rolls, hidden seeds,
+            // or latent enemy plans.
             enemies.append(e);
             // Every non-zero status is a visible power icon in game, so exporting
             // the whole runtime set is both fair and the only way to avoid

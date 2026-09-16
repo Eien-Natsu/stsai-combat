@@ -11,7 +11,7 @@ from dataclasses import asdict
 from .scenarios import make_scenario, make_env
 from .search import SearchConfig, BeliefSearch
 from .objective import outcome_target, terminal_utility
-from .util import canonical, atomic_json, digest, seed_for, weighted_index, load_json
+from .util import canonical, atomic_json, digest, seed_for, weighted_index, load_json, SCHEMA_VERSION
 
 @lru_cache(maxsize=4)
 def _teacher(checkpoint: str, backend: str, search_json: str):
@@ -38,12 +38,16 @@ def _collect_episode(job):
     for step in range(spec["max_actions"]):
         if obs["terminal"]: break
         result = teacher.run(obs,env.sampler(),seed_for("search-agent",spec["backend"],spec["split"],index,step,spec["iteration"]))
-        # Default argmax for stable teachers; optional visit-sampling supports coverage.
-        index_action = weighted_index(result["policy"],rng) if spec["sample_actions"] else next(i for i,a in enumerate(obs["actions"]) if a["id"] == result["action"]["id"])
+        # The teacher's own recommendation (its tie-break included) is recorded
+        # separately from what the behaviour policy actually played: with visit
+        # sampling these differ, and only the former is a valid top-1 target.
+        teacher_action = next(i for i,a in enumerate(obs["actions"]) if a["id"] == result["action"]["id"])
+        index_action = weighted_index(result["policy"],rng) if spec["sample_actions"] else teacher_action
         action = obs["actions"][index_action]
-        rows.append({"schema_version":1,"backend":spec["backend"],"split":spec["split"],
+        rows.append({"schema_version":SCHEMA_VERSION,"backend":spec["backend"],"split":spec["split"],
                      "episode_id":ep,"family":family,"episode_index":index,"iteration":spec["iteration"],
                      "observation":obs,"policy":result["policy"],"action_index":index_action,
+                     "teacher_action_index":teacher_action,"sampled_action":bool(spec["sample_actions"]),
                      "search_q":result["q"],"cutoff_fraction":result["cutoff_fraction"]})
         search_time += result["elapsed_seconds"]; simulations += result["simulations"]
         obs = env.step(action)
@@ -73,10 +77,13 @@ def collect(output, backend="reference_v1", split="train", count=16, start=0, wo
     checkpoint = str(Path(checkpoint).resolve()) if checkpoint else ""
     ckhash = hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest() if checkpoint else None
     from .scenarios import SCENARIO_REVISION
+    from .encoding import ENCODING_REVISION
+    from .objective import UTILITY_REVISION
     settings = {"backend":backend,"split":split,"search":asdict(SearchConfig(**(search or {}))),
                 "checkpoint":checkpoint,"checkpoint_sha256":ckhash,"master_seed":master_seed,
                 "max_actions":max_actions,"iteration":iteration,"sample_actions":sample_actions,
-                "scenario_revision":SCENARIO_REVISION}
+                "scenario_revision":SCENARIO_REVISION,"encoding_revision":ENCODING_REVISION,
+                "observation_schema":SCHEMA_VERSION,"utility_revision":UTILITY_REVISION}
     if backend == "lightspeed_pilot":
         from .native import engine_metadata
         settings["engine"] = engine_metadata()

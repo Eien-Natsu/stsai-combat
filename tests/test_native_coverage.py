@@ -275,15 +275,20 @@ def test_build_reports_the_locked_revision_and_patch_hashes():
 
 
 def observed_moves(encounter, seeds=range(24), turns=60):
-    """Moves and rosters seen with a tanky fixture, so later branches are reached."""
+    """Moves the enemy has EXECUTED, read from the public previous_move field.
+
+    The planned move for the coming turn is deliberately not exported, because
+    for several enemies two different moves show the same intent.
+    """
     moves, monsters = set(), set()
     for seed in seeds:
         env = pilot("DEFEND_RED", encounter=encounter, hp=TANK_HP, seed=seed)
         for _ in range(turns):
             obs = env.observe()
             for e in obs["enemies"]:
-                moves.add(e["observed_move"])
                 monsters.add(e["id"])
+                if e["previous_move"] != "INVALID":
+                    moves.add(e["previous_move"])
             if obs["terminal"]:
                 break
             env.step(end_turn(obs))
@@ -369,17 +374,36 @@ def test_cultist_ritual_is_exported_as_a_power():
 def test_gremlin_nob_follows_the_a18_fixed_pattern():
     """A18+ replaces the random choice with Bellow, Skull Bash, Rush, Rush, ..."""
     env = pilot("DEFEND_RED", encounter="GREMLIN_NOB", hp=TANK_HP)
-    sequence = []
-    for _ in range(8):
+    executed = []
+    for _ in range(9):
         obs = env.observe()
         assert not obs["terminal"], "the tanky fixture must survive the sampled turns"
-        sequence.append(obs["enemies"][0]["observed_move"])
+        previous = obs["enemies"][0]["previous_move"]
+        if previous != "INVALID":
+            executed.append(previous)
         env.step(end_turn(obs))  # never damages the Nob, so the cycle runs on
     expected = ["GREMLIN_NOB_BELLOW", "GREMLIN_NOB_SKULL_BASH",
                 "GREMLIN_NOB_RUSH", "GREMLIN_NOB_RUSH",
                 "GREMLIN_NOB_SKULL_BASH", "GREMLIN_NOB_RUSH",
                 "GREMLIN_NOB_RUSH", "GREMLIN_NOB_SKULL_BASH"]
-    assert sequence == expected, sequence
+    assert executed == expected, executed
+
+
+def test_planned_move_is_never_exported():
+    """The coming turn's move can be invisible to the player, so it is not a feature."""
+    for encounter in ("JAW_WORM", "LAGAVULIN", "LOOTER", "CULTIST"):
+        enemy = pilot("STRIKE_RED", encounter=encounter, seed=3).observe()["enemies"][0]
+        assert "observed_move" not in enemy, f"{encounter} still exports the planned move"
+        assert "previous_move" in enemy
+
+
+def test_previous_move_only_ever_reports_an_executed_move():
+    """At turn 1 nothing has resolved; afterwards it must be a real move name."""
+    env = pilot("DEFEND_RED", encounter="JAW_WORM", hp=TANK_HP)
+    assert env.observe()["enemies"][0]["previous_move"] == "INVALID"
+    after = env.step(end_turn(env.observe()))
+    first = after["enemies"][0]["previous_move"]
+    assert first.startswith("JAW_WORM_"), first
 
 
 def test_enemy_powers_are_exported_generically():

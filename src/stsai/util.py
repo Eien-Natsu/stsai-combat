@@ -6,7 +6,10 @@ import random
 from pathlib import Path
 from typing import Any
 
-SCHEMA_VERSION = 1
+# Observation schema. Bumped from 1 to 2 when the native adapter stopped
+# exporting the enemy's planned move and re-expressed the executed move as a
+# name instead of an enum ordinal: a reader of schema 1 would misread it.
+SCHEMA_VERSION = 2
 
 def canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)

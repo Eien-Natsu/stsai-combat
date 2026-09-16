@@ -2,6 +2,10 @@ from __future__ import annotations
 from .contracts import validate_public
 from .hints import enrich
 
+# Belief model of the native adapter. It resamples every RNG stream
+# independently; it is NOT the original game's correlated posterior.
+SAMPLER_REVISION = "independent_rng_approximation/1"
+
 # First native compilation and game differential testing must be performed on
 # the target machine. Import failure does NOT fall back to the reference engine.
 def _module():

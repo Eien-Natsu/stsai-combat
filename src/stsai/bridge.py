@@ -10,7 +10,7 @@ from pathlib import Path
 from .encoding import normalize
 from .contracts import validate_public
 from .hints import enrich,BASE
-from .util import canonical,digest,append_json
+from .util import canonical,digest,append_json,SCHEMA_VERSION
 
 class UnsupportedState(ValueError):pass
 
@@ -59,7 +59,7 @@ def parse_message(message:dict,counters=None)->dict:
             "intent_damage":adjusted if attack else 0,"hits":max(1,int(e.get("move_hits",1))) if attack else 0})
         if ep.get("RITUAL"):powerlist.append({"id":"RITUAL","owner":i,"amount":ep["RITUAL"]})
     if len(enemies)!=1:raise UnsupportedState("Pilot live bridge requires one enemy")
-    obs={"schema_version":1,"backend":"lightspeed_pilot","turn":int(c["turn"]),"ascension":int(g.get("ascension_level",0)),
+    obs={"schema_version":SCHEMA_VERSION,"backend":"lightspeed_pilot","turn":int(c["turn"]),"ascension":int(g.get("ascension_level",0)),
          "phase":"PLAYER_NORMAL","player":p,"enemies":enemies,"known_top":[],"choices":[],"potions":[],"potions_used":0,
          "powers":powerlist,"relics":[{"id":"BURNING_BLOOD","counter":-1}],"terminal":False,"won":False,"actions":[]}
     for zone in ("hand","draw_pile","discard_pile","exhaust_pile"):obs[zone]=[card(x) for x in c.get(zone,[])]

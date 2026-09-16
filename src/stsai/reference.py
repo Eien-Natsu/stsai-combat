@@ -10,7 +10,7 @@ import math
 import random
 from typing import Any
 from .contracts import Observation, Action, validate_public
-from .util import canonical
+from .util import canonical, SCHEMA_VERSION
 
 @dataclass(frozen=True)
 class Definition:
@@ -216,7 +216,7 @@ class ReferenceBattle:
     def observe(self) -> Observation:
         enemies = copy.deepcopy(self.enemies)
         for e in enemies: e["intent_damage"] = self._incoming(e)
-        return {"schema_version": 1, "backend": self.backend, "turn": self.turn,
+        return {"schema_version": SCHEMA_VERSION, "backend": self.backend, "turn": self.turn,
                 "phase": "PLAYER_NORMAL", "ascension": 0,
                 "player": copy.deepcopy(self.player), "enemies": enemies,
                 "hand": [c.public() for c in self.hand],

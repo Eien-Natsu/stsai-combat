@@ -7,6 +7,11 @@ import numpy as np
 
 FEATURES = 24
 VOCAB = 8192
+
+# Bump when the encoder changes which information reaches the model. Checkpoints
+# record it and refuse to load across a mismatch, so an old model can never be
+# silently evaluated on inputs it was not trained on.
+ENCODING_REVISION = 2
 MAX_SELECTION = 10
 KIND = {"play": 0, "end": 1, "potion": 2, "select": 3, "select_many": 4}
 ZONE = {"player": 1, "enemies": 2, "hand": 3, "draw_pile": 4, "discard_pile": 5,
@@ -73,6 +78,14 @@ def encode(obs: dict, max_entities: int = 512, max_actions: int = 1024) -> Encod
             12: e.get("artifact", 0) / 5})
         # Intent type and visible power identity must not be reduced to damage.
         add("powers", 10000 + i, "ENEMY_INTENT_" + str(slot) + "_" + str(e.get("intent", "UNKNOWN")), {2: 1})
+        # The enemy's already-executed move is public: the player watched it
+        # resolve. Empirically several enemies choose their next move from that
+        # history, so dropping it made the student strictly less informed than
+        # the search that produced its labels. The planned move is deliberately
+        # NOT exported -- see the adapter.
+        previous = e.get("previous_move")
+        if previous:
+            add("powers", 20000 + i, "ENEMY_PREV_" + str(slot) + "_" + normalize(str(previous)), {2: 1})
     for zone in ("hand", "draw_pile", "discard_pile", "exhaust_pile", "choices", "known_top"):
         for i, c in enumerate(obs.get(zone, [])):
             add(zone, i, c["id"], {2: c.get("cost", 0) / 5,
