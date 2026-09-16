@@ -1,4 +1,6 @@
 .venv/
+.python/
+.local/
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -7,6 +9,7 @@ build/
 third_party/
 data/
 runs/
+logs/
 *.so
 *.pyd
 *.pt

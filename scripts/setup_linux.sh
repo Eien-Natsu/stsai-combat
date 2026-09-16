@@ -4,6 +4,14 @@ cd "$(dirname "$0")/.."
 PYTHON="${PYTHON:-python3}"
 MODE="${1:-cuda}"
 if [[ "$MODE" != cuda && "$MODE" != cpu ]]; then echo 'Usage: bash scripts/setup_linux.sh [cuda|cpu]'; exit 2; fi
+# The optional native extension needs CPython development headers (Python.h).
+# Minimal images ship python3 without python3-dev; provision a project-local
+# interpreter that bundles them rather than modifying the system.
+if ! "$PYTHON" -c 'import pathlib,sysconfig,sys; sys.exit(0 if (pathlib.Path(sysconfig.get_paths()["include"])/"Python.h").is_file() else 1)'; then
+  echo "Warning: $PYTHON has no development headers (python3-dev absent); provisioning project-locally" >&2
+  PYTHON="$(bash scripts/setup_python_local.sh)"
+  echo "Using project-local interpreter: $PYTHON" >&2
+fi
 "$PYTHON" -c 'import sys; assert (3,11)<=sys.version_info[:2]<(3,14), "Use Python 3.11-3.13; 3.12 recommended"'
 "$PYTHON" -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
