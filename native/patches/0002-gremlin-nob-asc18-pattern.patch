@@ -1,0 +1,34 @@
+diff --git a/src/combat/MonsterSpecific.cpp b/src/combat/MonsterSpecific.cpp
+index f6f6c4a..1bbab9e 100644
+--- a/src/combat/MonsterSpecific.cpp
++++ b/src/combat/MonsterSpecific.cpp
+@@ -2410,18 +2410,21 @@ MMID Monster::getMoveForRoll(BattleContext &bc, int &monsterData, const int roll
+             }
+ 
+             if (asc18) {
+-                if (!lastTwoMoves(MMID::GREMLIN_NOB_SKULL_BASH)) {
++                // At A18+ the random choice becomes the fixed cycle
++                // Bellow, Skull Bash, Rush, Rush, Skull Bash, ... Upstream
++                // guarded on lastTwoMoves(SKULL_BASH), which cannot be true
++                // before a first Skull Bash is ever returned, so Skull Bash
++                // was unreachable and the Nob only ever used Rush.
++                if (lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {
++                    return (MMID::GREMLIN_NOB_SKULL_BASH);
++                }
++                if (lastMove(MMID::GREMLIN_NOB_SKULL_BASH)) {
+                     return (MMID::GREMLIN_NOB_RUSH);
+-                    break;
+                 }
+-
+-                if (lastTwoMoves(MMID(MMID::GREMLIN_NOB_RUSH))) {
++                if (lastMove(MMID::GREMLIN_NOB_BELLOW)) {
+                     return (MMID::GREMLIN_NOB_SKULL_BASH);
+-
+-                } else {
+-                    return (MMID::GREMLIN_NOB_RUSH);
+                 }
+-                break;
++                return (MMID::GREMLIN_NOB_RUSH);
+             }
+ 
+             if (roll < 33 || lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {

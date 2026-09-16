@@ -2,8 +2,32 @@ from __future__ import annotations
 import random
 from .util import seed_for
 
+# Bump when the fixture distribution changes in any way that makes old and new
+# episodes incomparable. Collection fingerprints include it, so data collected
+# under different fixtures cannot be mixed into one training run by accident.
+SCENARIO_REVISION = 2
+
 REFERENCE_FAMILIES = ("basic", "wide", "scaling", "low_hp")
-NATIVE_FAMILIES = ("starter", "attack", "block", "strength")
+# Native fixtures pair a deck family with an encounter family. The decks decide
+# what the agent can do; the encounters decide whether the fight is actually in
+# doubt. A distribution where every agent wins everything carries no signal, so
+# swarm and elite fights are part of the mix rather than single weak monsters.
+NATIVE_FAMILIES = ("starter", "swarm", "elite", "mixed")
+NATIVE_ENCOUNTERS = {
+    "starter": ("CULTIST", "JAW_WORM"),
+    "swarm": ("TWO_LOUSE", "THREE_LOUSE", "EXORDIUM_THUGS", "EXORDIUM_WILDLIFE"),
+    "elite": ("GREMLIN_NOB", "LAGAVULIN", "THREE_SENTRIES"),
+    "mixed": ("GREMLIN_GANG", "SMALL_SLIMES", "LOTS_OF_SLIMES", "LOOTER"),
+}
+NATIVE_HP = {"starter": (45, 70), "swarm": (45, 65), "elite": (60, 80), "mixed": (50, 70)}
+# Deck pools are indexed separately from the encounter family so the two vary
+# independently rather than always pairing one deck with one fight.
+NATIVE_DECKS = {
+    "starter": ["POMMEL_STRIKE", "SHRUG_IT_OFF", "IRON_WAVE"],
+    "attack": ["CLEAVE", "UPPERCUT", "CARNAGE", "TWIN_STRIKE"],
+    "block": ["METALLICIZE", "IMPERVIOUS", "GHOSTLY_ARMOR", "DISARM"],
+    "strength": ["INFLAME", "HEAVY_BLADE", "ANGER", "WHIRLWIND"],
+}
 STARTER = ["STRIKE"] * 5 + ["DEFEND"] * 4 + ["BASH"]
 
 # A scenario seed describes a benchmark fixture; it is never a network feature.
@@ -30,15 +54,13 @@ def make_scenario(backend: str, split: str, index: int, master_seed: int = 20260
                     "potions": [rng.choice(["FIRE", "BLOCK", "STRENGTH"])] if rng.random() < .35 else []}
     elif backend == "lightspeed_pilot":
         family = NATIVE_FAMILIES[index % len(NATIVE_FAMILIES)]
-        pools = {"starter": ["POMMEL_STRIKE", "SHRUG_IT_OFF", "IRON_WAVE"],
-                 "attack": ["CLEAVE", "UPPERCUT", "CARNAGE", "TWIN_STRIKE"],
-                 "block": ["METALLICIZE", "IMPERVIOUS", "GHOSTLY_ARMOR", "DISARM"],
-                 "strength": ["INFLAME", "HEAVY_BLADE", "ANGER", "WHIRLWIND"]}
+        deck_family = tuple(NATIVE_DECKS)[(index // len(NATIVE_FAMILIES)) % len(NATIVE_DECKS)]
         deck = ["STRIKE_RED"] * 5 + ["DEFEND_RED"] * 4 + ["BASH", "ASCENDERS_BANE"]
-        deck += rng.choices(pools[family], k=rng.randint(2, 5))
+        deck += rng.choices(NATIVE_DECKS[deck_family], k=rng.randint(2, 5))
         deck = [c + "+" if c != "ASCENDERS_BANE" and rng.random() < .2 else c for c in deck]
-        scenario = {"deck": deck, "encounter": rng.choice(["CULTIST", "JAW_WORM"]),
-                    "ascension": 20, "hp": rng.randint(30, 70), "max_hp": 80,
+        low, high = NATIVE_HP[family]
+        scenario = {"deck": deck, "encounter": rng.choice(NATIVE_ENCOUNTERS[family]),
+                    "ascension": 20, "hp": rng.randint(low, high), "max_hp": 80,
                     "floor": 1, "act": 1, "potions": []}
     else: raise ValueError(f"Unknown backend {backend}")
     return scenario, episode_seed, family

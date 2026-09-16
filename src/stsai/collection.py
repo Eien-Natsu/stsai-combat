@@ -72,9 +72,11 @@ def collect(output, backend="reference_v1", split="train", count=16, start=0, wo
     output = Path(output); output.mkdir(parents=True,exist_ok=True)
     checkpoint = str(Path(checkpoint).resolve()) if checkpoint else ""
     ckhash = hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest() if checkpoint else None
+    from .scenarios import SCENARIO_REVISION
     settings = {"backend":backend,"split":split,"search":asdict(SearchConfig(**(search or {}))),
                 "checkpoint":checkpoint,"checkpoint_sha256":ckhash,"master_seed":master_seed,
-                "max_actions":max_actions,"iteration":iteration,"sample_actions":sample_actions}
+                "max_actions":max_actions,"iteration":iteration,"sample_actions":sample_actions,
+                "scenario_revision":SCENARIO_REVISION}
     if backend == "lightspeed_pilot":
         from .native import engine_metadata
         settings["engine"] = engine_metadata()

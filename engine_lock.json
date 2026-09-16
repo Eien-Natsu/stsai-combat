@@ -8,6 +8,10 @@
     {
       "file": "native/patches/0001-disarm-upgrade-strength.patch",
       "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+    },
+    {
+      "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+      "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
     }
   ]
 }

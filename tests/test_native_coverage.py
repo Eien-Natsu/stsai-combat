@@ -32,16 +32,31 @@ COSTS = {
 }
 # Whirlwind is X-cost; the bridge reports the energy it would consume.
 XCOST = {"WHIRLWIND"}
-UNPLAYABLE = {"ASCENDERS_BANE"}
-PLAYABLE = sorted(COSTS)
+# Status cards injected by supported enemies. Slimed is playable (it exhausts);
+# Dazed is unplayable and ethereal.
+STATUS_INJECTED = {"SLIMED": 1, "DAZED": 0}
+UNPLAYABLE = {"ASCENDERS_BANE", "DAZED"}
+PLAYABLE = sorted(COSTS) + ["SLIMED"]
 ALL_CARDS = PLAYABLE + sorted(UNPLAYABLE)
+# None of these have an upgraded form inside the pilot range, so that
+# combination is not generated rather than silently skipped.
+NO_UPGRADE = UNPLAYABLE | {"SLIMED"}
+CARD_FORMS = [(c, up) for c in ALL_CARDS for up in (False, True) if not (up and c in NO_UPGRADE)]
+
+
+TANK_HP = 200  # coverage fixture: survive long enough to see later enemy branches
+
+
+def end_turn(obs):
+    """The one action that advances enemy behaviour without dealing damage."""
+    return next(a for a in obs["actions"] if a["kind"] == "end")
 
 
 def pilot(card, upgraded=False, encounter="CULTIST", hp=PLAYER_HP, copies=10, seed=7, extra=()):
     """Deck of identical copies so the opening hand is deterministic."""
     deck = [card + "+" if upgraded else card] * copies + list(extra)
     scenario = {"deck": deck, "encounter": encounter, "ascension": ASCENSION,
-                "hp": hp, "max_hp": PLAYER_HP, "floor": 1, "act": 1, "potions": []}
+                "hp": hp, "max_hp": max(PLAYER_HP, hp), "floor": 1, "act": 1, "potions": []}
     return NativeBattle(scenario, seed)
 
 
@@ -63,14 +78,14 @@ def zone_count(obs, card):
                for c in obs[zone] if c["id"] == name)
 
 
-@pytest.mark.parametrize("card", ALL_CARDS)
-@pytest.mark.parametrize("upgraded", [False, True])
+def test_ascenders_bane_cannot_be_upgraded():
+    # The one card the adapter must refuse outright rather than paper over.
+    with pytest.raises((ValueError, RuntimeError)):
+        pilot("ASCENDERS_BANE", upgraded=True).observe()
+
+
+@pytest.mark.parametrize("card,upgraded", CARD_FORMS)
 def test_card_is_offered_with_correct_cost(card, upgraded):
-    if upgraded and card in UNPLAYABLE:
-        # Ascender's Bane has no upgraded form; the adapter must reject it loudly.
-        with pytest.raises((ValueError, RuntimeError)):
-            pilot(card, upgraded=True).observe()
-        return
     env = pilot(card, upgraded)
     obs = env.observe()
     validate_public(obs)
@@ -80,7 +95,7 @@ def test_card_is_offered_with_correct_cost(card, upgraded):
         assert obs["player"]["energy"] == 3
         return
     assert offered, f"{card} not offered in an all-{card} deck"
-    expected = obs["player"]["energy"] if card in XCOST else COSTS[card]
+    expected = obs["player"]["energy"] if card in XCOST else COSTS.get(card, STATUS_INJECTED.get(card))
     assert {a["cost"] for a in offered} == {expected}
 
 
@@ -259,30 +274,88 @@ def test_build_reports_the_locked_revision_and_patch_hashes():
         "original-game differential testing has not been performed; do not claim it"
 
 
-def observed_moves(encounter, seeds=range(64)):
-    seen = {}
+def observed_moves(encounter, seeds=range(24), turns=60):
+    """Moves and rosters seen with a tanky fixture, so later branches are reached."""
+    moves, monsters = set(), set()
     for seed in seeds:
-        env = pilot("STRIKE_RED", encounter=encounter, seed=seed)
-        for _ in range(40):
+        env = pilot("DEFEND_RED", encounter=encounter, hp=TANK_HP, seed=seed)
+        for _ in range(turns):
             obs = env.observe()
             for e in obs["enemies"]:
-                if e["hp"] > 0:
-                    seen.setdefault(e["observed_move"], 0)
-                    seen[e["observed_move"]] += 1
+                moves.add(e["observed_move"])
+                monsters.add(e["id"])
             if obs["terminal"]:
                 break
-            env.step(obs["actions"][0])
-    return seen
+            env.step(end_turn(obs))
+    return monsters, moves
 
 
-def test_cultist_covers_all_visible_moves():
-    seen = observed_moves("CULTIST")
-    assert set(seen) == {"CULTIST_INCANTATION", "CULTIST_DARK_STRIKE"}, seen
+# Every move upstream defines for each monster reachable in Act 1, read from the
+# pinned revision's MonsterMoves.h table.
+MONSTER_MOVES = {
+    "CULTIST": {"CULTIST_INCANTATION", "CULTIST_DARK_STRIKE"},
+    "JAW_WORM": {"JAW_WORM_CHOMP", "JAW_WORM_THRASH", "JAW_WORM_BELLOW"},
+    "GREEN_LOUSE": {"GREEN_LOUSE_BITE", "GREEN_LOUSE_SPIT_WEB"},
+    "RED_LOUSE": {"RED_LOUSE_BITE", "RED_LOUSE_GROW"},
+    "BLUE_SLAVER": {"BLUE_SLAVER_STAB", "BLUE_SLAVER_RAKE"},
+    "RED_SLAVER": {"RED_SLAVER_STAB", "RED_SLAVER_SCRAPE", "RED_SLAVER_ENTANGLE"},
+    "FUNGI_BEAST": {"FUNGI_BEAST_BITE", "FUNGI_BEAST_GROW"},
+    "LOOTER": {"LOOTER_MUG", "LOOTER_LUNGE", "LOOTER_SMOKE_BOMB", "LOOTER_ESCAPE"},
+    "GREMLIN_NOB": {"GREMLIN_NOB_BELLOW", "GREMLIN_NOB_RUSH", "GREMLIN_NOB_SKULL_BASH"},
+    "LAGAVULIN": {"LAGAVULIN_SLEEP", "LAGAVULIN_ATTACK", "LAGAVULIN_SIPHON_SOUL"},
+    "SENTRY": {"SENTRY_BEAM", "SENTRY_BOLT"},
+    "FAT_GREMLIN": {"FAT_GREMLIN_SMASH"},
+    "MAD_GREMLIN": {"MAD_GREMLIN_SCRATCH"},
+    "SHIELD_GREMLIN": {"SHIELD_GREMLIN_PROTECT", "SHIELD_GREMLIN_SHIELD_BASH"},
+    "SNEAKY_GREMLIN": {"SNEAKY_GREMLIN_PUNCTURE"},
+    "GREMLIN_WIZARD": {"GREMLIN_WIZARD_CHARGING", "GREMLIN_WIZARD_ULTIMATE_BLAST"},
+    "ACID_SLIME_S": {"ACID_SLIME_S_LICK", "ACID_SLIME_S_TACKLE"},
+    "ACID_SLIME_M": {"ACID_SLIME_M_CORROSIVE_SPIT", "ACID_SLIME_M_LICK", "ACID_SLIME_M_TACKLE"},
+    "ACID_SLIME_L": {"ACID_SLIME_L_CORROSIVE_SPIT", "ACID_SLIME_L_LICK", "ACID_SLIME_L_TACKLE",
+                     "ACID_SLIME_L_SPLIT"},
+    "SPIKE_SLIME_S": {"SPIKE_SLIME_S_TACKLE"},
+    "SPIKE_SLIME_M": {"SPIKE_SLIME_M_FLAME_TACKLE", "SPIKE_SLIME_M_LICK"},
+    "SPIKE_SLIME_L": {"SPIKE_SLIME_L_FLAME_TACKLE", "SPIKE_SLIME_L_LICK", "SPIKE_SLIME_L_SPLIT"},
+}
+# Exordium Thugs/Wildlife and the louse, slime and gremlin groups draw their
+# roster from a per-encounter pool, so their monsters vary by seed.
+ENCOUNTERS = {
+    "CULTIST": {"CULTIST"}, "JAW_WORM": {"JAW_WORM"},
+    "BLUE_SLAVER": {"BLUE_SLAVER"}, "RED_SLAVER": {"RED_SLAVER"},
+    "TWO_FUNGI_BEASTS": {"FUNGI_BEAST"}, "LOOTER": {"LOOTER"},
+    "GREMLIN_NOB": {"GREMLIN_NOB"}, "LAGAVULIN": {"LAGAVULIN"},
+    "THREE_SENTRIES": {"SENTRY"},
+    "TWO_LOUSE": {"GREEN_LOUSE", "RED_LOUSE"}, "THREE_LOUSE": {"GREEN_LOUSE", "RED_LOUSE"},
+    "EXORDIUM_THUGS": {"GREEN_LOUSE", "RED_LOUSE", "BLUE_SLAVER", "RED_SLAVER", "LOOTER",
+                       "ACID_SLIME_M", "SPIKE_SLIME_M", "CULTIST"},
+    "EXORDIUM_WILDLIFE": {"FUNGI_BEAST", "GREEN_LOUSE", "RED_LOUSE", "JAW_WORM",
+                          "ACID_SLIME_M", "SPIKE_SLIME_M"},
+    "GREMLIN_GANG": {"SNEAKY_GREMLIN", "MAD_GREMLIN", "FAT_GREMLIN", "SHIELD_GREMLIN",
+                     "GREMLIN_WIZARD"},
+    "SMALL_SLIMES": {"ACID_SLIME_M", "ACID_SLIME_S", "SPIKE_SLIME_M", "SPIKE_SLIME_S"},
+    "LOTS_OF_SLIMES": {"ACID_SLIME_S", "SPIKE_SLIME_S"},
+    "LARGE_SLIME": {"ACID_SLIME_L", "SPIKE_SLIME_L", "ACID_SLIME_M", "ACID_SLIME_S"},
+}
 
 
-def test_jaw_worm_covers_all_visible_moves():
-    seen = observed_moves("JAW_WORM")
-    assert set(seen) == {"JAW_WORM_CHOMP", "JAW_WORM_THRASH", "JAW_WORM_BELLOW"}, seen
+@pytest.mark.parametrize("encounter", sorted(ENCOUNTERS))
+def test_encounter_stays_inside_its_declared_move_space(encounter):
+    monsters, moves = observed_moves(encounter)
+    assert monsters, f"{encounter} produced no observation"
+    assert monsters <= ENCOUNTERS[encounter], f"{encounter} produced unexpected monsters: {monsters}"
+    allowed = set().union(*(MONSTER_MOVES[m] for m in monsters))
+    assert moves <= allowed, f"{encounter} used undeclared moves: {moves - allowed}"
+
+
+@pytest.mark.parametrize("encounter", ["CULTIST", "JAW_WORM", "BLUE_SLAVER", "RED_SLAVER",
+                                       "TWO_FUNGI_BEASTS", "LOOTER", "GREMLIN_NOB",
+                                       "LAGAVULIN", "THREE_SENTRIES"])
+def test_fixed_encounter_covers_every_visible_branch(encounter):
+    """Fixed-roster encounters must exercise every move the monster can make."""
+    monsters, moves = observed_moves(encounter)
+    assert len(monsters) == 1, f"{encounter} should have one monster type, saw {monsters}"
+    expected = MONSTER_MOVES[next(iter(monsters))]
+    assert moves == expected, f"{encounter} missed {expected - moves}"
 
 
 def test_cultist_ritual_is_exported_as_a_power():
@@ -291,3 +364,32 @@ def test_cultist_ritual_is_exported_as_a_power():
     ritual = [p for p in after["powers"] if p["id"] == "RITUAL"]
     assert ritual and ritual[0]["amount"] > 0
     assert ritual[0]["owner"] == 0
+
+
+def test_gremlin_nob_follows_the_a18_fixed_pattern():
+    """A18+ replaces the random choice with Bellow, Skull Bash, Rush, Rush, ..."""
+    env = pilot("DEFEND_RED", encounter="GREMLIN_NOB", hp=TANK_HP)
+    sequence = []
+    for _ in range(8):
+        obs = env.observe()
+        assert not obs["terminal"], "the tanky fixture must survive the sampled turns"
+        sequence.append(obs["enemies"][0]["observed_move"])
+        env.step(end_turn(obs))  # never damages the Nob, so the cycle runs on
+    expected = ["GREMLIN_NOB_BELLOW", "GREMLIN_NOB_SKULL_BASH",
+                "GREMLIN_NOB_RUSH", "GREMLIN_NOB_RUSH",
+                "GREMLIN_NOB_SKULL_BASH", "GREMLIN_NOB_RUSH",
+                "GREMLIN_NOB_RUSH", "GREMLIN_NOB_SKULL_BASH"]
+    assert sequence == expected, sequence
+
+
+def test_enemy_powers_are_exported_generically():
+    """A non-Ritual power must still surface: Lagavulin gives itself Metallicize."""
+    env = pilot("DEFEND_RED", encounter="LAGAVULIN", hp=200)
+    powers = set()
+    for _ in range(12):
+        obs = env.observe()
+        powers |= {p["id"] for p in obs["powers"]}
+        if obs["terminal"]:
+            break
+        env.step(obs["actions"][0])
+    assert "METALLICIZE" in powers, f"Lagavulin's Metallicize was not exported: {powers}"

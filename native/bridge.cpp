@@ -2,6 +2,7 @@
 // Reviewed against public master sources retrieved 2026-09-16.
 // The delivery environment cannot fetch/build upstream: compilation and real-game
 // differential validation are EXPLICIT downstream gates, not claimed complete.
+#include <cctype>
 #include <cstdint>
 #include <algorithm>
 #include <array>
@@ -34,13 +35,37 @@ static const std::unordered_map<std::string, CardId> allowed_cards = {
     {"DISARM", CardId::DISARM}, {"INFLAME", CardId::INFLAME},
     {"HEAVY_BLADE", CardId::HEAVY_BLADE}, {"ANGER", CardId::ANGER},
     {"WHIRLWIND", CardId::WHIRLWIND}, {"THUNDERCLAP", CardId::THUNDERCLAP},
-    {"BLUDGEON", CardId::BLUDGEON}
+    {"BLUDGEON", CardId::BLUDGEON},
+    // Status cards the supported enemies inject into our deck. Slimed is
+    // playable (it just exhausts); Dazed is unplayable and ethereal.
+    {"SLIMED", CardId::SLIMED}, {"DAZED", CardId::DAZED}
 };
 
 static std::string card_name(CardId id) {
     for (const auto &p: allowed_cards) if (p.second == id) return p.first;
-    throw std::runtime_error("Unsupported generated card: extend capability tests before widening whitelist");
+    // Name the offender: enemies inject status cards, and a bare refusal makes
+    // widening the whitelist a guessing game.
+    const auto index = static_cast<std::size_t>(id);
+    const std::string upstream = index < std::size(cardEnumStrings) ? cardEnumStrings[index] : "UNKNOWN";
+    throw std::runtime_error("Unsupported generated card: " + upstream +
+                             "; extend capability tests before widening the whitelist");
 }
+// Encounters are whitelisted one by one: each needs its visible move set and
+// power set covered by tests before it is offered to the trainer.
+static const std::unordered_map<std::string, MonsterEncounter> supported_encounters = {
+    {"CULTIST", MonsterEncounter::CULTIST}, {"JAW_WORM", MonsterEncounter::JAW_WORM},
+    {"TWO_LOUSE", MonsterEncounter::TWO_LOUSE}, {"THREE_LOUSE", MonsterEncounter::THREE_LOUSE},
+    {"BLUE_SLAVER", MonsterEncounter::BLUE_SLAVER}, {"RED_SLAVER", MonsterEncounter::RED_SLAVER},
+    {"EXORDIUM_THUGS", MonsterEncounter::EXORDIUM_THUGS},
+    {"EXORDIUM_WILDLIFE", MonsterEncounter::EXORDIUM_WILDLIFE},
+    {"TWO_FUNGI_BEASTS", MonsterEncounter::TWO_FUNGI_BEASTS},
+    {"LOOTER", MonsterEncounter::LOOTER}, {"GREMLIN_GANG", MonsterEncounter::GREMLIN_GANG},
+    {"SMALL_SLIMES", MonsterEncounter::SMALL_SLIMES}, {"LOTS_OF_SLIMES", MonsterEncounter::LOTS_OF_SLIMES},
+    {"LARGE_SLIME", MonsterEncounter::LARGE_SLIME},
+    {"GREMLIN_NOB", MonsterEncounter::GREMLIN_NOB}, {"LAGAVULIN", MonsterEncounter::LAGAVULIN},
+    {"THREE_SENTRIES", MonsterEncounter::THREE_SENTRIES},
+};
+
 static std::vector<std::string> split_csv(const std::string &text) {
     std::vector<std::string> parts;
     for (std::size_t start = 0; start <= text.size();) {
@@ -51,6 +76,18 @@ static std::vector<std::string> split_csv(const std::string &text) {
         start = comma + 1;
     }
     return parts;
+}
+// Upstream keeps the display names ("Curl Up"); the adapter exposes stable
+// tokens so the cross-backend key and the trainer see one spelling.
+static std::string status_name(MonsterStatus status) {
+    const auto index = static_cast<std::size_t>(status);
+    if (index >= std::size(enemyStatusStrings)) return "UNKNOWN";
+    std::string out;
+    for (char ch : std::string(enemyStatusStrings[index])) {
+        if (ch == ' ') out.push_back('_');
+        else out.push_back(static_cast<char>(std::toupper(static_cast<unsigned char>(ch))));
+    }
+    return out;
 }
 static std::string move_name(MMID move) {
     const auto index = static_cast<std::size_t>(move);
@@ -86,8 +123,9 @@ public:
     PilotBattle(const PilotBattle&) = default;
     PilotBattle(const py::dict &scenario, std::uint64_t seed) {
         const auto encounter = py::cast<std::string>(scenario["encounter"]);
-        if (encounter != "CULTIST" && encounter != "JAW_WORM")
-            throw std::invalid_argument("Pilot supports CULTIST/JAW_WORM only; hidden monster fields need a per-enemy audit");
+        const auto encounter_id = supported_encounters.find(encounter);
+        if (encounter_id == supported_encounters.end())
+            throw std::invalid_argument("Unsupported pilot encounter: " + encounter);
         const int asc = py::cast<int>(scenario["ascension"]);
         if (asc < 0 || asc > 20) throw std::invalid_argument("Invalid ascension");
         GameContext gc(CharacterClass::IRONCLAD, seed, asc);
@@ -116,7 +154,7 @@ public:
         if (scenario.contains("floor") && py::cast<int>(scenario["floor"]) != 1)
             throw std::invalid_argument("Native pilot uses floor 1 fixtures only");
         bc.player.cc = CharacterClass::IRONCLAD;
-        bc.init(gc, encounter == "CULTIST" ? MonsterEncounter::CULTIST : MonsterEncounter::JAW_WORM);
+        bc.init(gc, encounter_id->second);
         check_supported_state();
     }
     void check_supported_state() const {
@@ -174,8 +212,16 @@ public:
             // stored future damage rolls, hidden seeds, or latent enemy plans.
             e["observed_move"]=move_name(m.moveHistory[0]); e["previous_move"]=move_name(m.moveHistory[1]);
             enemies.append(e);
-            int ritual=m.getStatus<MonsterStatus::RITUAL>();
-            if (ritual) { py::dict r; r["id"]="RITUAL"; r["owner"]=i; r["amount"]=ritual; powers.append(r); }
+            // Every non-zero status is a visible power icon in game, so exporting
+            // the whole runtime set is both fair and the only way to avoid
+            // silently hiding a new enemy's key mechanic.
+            for (int s=0; s<int(MonsterStatus::INVALID); ++s) {
+                const auto status=static_cast<MonsterStatus>(s);
+                const int amount=m.getStatusInternal(status);
+                if (!amount) continue;
+                py::dict pw; pw["id"]=status_name(status); pw["owner"]=i; pw["amount"]=amount;
+                powers.append(pw);
+            }
         }
         for(int i=0;i<bc.cards.cardsInHand;++i) hand.append(public_card(bc.cards.hand[i]));
         // Sorting is repeated in Python by the exact cross-backend canonical key.
