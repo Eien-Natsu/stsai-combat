@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stsai-combat"
+version = "0.1.0"
+description = "Auditable Slay the Spire combat-search and distillation workbench"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3"]
+
+[project.optional-dependencies]
+train = ["torch>=2.7,<3"]
+test = ["pytest>=8,<10"]
+native = ["pybind11>=2.13,<4"]
+
+[project.scripts]
+stsai = "stsai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["native: requires the optional compiled upstream engine", "integration: exercises the training pipeline"]

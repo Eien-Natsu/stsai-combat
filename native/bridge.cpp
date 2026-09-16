@@ -1,0 +1,228 @@
+// Original adapter code. Depends on gamerpuppy/sts_lightspeed (MIT).
+// Reviewed against public master sources retrieved 2026-09-16.
+// The delivery environment cannot fetch/build upstream: compilation and real-game
+// differential validation are EXPLICIT downstream gates, not claimed complete.
+#include <cstdint>
+#include <algorithm>
+#include <array>
+#include <memory>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include "game/GameContext.h"
+#include "combat/BattleContext.h"
+#include "sim/search/Action.h"
+
+namespace py = pybind11;
+using namespace sts;
+using A = sts::search::Action;
+using AT = sts::search::ActionType;
+
+static const std::unordered_map<std::string, CardId> allowed_cards = {
+    {"STRIKE_RED", CardId::STRIKE_RED}, {"DEFEND_RED", CardId::DEFEND_RED},
+    {"BASH", CardId::BASH}, {"ASCENDERS_BANE", CardId::ASCENDERS_BANE},
+    {"POMMEL_STRIKE", CardId::POMMEL_STRIKE}, {"SHRUG_IT_OFF", CardId::SHRUG_IT_OFF},
+    {"IRON_WAVE", CardId::IRON_WAVE}, {"CLEAVE", CardId::CLEAVE},
+    {"UPPERCUT", CardId::UPPERCUT}, {"CARNAGE", CardId::CARNAGE},
+    {"TWIN_STRIKE", CardId::TWIN_STRIKE}, {"METALLICIZE", CardId::METALLICIZE},
+    {"IMPERVIOUS", CardId::IMPERVIOUS}, {"GHOSTLY_ARMOR", CardId::GHOSTLY_ARMOR},
+    {"DISARM", CardId::DISARM}, {"INFLAME", CardId::INFLAME},
+    {"HEAVY_BLADE", CardId::HEAVY_BLADE}, {"ANGER", CardId::ANGER},
+    {"WHIRLWIND", CardId::WHIRLWIND}, {"THUNDERCLAP", CardId::THUNDERCLAP},
+    {"BLUDGEON", CardId::BLUDGEON}
+};
+
+static std::string card_name(CardId id) {
+    for (const auto &p: allowed_cards) if (p.second == id) return p.first;
+    throw std::runtime_error("Unsupported generated card: extend capability tests before widening whitelist");
+}
+static std::string card_type(CardType type) {
+    switch(type) {
+        case CardType::ATTACK: return "ATTACK";
+        case CardType::SKILL: return "SKILL";
+        case CardType::POWER: return "POWER";
+        case CardType::STATUS: return "STATUS";
+        case CardType::CURSE: return "CURSE";
+        default: return "UNKNOWN";
+    }
+}
+static py::dict public_card(const CardInstance &c) {
+    py::dict d;
+    d["id"] = card_name(c.id); d["cost"] = int(c.costForTurn);
+    d["upgraded"] = c.getUpgradeCount(); d["type"] = card_type(c.getType());
+    d["exhaust"] = c.doesExhaust(); d["ethereal"] = c.isEthereal();
+    d["targeted"] = c.requiresTarget(); d["special"] = int(c.specialData);
+    d["free"] = c.freeToPlayOnce; d["retain"] = c.retain;
+    // uniqueId, raw pointers and the draw-pile position are NEVER exported.
+    return d;
+}
+
+class PilotBattle {
+    BattleContext bc{};
+    int potions_used = 0;
+public:
+    PilotBattle() = default;
+    PilotBattle(const PilotBattle&) = default;
+    PilotBattle(const py::dict &scenario, std::uint64_t seed) {
+        const auto encounter = py::cast<std::string>(scenario["encounter"]);
+        if (encounter != "CULTIST" && encounter != "JAW_WORM")
+            throw std::invalid_argument("Pilot supports CULTIST/JAW_WORM only; hidden monster fields need a per-enemy audit");
+        const int asc = py::cast<int>(scenario["ascension"]);
+        if (asc < 0 || asc > 20) throw std::invalid_argument("Invalid ascension");
+        GameContext gc(CharacterClass::IRONCLAD, seed, asc);
+        gc.curHp = py::cast<int>(scenario["hp"]); gc.maxHp = py::cast<int>(scenario["max_hp"]);
+        if (gc.curHp <= 0 || gc.curHp > gc.maxHp) throw std::invalid_argument("Invalid starting HP");
+        gc.act = 1; gc.floorNum = 1; gc.curRoom = Room::MONSTER;
+        gc.curMapNodeX = -100; gc.curMapNodeY = -100; // no burning-elite marker match
+        auto deck = py::cast<std::vector<std::string>>(scenario["deck"]);
+        if (deck.empty() || deck.size() > 60) throw std::invalid_argument("Deck size must be 1..60");
+        while (gc.deck.size()) gc.deck.remove(gc, gc.deck.size()-1);
+        for (auto name: deck) {
+            bool upgraded = !name.empty() && name.back() == '+';
+            if (upgraded) name.pop_back();
+            auto found = allowed_cards.find(name);
+            if (found == allowed_cards.end()) throw std::invalid_argument("Unsupported pilot card: " + name);
+            if (upgraded && name == "ASCENDERS_BANE") throw std::invalid_argument("Ascenders Bane cannot upgrade");
+            Card c(found->second); if (upgraded) c.upgrade();
+            gc.deck.obtain(gc, c);
+        }
+        if (scenario.contains("potions") && py::len(scenario["potions"]) != 0)
+            throw std::invalid_argument("Native pilot intentionally excludes potions; do not silently ignore them");
+        if (scenario.contains("relics") && py::len(scenario["relics"]) != 0)
+            throw std::invalid_argument("Native pilot uses starting Burning Blood only");
+        if (scenario.contains("act") && py::cast<int>(scenario["act"]) != 1)
+            throw std::invalid_argument("Native pilot supports act 1 only");
+        if (scenario.contains("floor") && py::cast<int>(scenario["floor"]) != 1)
+            throw std::invalid_argument("Native pilot uses floor 1 fixtures only");
+        bc.player.cc = CharacterClass::IRONCLAD;
+        bc.init(gc, encounter == "CULTIST" ? MonsterEncounter::CULTIST : MonsterEncounter::JAW_WORM);
+        check_supported_state();
+    }
+    void check_supported_state() const {
+        if (bc.undefinedBehaviorEvoked) throw std::runtime_error("Upstream flagged undefined behavior");
+        if (bc.outcome == Outcome::UNDECIDED && bc.inputState != InputState::PLAYER_NORMAL)
+            throw std::runtime_error("Unsupported pilot input state; no automatic choose/end fallback");
+    }
+    std::vector<A> actions() const {
+        std::vector<A> out;
+        if (bc.outcome != Outcome::UNDECIDED) return out;
+        check_supported_state();
+        for (int i=0; i<bc.cards.cardsInHand; ++i) {
+            const auto &c=bc.cards.hand[i];
+            if (c.requiresTarget()) {
+                for (int j=0; j<bc.monsters.monsterCount; ++j) {
+                    A a(AT::CARD,i,j);
+                    if (bc.monsters.arr[j].isTargetable() && a.isValidAction(bc)) out.push_back(a);
+                }
+            } else {
+                A a(AT::CARD,i,0); if (a.isValidAction(bc)) out.push_back(a);
+            }
+        }
+        A end(AT::END_TURN); if (end.isValidAction(bc)) out.push_back(end);
+        if (out.empty()) throw std::runtime_error("No legal actions for a live pilot state");
+        return out;
+    }
+    py::dict observe() const {
+        check_supported_state(); py::dict o,p; py::list enemies,hand,draw,discard,exhaust,acts,powers,relics;
+        o["schema_version"]=1; o["backend"]="lightspeed_pilot";
+        o["turn"]=bc.turn; o["phase"]="PLAYER_NORMAL"; o["ascension"]=bc.ascension;
+        p["hp"]=bc.player.curHp; p["max_hp"]=bc.player.maxHp;
+        p["block"]=bc.player.block; p["energy"]=bc.player.energy;
+        p["strength"]=bc.player.strength; p["dexterity"]=bc.player.dexterity;
+        p["artifact"]=bc.player.artifact;
+        p["weak"]=bc.player.getStatus<PlayerStatus::WEAK>();
+        p["vulnerable"]=bc.player.getStatus<PlayerStatus::VULNERABLE>();
+        p["frail"]=bc.player.getStatus<PlayerStatus::FRAIL>();
+        p["metallicize"]=bc.player.getStatus<PlayerStatus::METALLICIZE>();
+        p["cards_played"]=int(bc.player.cardsPlayedThisTurn);
+        p["attacks_played"]=int(bc.player.attacksPlayedThisTurn);
+        p["skills_played"]=int(bc.player.skillsPlayedThisTurn);
+        o["player"]=p;
+        for (int i=0;i<bc.monsters.monsterCount;++i) {
+            const auto &m=bc.monsters.arr[i]; py::dict e;
+            e["id"]=std::string(m.getName()); e["slot"]=i; e["hp"]=m.curHp; e["max_hp"]=m.maxHp;
+            e["block"]=m.block; e["strength"]=m.strength; e["weak"]=m.weak; e["vulnerable"]=m.vulnerable;
+            e["artifact"]=int(m.artifact); e["half_dead"]=m.halfDead;
+            if (m.isAttacking() && m.isTargetable()) {
+                const auto damage=m.getMoveBaseDamage(bc);
+                e["intent_damage"]=m.calculateDamageToPlayer(bc,damage.damage);
+                e["hits"]=damage.attackCount;
+            } else { e["intent_damage"]=0; e["hits"]=0; }
+            e["intent"]=m.isAttacking() ? "ATTACK" : "BUFF";
+            // Current intent and previous observed move. Never expose miscInfo,
+            // stored future damage rolls, hidden seeds, or latent enemy plans.
+            e["observed_move"]=int(m.moveHistory[0]); e["previous_move"]=int(m.moveHistory[1]);
+            enemies.append(e);
+            int ritual=m.getStatus<MonsterStatus::RITUAL>();
+            if (ritual) { py::dict r; r["id"]="RITUAL"; r["owner"]=i; r["amount"]=ritual; powers.append(r); }
+        }
+        for(int i=0;i<bc.cards.cardsInHand;++i) hand.append(public_card(bc.cards.hand[i]));
+        // Sorting is repeated in Python by the exact cross-backend canonical key.
+        auto cards=std::vector<CardInstance>(bc.cards.drawPile.begin(),bc.cards.drawPile.end());
+        std::sort(cards.begin(),cards.end(),[](const CardInstance &a,const CardInstance &b) {
+            return std::make_tuple(card_name(a.id),a.upgraded,int(a.costForTurn),a.specialData,a.freeToPlayOnce,a.retain)
+                 < std::make_tuple(card_name(b.id),b.upgraded,int(b.costForTurn),b.specialData,b.freeToPlayOnce,b.retain);
+        });
+        for(const auto &c:cards) draw.append(public_card(c));
+        for(const auto &c:bc.cards.discardPile) discard.append(public_card(c));
+        for(const auto &c:bc.cards.exhaustPile) exhaust.append(public_card(c));
+        for(const auto &a:actions()) {
+            py::dict d; d["id"]=std::to_string(a.bits); d["selection"]=py::list();
+            if(a.getActionType()==AT::END_TURN) {
+                d["kind"]="end"; d["source"]=-1; d["target"]=-1; d["source_zone"]="none"; d["card_id"]="END"; d["cost"]=0;
+            } else {
+                const auto &c=bc.cards.hand[a.getSourceIdx()]; d["kind"]="play";
+                d["source"]=a.getSourceIdx(); d["source_zone"]="hand";
+                d["target"]=c.requiresTarget()?a.getTargetIdx():-1;
+                d["card_id"]=card_name(c.id); d["cost"]=c.isXCost()?bc.player.energy:int(c.costForTurn);
+            }
+            acts.append(d);
+        }
+        py::dict r; r["id"]="BURNING_BLOOD"; r["counter"]=-1; relics.append(r);
+        o["enemies"]=enemies; o["hand"]=hand; o["draw_pile"]=draw;
+        o["discard_pile"]=discard; o["exhaust_pile"]=exhaust;
+        o["known_top"]=py::list(); o["choices"]=py::list();
+        o["powers"]=powers; o["relics"]=relics; o["potions"]=py::list(); o["potions_used"]=potions_used;
+        o["terminal"]=bc.outcome!=Outcome::UNDECIDED; o["won"]=bc.outcome==Outcome::PLAYER_VICTORY;
+        o["actions"]=acts; return o;
+    }
+    py::dict step(const std::string &action_id) {
+        const auto legal=actions(); auto found=std::find_if(legal.begin(),legal.end(),[&](const A &a){return std::to_string(a.bits)==action_id;});
+        if(found==legal.end()) throw std::invalid_argument("Illegal or stale native action");
+        found->execute(bc); check_supported_state(); return observe();
+    }
+    std::unique_ptr<PilotBattle> sample(std::uint64_t sampler_seed) const {
+        check_supported_state();
+        auto result=std::make_unique<PilotBattle>(*this);
+        std::mt19937_64 rng(sampler_seed);
+        // Independent future RNG approximation, NOT the exact posterior of
+        // original STS's correlated seeded streams. No original RNG is reused.
+        result->bc.aiRng=Random(rng()); result->bc.cardRandomRng=Random(rng());
+        result->bc.miscRng=Random(rng()); result->bc.monsterHpRng=Random(rng());
+        result->bc.potionRng=Random(rng()); result->bc.shuffleRng=Random(rng());
+        result->bc.seed=0; // debug-only field; never an agent input
+        auto &draw=result->bc.cards.drawPile;
+        // Canonicalize before shuffling: sampling must not depend on real order.
+        std::sort(draw.begin(),draw.end(),[](const CardInstance &a,const CardInstance &b) {
+            return std::make_tuple(card_name(a.id),a.upgraded,int(a.costForTurn),a.specialData,a.freeToPlayOnce,a.retain)
+                 < std::make_tuple(card_name(b.id),b.upgraded,int(b.costForTurn),b.specialData,b.freeToPlayOnce,b.retain);
+        });
+        std::shuffle(draw.begin(),draw.end(),rng);
+        return result;
+    }
+};
+PYBIND11_MODULE(_lightspeed,m) {
+    py::class_<PilotBattle>(m,"PilotBattle")
+        .def(py::init<const py::dict&,std::uint64_t>())
+        .def("observe",&PilotBattle::observe)
+        .def("step",&PilotBattle::step)
+        .def("sample",&PilotBattle::sample);
+    m.def("build_info",[](){py::dict d; d["revision"]=STSAI_ENGINE_REVISION;
+        d["backend"]="lightspeed_pilot"; d["belief_model"]="independent_rng_approximation";
+        d["game_differential_verified"]=false; return d;});
+}

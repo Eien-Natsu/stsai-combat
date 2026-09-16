@@ -1,0 +1,15 @@
+{
+  "steps": 8,
+  "backend": "reference_v1",
+  "parameters": 438829,
+  "validation": {
+    "loss": 2.4785095585717096,
+    "policy_loss": 1.3187273608313665,
+    "outcome_loss": 2.1535687181684704,
+    "value_loss": 0.08299786763058768,
+    "teacher_top1_agreement": 0.5555555555555556,
+    "samples": 18
+  },
+  "best_validation_loss": 2.4785095585717096,
+  "elapsed_seconds": 0.1388873189998776
+}

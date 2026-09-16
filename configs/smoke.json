@@ -1,0 +1,34 @@
+{
+  "master_seed": 20260916,
+  "max_actions": 192,
+  "search": {
+    "simulations": 8,
+    "max_depth": 16,
+    "rollout_limit": 32,
+    "c_puct": 1.5,
+    "rollout_epsilon": 0.12,
+    "potion_cost": 0.02,
+    "use_leaf_value": false
+  },
+  "training": {
+    "seed": 42,
+    "batch_size": 4,
+    "accumulation_steps": 1,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "max_updates": 8,
+    "epochs": 8,
+    "eval_every": 4,
+    "save_every": 4,
+    "validation_batches": 8,
+    "shuffle_buffer": 64,
+    "amp": false,
+    "cpu_threads": 2,
+    "model": {
+      "d_model": 48,
+      "layers": 1,
+      "heads": 4,
+      "dropout": 0.1
+    }
+  }
+}

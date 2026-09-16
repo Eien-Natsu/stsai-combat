@@ -1,0 +1,60 @@
+{
+  "delivery_version": "0.1.0",
+  "date": "2026-09-16",
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "torch": "2.10.0+cpu",
+    "numpy": "2.3.5",
+    "pytest": "9.0.2",
+    "cuda_available": false
+  },
+  "tests": {
+    "passed": 71,
+    "skipped_modules": 1,
+    "failed": 0,
+    "skip_reason": "Optional native extension not built; module-level skip is not native validation"
+  },
+  "end_to_end": {
+    "backend": "reference_v1",
+    "train_episodes": 4,
+    "train_rows": 41,
+    "val_episodes": 2,
+    "val_rows": 18,
+    "optimizer_updates": 8,
+    "evaluation_agents": [
+      "heuristic",
+      "search",
+      "model",
+      "hybrid"
+    ],
+    "scenarios_per_agent": 4,
+    "decision_cases_mined": 12
+  },
+  "verified": [
+    "CPU reference rules within tests",
+    "observation firewall tests",
+    "history-indexed search invariance",
+    "legal action masks",
+    "CPU model forward/backward",
+    "multiprocess collection",
+    "streaming training and checkpoint resume/warm-start",
+    "evaluation pipeline",
+    "synthetic CommunicationMod protocol parsing"
+  ],
+  "not_verified": [
+    "RTX 5070 execution",
+    "PyTorch 2.9.1+cu128 target dependency combination",
+    "Native C++ compilation",
+    "Original-game rules/RNG differential parity",
+    "Real CommunicationMod gameplay",
+    "Superhuman strength"
+  ],
+  "native_scope": "Candidate adapter only: Ironclad, 21 card types, Cultist/Jaw Worm, Burning Blood, no potions/selections, controlled Act1 floor1 fixtures",
+  "whole_game_or_full_ironclad_coverage": false,
+  "pretrained_game_model_included": false,
+  "design_parameter_counts": {
+    "smoke": 438829,
+    "native_pilot_and_8gb": 1949325,
+    "12gb": 3587533
+  }
+}
