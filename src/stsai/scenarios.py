@@ -5,7 +5,7 @@ from .util import seed_for
 # Bump when the fixture distribution changes in any way that makes old and new
 # episodes incomparable. Collection fingerprints include it, so data collected
 # under different fixtures cannot be mixed into one training run by accident.
-SCENARIO_REVISION = 2
+SCENARIO_REVISION = 3
 
 REFERENCE_FAMILIES = ("basic", "wide", "scaling", "low_hp")
 # Native fixtures pair a deck family with an encounter family. The decks decide
@@ -15,9 +15,10 @@ REFERENCE_FAMILIES = ("basic", "wide", "scaling", "low_hp")
 NATIVE_FAMILIES = ("starter", "swarm", "elite", "mixed")
 NATIVE_ENCOUNTERS = {
     "starter": ("CULTIST", "JAW_WORM"),
-    "swarm": ("TWO_LOUSE", "THREE_LOUSE", "EXORDIUM_THUGS", "EXORDIUM_WILDLIFE"),
+    "swarm": ("TWO_LOUSE", "THREE_LOUSE", "EXORDIUM_THUGS", "EXORDIUM_WILDLIFE",
+              "BLUE_SLAVER", "RED_SLAVER", "TWO_FUNGI_BEASTS"),
     "elite": ("GREMLIN_NOB", "LAGAVULIN", "THREE_SENTRIES"),
-    "mixed": ("GREMLIN_GANG", "SMALL_SLIMES", "LOTS_OF_SLIMES", "LOOTER"),
+    "mixed": ("GREMLIN_GANG", "SMALL_SLIMES", "LOTS_OF_SLIMES", "LARGE_SLIME", "LOOTER"),
 }
 NATIVE_HP = {"starter": (45, 70), "swarm": (45, 65), "elite": (60, 80), "mixed": (50, 70)}
 # Deck pools are indexed separately from the encounter family so the two vary
