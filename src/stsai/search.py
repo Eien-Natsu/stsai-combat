@@ -40,6 +40,25 @@ class HeuristicEvaluator:
         value = float(np.clip(.55 + .35 * hp - .15 * threat - .004 * deficit, 0, 1))
         return priors.tolist(), value
 
+class SplitEvaluator:
+    """Take priors from one evaluator and leaf value from another.
+
+    The four modes worth separating are S (heuristic prior, rollout cutoff),
+    P (network prior, rollout cutoff), V (heuristic prior, network leaf value)
+    and PV (both from the network). Without this split, "hybrid" silently
+    changes the prior and the value at once and no attribution is possible.
+    """
+
+    def __init__(self, prior: Evaluator, value: Evaluator):
+        self.prior = prior
+        self.value = value
+
+    def evaluate(self, obs: Observation) -> tuple[list[float], float]:
+        priors, _ = self.prior.evaluate(obs)
+        _, value = self.value.evaluate(obs)
+        return priors, value
+
+
 @dataclass
 class SearchConfig:
     simulations: int = 64

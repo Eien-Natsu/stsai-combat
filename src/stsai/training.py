@@ -56,9 +56,15 @@ def collate_samples(samples):
         if not torch.isfinite(p).all() or (p < 0).any() or abs(float(p.sum())-1)>1e-4:
             raise ValueError("Invalid policy target")
         policy[i,:len(p)]=p
+    # -1 marks shards predating the explicit column; the caller must then fall
+    # back to the visit argmax and say so.
     labels={"policy":policy,"outcome":torch.tensor([s["outcome"] for s in samples]),
             "value":torch.tensor([s["value"] for s in samples]),
-            "value_mask":torch.tensor([s["value_mask"] for s in samples])}
+            "value_mask":torch.tensor([s["value_mask"] for s in samples]),
+            "teacher_action":torch.tensor([s.get("teacher_action_index",-1) for s in samples]),
+            # A state with one legal action scores 1.0 for free; agreement on
+            # those must never be mixed into the headline number.
+            "decision":torch.tensor([int(batch["action_mask"][i].sum())>1 for i in range(len(samples))])}
     return batch,labels
 
 def losses(output,labels):
@@ -84,18 +90,50 @@ def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
 
 @torch.inference_mode()
 def validate(model,loader,device,max_batches=50):
+    """Report agreement several ways; the single old number was misleading.
+
+    `teacher_top1_agreement` compared the student's argmax with the argmax of
+    the teacher's VISIT distribution, but BeliefSearch breaks visit ties by Q,
+    so that argmax is not always the action the teacher actually played.
+    `teacher_choice_agreement` uses the recorded action instead. Both are
+    reported alongside decision-state-only figures and the policy divergence,
+    and forced single-action states are kept out of the decision figures.
+    """
     model.eval(); total=0; sums={"loss":0.,"policy_loss":0.,"outcome_loss":0.,"value_loss":0.}
-    agree=0
+    agree_legacy=agree_choice=0; dec=0; agree_choice_dec=0.0
+    kl_sum=0.; entropy_sum=0.
     for j,(batch,labels) in enumerate(loader):
         if j>=max_batches: break
         batch,labels=_move(batch,device),_move(labels,device)
         output=model(batch); loss,metrics=losses(output,labels); n=len(labels["value"])
         sums["loss"]+=float(loss)*n
         for key,value in metrics.items(): sums[key]+=float(value)*n
-        agree+=int((output["policy_logits"].argmax(-1)==labels["policy"].argmax(-1)).sum())
+        student=output["policy_logits"].argmax(-1)
+        agree_legacy+=int((student==labels["policy"].argmax(-1)).sum())
+        teacher=labels["teacher_action"]
+        known=teacher>=0
+        if bool(known.any()):
+            matched=(student==teacher)&known
+            agree_choice+=int(matched.sum())
+            decision=labels["decision"]&known
+            dec+=int(decision.sum()); agree_choice_dec+=float(matched[decision].sum())
+        # KL(teacher||student) over legal actions, with the teacher's own
+        # entropy so a plateau is not read as a capacity wall.
+        # Mask elementwise terms, never the full tensor against a masked vector.
+        logp=output["policy_logits"].log_softmax(-1)
+        logp_target=torch.log(labels["policy"].clamp_min(1e-12))
+        legal=labels["policy"]>0
+        kl_sum+=float((labels["policy"]*(logp_target-logp))[legal].sum())
+        entropy_sum+=float((-(labels["policy"]*logp_target))[legal].sum())
         total+=n
     if total == 0: raise ValueError("Empty validation replay")
-    return {**{k:v/total for k,v in sums.items()},"teacher_top1_agreement":agree/total,"samples":total}
+    return {**{k:v/total for k,v in sums.items()},
+            "teacher_top1_agreement":agree_legacy/total,
+            "teacher_choice_agreement":agree_choice/total,
+            "teacher_choice_agreement_decision_states":agree_choice_dec/max(1,dec),
+            "decision_states":dec,"forced_states":total-dec,
+            "policy_kl":kl_sum/total,"teacher_entropy":entropy_sum/total,
+            "samples":total}
 
 def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config=None,resume="",init_checkpoint=""):
     if resume and init_checkpoint: raise ValueError("Choose resume OR init_checkpoint, not both")

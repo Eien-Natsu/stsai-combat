@@ -61,10 +61,15 @@ def load_checkpoint(path, device="cpu"):
     from .encoding import ENCODING_REVISION
     from .util import SCHEMA_VERSION
     # An old model must never be silently loaded under new input semantics.
-    for key, current in (("encoding_revision", ENCODING_REVISION), ("observation_schema", SCHEMA_VERSION)):
-        stored = checkpoint.get(key)
-        if stored is not None and stored != current:
-            raise ValueError(f"Checkpoint {key}={stored} but this build uses {current}; retrain or convert explicitly")
+    # A checkpoint predating these fields was written by revision 1, so absence
+    # means 1 rather than "unknown, allow it".
+    for key, current, legacy in (("encoding_revision", ENCODING_REVISION, 1),
+                                 ("observation_schema", SCHEMA_VERSION, 1)):
+        stored = checkpoint.get(key, legacy)
+        if stored != current:
+            raise ValueError(
+                f"Checkpoint was trained on {key}={stored} but this build uses {current}; "
+                "its inputs no longer mean the same thing. Retrain, or convert explicitly.")
     model = CombatNet(ModelConfig(**checkpoint["model_config"]))
     model.load_state_dict(checkpoint["model_state"])
     model.to(resolve_device(device)); model.eval()
