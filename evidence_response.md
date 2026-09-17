@@ -30,7 +30,7 @@ policy      = (elementwise * decision.unsqueeze(-1)).sum() / decision.sum().clam
 #              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (b,) × (b,1) → (b,b) 外积
 ```
 
-`(b,)` 乘 `(b,1)` 广播成 `(b,b)`，求和从 b 项变成 b×b 项。最小复现（`reports/_review_loss_bug_repro.txt`）：
+`(b,)` 乘 `(b,1)` 广播成 `(b,b)`，求和从 b 项变成 b×b 项。最小复现（`reports/_review_loss_bug_repro.txt`，由 `python scripts/review_recompute.py loss-repro` 生成）：
 
 | | 值 |
 |---|---|
@@ -90,7 +90,7 @@ Brier 相关结论（D 节）则必须按 0.1 与 D 节重新解读。
 ### 0.2 【更正】公开意图映射：上一轮的「泄漏修复」过度删除
 
 复核端引用旧 `native/bridge.cpp:227` 的 `intent = isAttacking() ? "ATTACK" : "BUFF"` —— 这个映射
-**现在仍然只有两类**。据此逐项核对上一轮报告的「9 组歧义」（`reports/_review_A_ambiguity.txt`），
+**现在仍然只有两类**。据此逐项核对上一轮报告的「9 组歧义」（`reports/_review_A_ambiguity.txt`，由 `python scripts/review_recompute.py ambiguity` 生成），
 并用上游源码验证每个招式实际做了什么：
 
 | 歧义组（旧口径） | 上游源码 | 真实游戏 Intent | 是否真的歧义 |
@@ -198,6 +198,9 @@ Brier 相关结论（D 节）则必须按 0.1 与 D 节重新解读。
 ### A.4 N0 审计脚本、覆盖说明与碰撞键定义
 
 - 脚本：`scripts/native_replay.py`（10⁴ 局随机回放）、`tests/test_native_fairness.py`（变形测试）。
+- **本次复核用到的重新导出全部收敛到一个脚本** `scripts/review_recompute.py`，六个子命令
+  `paired` / `coverage` / `bridge` / `brier-scan` / `ambiguity` / `loss-repro`
+  分别生成 `reports/_review_*.txt`；只做推理与算术，不含训练。
 - 碰撞键：`stsai.contracts.observation_key` = `sha256(canonical(obs))`，其中
   `canonical` 是 `json.dumps(sort_keys=True, separators=(",",":"))`；
   **排除的键**：`backend`、`schema_version`。
@@ -229,7 +232,7 @@ Brier 相关结论（D 节）则必须按 0.1 与 D 节重新解读。
 
 ## B 学生是否已经优于启发式
 
-### B.1 逐种子的配对效用差与胜负交叉（`reports/_review_B_section.txt`）
+### B.1 逐种子的配对效用差与胜负交叉（`reports/_review_B_section.txt`，由 `python scripts/review_recompute.py paired` 生成）
 
 区间**只对场景重采样**，**条件于当前已训练的这几个 checkpoint**，不重采样训练种子。
 配对单位 = 场景（同一 `episode_index` 同初始条件），256 对全部完整，**0 丢弃**。
@@ -275,7 +278,7 @@ Brier 相关结论（D 节）则必须按 0.1 与 D 节重新解读。
   **宽度×正则化交互是事后观察到的**（6/6 种子符号一致，但两侧区间均含 0），
   只能标为**探索性提示**。
 
-### B.4 12 个 run 的 KL 与效用对应（`reports/_review_B2_section.txt`）
+### B.4 12 个 run 的 KL 与效用对应（`reports/_review_B2_section.txt`，由 `python scripts/review_recompute.py coverage` 生成）
 
 | cell | kl_dev | kl(decision) | policy_kl | utility | wins | best_step |
 |---|---|---|---|---|---|---|

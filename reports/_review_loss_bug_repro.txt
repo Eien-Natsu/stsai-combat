@@ -1,19 +1,10 @@
-elementwise      : torch.Size([16])
-decision         : torch.Size([16])
-elementwise*decision.unsqueeze(-1) shape: (16, 16)  <- current code path
-elementwise*decision               shape: (16,)  <- intended
+elementwise (16,)  decision (16,)
+current path (b,)*(b,1) -> (16, 16)   <- outer product
+intended     (b,)*(b,)  -> (16,)
+current  policy term = 29.4312
+intended policy term = 1.7408
+inflation            = 16.91x
 
-current  numerator sum = 1768.0   (over 256 entries)
-intended numerator sum = 112.0   (over 16 entries)
-denominator decision.sum() = 13.0
-
-CURRENT  policy term = 136.0000
-INTENDED policy term = 8.6154
-inflation factor     = 15.786  (= sum(elementwise)/mean over decision states)
-
-Interpretation: the product is a (b x b) outer product, so the sum runs over
-b*b terms instead of b, and every sample is multiplied by every other sample's
-decision flag. The intended line needs no unsqueeze:  elementwise * decision
-
-Measured on the real runs: validation policy_loss = 16.90 (matrix) vs 1.07 (pre-change),
-i.e. the policy term dominated the objective and the auxiliary heads were starved.
+losses() actually returns policy_loss = 29.4312
+measured on real runs: 16.90 (matrix) vs 1.07 (pre-change)
+auxiliary heads unaffected: outcome=2.7274 value=0.2006
