@@ -13,9 +13,11 @@
 ### 0.0 边界
 
 - 报告 commit：`fb9bf6e`。源码 bundle：`stsai-handoff-fb9bf6e.bundle`（本次附件内含，附 SHA256）。
-- 本包另外新增的文件（本文、`INDEX.md`、`MANIFEST.sha256`、`review_weights/`、`reports/_review_*.txt`）
-  是**在 fb9bf6e 之后的工作区新增**，不属于 fb9bf6e。它们已提交为 `stsai-review-evidence` 分支上的一个
-  独立 commit（见 `INDEX.md` 的 commit 对照表），**没有改写任何既有产物**。
+- 本包另外新增的文件（本文、`INDEX.md`、`MANIFEST.sha256`、`review_weights/`、
+  `scripts/review_recompute.py`、`reports/_review_*.txt`）是**在 fb9bf6e 之后新增**，不属于 fb9bf6e。
+  它们在 `work/5070-bringup` 分支上追加了 3 个 commit（`15f2fff`、`7fbf89b`、`d90e873`，
+  HEAD = `d90e873`），**没有改写任何既有产物、没有修改冻结协议**。
+  两个阶段的 bundle 都在 `bundles/`，对照表见 `INDEX.md` §1。
 - 未提供：游戏本体/JAR、`.venv`、GPU 二进制、全部训练数据、优化器状态。
 
 ### 0.1 【新发现】训练损失里的广播错误——12 次矩阵是在错误的目标函数下训练的
@@ -36,9 +38,11 @@ policy      = (elementwise * decision.unsqueeze(-1)).sum() / decision.sum().clam
 |---|---|
 | 当前代码路径乘积形状 | **(16, 16)** |
 | 应该是 | (16,) |
-| 当前 policy 项 | 136.00 |
-| 预期 policy 项 | 8.62 |
-| **膨胀倍数** | **15.79** |
+| 当前 policy 项 | 29.4312 |
+| 预期 policy 项 | 1.7408 |
+| **膨胀倍数** | **16.91×** |
+
+（`losses()` 实际返回的 `policy_loss` 也是 29.4312，与手算一致；对照头 `outcome=2.7274`、`value=0.2006` 正常。）
 
 与实测一致：矩阵运行的验证 `policy_loss` = **16.90**，而改动前的 `dev_base2` 是 **1.07**。
 `loss` 因此也是坏的（矩阵 `best_validation_loss` ≈ 18.3，改动前 2.22）。
