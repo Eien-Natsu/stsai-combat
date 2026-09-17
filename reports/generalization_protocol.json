@@ -1,0 +1,148 @@
+{
+  "purpose": "Frozen generalisation matrix. Written before the first run and not rewritten.",
+  "matrix": {
+    "widths": [
+      128,
+      192
+    ],
+    "regularisation": [
+      "R0",
+      "R1"
+    ],
+    "seeds": [
+      17,
+      29,
+      43
+    ],
+    "cells": 12
+  },
+  "regularisation": {
+    "r0": {
+      "dropout": 0.1,
+      "weight_decay": 0.01
+    },
+    "r1": {
+      "dropout": 0.2,
+      "weight_decay": 0.05
+    },
+    "versions": {
+      "observation_schema": 2,
+      "encoding_revision": 2,
+      "utility_revision": 1,
+      "scenario_revision": 3
+    }
+  },
+  "head_count": 4,
+  "head_count_note": "4 divides 128 and 192, so head count is held fixed and head dimension varies with width (32 vs 48).",
+  "training": {
+    "max_updates": 500,
+    "eval_every": 25,
+    "epochs": 40,
+    "batch_size": 16,
+    "accumulation_steps": 2,
+    "effective_batch": 32,
+    "learning_rate": 0.0003,
+    "validation_batches": 50
+  },
+  "selection": "kl_dev = mean over battles of (battle mean decision-state KL); ties keep the earlier step",
+  "policy_loss_normalisation": "decision states only (legal_actions > 1)",
+  "expected_runs": 12,
+  "planned": [
+    {
+      "id": "M128-R0-s17",
+      "d_model": 128,
+      "reg": "R0",
+      "init_seed": 17,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M128-R0-s29",
+      "d_model": 128,
+      "reg": "R0",
+      "init_seed": 29,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M128-R0-s43",
+      "d_model": 128,
+      "reg": "R0",
+      "init_seed": 43,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M128-R1-s17",
+      "d_model": 128,
+      "reg": "R1",
+      "init_seed": 17,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M128-R1-s29",
+      "d_model": 128,
+      "reg": "R1",
+      "init_seed": 29,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M128-R1-s43",
+      "d_model": 128,
+      "reg": "R1",
+      "init_seed": 43,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R0-s17",
+      "d_model": 192,
+      "reg": "R0",
+      "init_seed": 17,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R0-s29",
+      "d_model": 192,
+      "reg": "R0",
+      "init_seed": 29,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R0-s43",
+      "d_model": 192,
+      "reg": "R0",
+      "init_seed": 43,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R1-s17",
+      "d_model": 192,
+      "reg": "R1",
+      "init_seed": 17,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R1-s29",
+      "d_model": 192,
+      "reg": "R1",
+      "init_seed": 29,
+      "data_seed": 42,
+      "heads": 4
+    },
+    {
+      "id": "M192-R1-s43",
+      "d_model": 192,
+      "reg": "R1",
+      "init_seed": 43,
+      "data_seed": 42,
+      "heads": 4
+    }
+  ]
+}

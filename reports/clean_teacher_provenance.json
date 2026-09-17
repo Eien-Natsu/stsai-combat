@@ -1,0 +1,84 @@
+{
+  "purpose": "N0 data-provenance gate: are the teacher labels, sampler and checkpoints all post-fix?",
+  "parent_baseline_id": "ec5bef081d64e1b399d89a18c70f341c17387669c2fe51857f0030c707771379",
+  "parent_baseline_file": "reports/baseline_freeze.json",
+  "question": "Did the fairness fixes (planned-move leak, executed-move semantics) precede the artefacts in use?",
+  "artefact_classes": {
+    "raw_trajectories": {
+      "path": "data/dev/train, data/dev/val",
+      "observation_schema": 2,
+      "encoding_revision": 2,
+      "collected_after_fix": true,
+      "evidence": "collection.json settings carry schema/encoding revisions; the adapter that wrote them no longer exports observed_move"
+    },
+    "teacher_labels": {
+      "fields": [
+        "policy",
+        "search_q",
+        "teacher_action_index",
+        "sampled_action"
+      ],
+      "produced_by": "scripts: stsai collect under the patched engine",
+      "note": "labels are produced by the same adapter build as the observations, so the leak fix covers them"
+    },
+    "outcome_utility": {
+      "utility_revision": 1,
+      "scenario_revision": 3
+    },
+    "checkpoint_init": {
+      "matrix": "runs/matrix/*",
+      "initialisation": "random (torch.manual_seed(init_seed))",
+      "reason": "no contaminated checkpoint is ever resumed from in this round"
+    }
+  },
+  "sampler_audit": {
+    "finding": "PilotBattle::sample copies the battle including moveHistory[0], the not-yet-executed planned move.",
+    "code_path": [
+      "Monster::rollMove calls getMoveForRoll BEFORE setMove shifts the history",
+      "getMoveForRoll therefore reads moveHistory[0] as the move JUST EXECUTED, which the player watched resolve",
+      "the planned move only becomes an AI input once it has been executed and is public"
+    ],
+    "other_hidden_move_inputs": {
+      "GREMLIN_WIZARD": "monsterData charge flag; the charging state is visible as the intent",
+      "RED_SLAVER": "miscInfo usedEntangle flag; whether Entangle was used is public",
+      "unsupported_monsters_reading_miscInfo": [
+        "THE_CHAMP",
+        "SPIKER",
+        "WRITHING_MASS",
+        "TIME_EATER",
+        "AWAKENED_ONE",
+        "BOOK_OF_STABBING"
+      ]
+    },
+    "status": "AUDITED, NOT EMPIRICALLY PROVEN",
+    "why_not_proven": "a decisive test needs two live states with identical full public history but a different hidden planned move; scanning all 2104 stored development states found no public-state collision across episodes, so no such pair could be constructed",
+    "residual_assumption": "an executed move is identifiable after the fact from its visible consequences; two moves with literally identical consequences would make it private and this audit would not catch it",
+    "regression_tests": [
+      "tests/test_native_fairness.py",
+      "tests/test_native_coverage.py::test_planned_move_is_never_exported"
+    ]
+  },
+  "gate_result": "PASS with the residual assumption above recorded; no privileged-teacher labels are mixed into the main comparison",
+  "versions": {
+    "observation_schema": 2,
+    "encoding_revision": 2,
+    "utility_revision": 1,
+    "scenario_revision": 3,
+    "engine": {
+      "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+      "patches": [
+        "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+        "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      ],
+      "backend": "lightspeed_pilot",
+      "belief_model": "independent_rng_approximation",
+      "game_differential_verified": false
+    }
+  },
+  "artefact_hashes": {
+    "data/dev/train/collection.json": "52655deee669fcc0cebc0b7a59a73cc5aefcf9fa6acc85bac7d79b9e496a2124",
+    "data/dev/val/collection.json": "a3d66aab2ae8d92b3580f0f3544e8edbd51f626b130fb57b4ccd545c60692815",
+    "reports/dev_closed_loop/dev_scenarios.json": "508793fd71c5b04bed2d96ff5c8b15599c8f727b913d3e00916ab91829a7bc07",
+    "reports/generalization_protocol.json": "e0847feed164aa14c464041d2b0388e7cab4f209cb74b0b7ecee13c299b87ecf"
+  }
+}

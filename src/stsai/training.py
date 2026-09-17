@@ -62,19 +62,32 @@ def collate_samples(samples):
             "value":torch.tensor([s["value"] for s in samples]),
             "value_mask":torch.tensor([s["value_mask"] for s in samples]),
             "teacher_action":torch.tensor([s.get("teacher_action_index",-1) for s in samples]),
+            # Not a tensor: kept for per-battle KL aggregation, which is the
+            # frozen checkpoint-selection metric.
+            "episode_id":[s.get("episode_id","?") for s in samples],
             # A state with one legal action scores 1.0 for free; agreement on
             # those must never be mixed into the headline number.
             "decision":torch.tensor([int(batch["action_mask"][i].sum())>1 for i in range(len(samples))])}
     return batch,labels
 
 def losses(output,labels):
-    policy=-(labels["policy"]*output["policy_logits"].log_softmax(-1)).sum(-1).mean()
+    """Auxiliary heads keep the batch mean; the policy head is normalised by the
+    number of DECISION states. A state with one legal action contributes ~0 to
+    the policy numerator, so leaving it in the denominator would dilute the
+    policy gradient by the forced-state fraction and silently down-weight it
+    against the outcome and value heads."""
+    elementwise=-(labels["policy"]*output["policy_logits"].log_softmax(-1)).sum(-1)
+    decision=labels["decision"]
+    # (b,) -> (b,1): elementwise is per action, the mask is per sample.
+    policy=(elementwise*decision.unsqueeze(-1)).sum()/decision.sum().clamp_min(1)
     mask=labels["value_mask"]; count=mask.sum().clamp_min(1)
     outcome=(-(labels["outcome"]*output["outcome_logits"].log_softmax(-1)).sum(-1)*mask).sum()/count
     value=(((output["value"]-labels["value"])**2)*mask).sum()/count
-    return policy+.5*outcome+value, {"policy_loss":policy,"outcome_loss":outcome,"value_loss":value}
+    return policy+.5*outcome+value, {"policy_loss":policy,"outcome_loss":outcome,"value_loss":value,
+                                     "decision_fraction":decision.float().mean()}
 
-def _move(batch,device): return {k:v.to(device,non_blocking=True) for k,v in batch.items()}
+def _move(batch,device):
+    return {k:(v.to(device,non_blocking=True) if torch.is_tensor(v) else v) for k,v in batch.items()}
 
 def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
@@ -101,13 +114,15 @@ def validate(model,loader,device,max_batches=50):
     """
     model.eval(); total=0; sums={"loss":0.,"policy_loss":0.,"outcome_loss":0.,"value_loss":0.}
     agree_legacy=agree_choice=0; dec=0; agree_choice_dec=0.0
-    kl_sum=0.; entropy_sum=0.
+    kl_sum=0.; entropy_sum=0.; policy_num=0.
+    per_episode={}; episodes=set()
     for j,(batch,labels) in enumerate(loader):
         if j>=max_batches: break
+        episode_ids=labels.get("episode_id")
         batch,labels=_move(batch,device),_move(labels,device)
         output=model(batch); loss,metrics=losses(output,labels); n=len(labels["value"])
         sums["loss"]+=float(loss)*n
-        for key,value in metrics.items(): sums[key]+=float(value)*n
+        for key in ("policy_loss","outcome_loss","value_loss"): sums[key]+=float(metrics[key])*n
         student=output["policy_logits"].argmax(-1)
         agree_legacy+=int((student==labels["policy"].argmax(-1)).sum())
         teacher=labels["teacher_action"]
@@ -123,16 +138,34 @@ def validate(model,loader,device,max_batches=50):
         logp=output["policy_logits"].log_softmax(-1)
         logp_target=torch.log(labels["policy"].clamp_min(1e-12))
         legal=labels["policy"]>0
-        kl_sum+=float((labels["policy"]*(logp_target-logp))[legal].sum())
+        elementwise=(labels["policy"]*(logp_target-logp))
+        kl_sum+=float(elementwise[legal].sum())
         entropy_sum+=float((-(labels["policy"]*logp_target))[legal].sum())
+        # Per-battle policy KL, the frozen checkpoint-selection metric.
+        decision_mask=labels["decision"]
+        policy_num+=float((elementwise*decision_mask.unsqueeze(-1)).sum())
+        if episode_ids is not None:
+            row_kl=elementwise.sum(-1).detach().cpu().tolist()
+            row_decision=decision_mask.detach().cpu().tolist()
+            for ep,value,is_decision in zip(episode_ids,row_kl,row_decision):
+                episodes.add(ep)
+                bucket=per_episode.setdefault(ep,[])
+                if is_decision: bucket.append(float(value))
         total+=n
     if total == 0: raise ValueError("Empty validation replay")
+    battles_with_decisions=sum(1 for v in per_episode.values() if v)
+    episode_kl=[sum(v)/len(v) for v in per_episode.values() if v]
     return {**{k:v/total for k,v in sums.items()},
             "teacher_top1_agreement":agree_legacy/total,
             "teacher_choice_agreement":agree_choice/total,
             "teacher_choice_agreement_decision_states":agree_choice_dec/max(1,dec),
             "decision_states":dec,"forced_states":total-dec,
             "policy_kl":kl_sum/total,"teacher_entropy":entropy_sum/total,
+            # Primary: mean over battles of the battle's mean decision-state KL.
+            "kl_dev":(sum(episode_kl)/len(episode_kl)) if episode_kl else None,
+            "kl_over_decision_states":policy_num/max(1,dec),
+            "battles_seen":len(episodes),"battles_with_decisions":battles_with_decisions,
+            "battles_without_decisions":len(episodes)-battles_with_decisions,
             "samples":total}
 
 def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config=None,resume="",init_checkpoint=""):
@@ -145,14 +178,17 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
     for key in ("batch_size","accumulation_steps","max_updates","epochs","eval_every","save_every","validation_batches","shuffle_buffer","cpu_threads"):
         if cfg[key] < 1: raise ValueError(f"{key} must be positive")
     torch.set_num_threads(cfg["cpu_threads"])
-    random.seed(cfg["seed"]); torch.manual_seed(cfg["seed"])
+    # Separate streams: the data order must stay fixed across a paired comparison so
+    # widths differ only by shape, while initialisation is what the seed varies.
+    cfg.setdefault("init_seed",cfg["seed"]); cfg.setdefault("data_seed",cfg["seed"])
+    random.seed(cfg["data_seed"]); torch.manual_seed(cfg["init_seed"])
     dev=resolve_device(device)
     if dev.type == "cuda": torch.cuda.reset_peak_memory_stats(dev)
     out=Path(output); out.mkdir(parents=True,exist_ok=True)
     if (out/"last.pt").exists() and not resume:
         raise ValueError("Output already contains a checkpoint; use --resume or a new directory")
-    ds=ReplayDataset(train_dirs,backend,"train",cfg["seed"],cfg["shuffle_buffer"])
-    vd=ReplayDataset(val_dirs,backend,"val",cfg["seed"],1)
+    ds=ReplayDataset(train_dirs,backend,"train",cfg["data_seed"],cfg["shuffle_buffer"])
+    vd=ReplayDataset(val_dirs,backend,"val",cfg["data_seed"],1)
     if ds.objectives!=vd.objectives: raise ValueError("Train/validation utility objectives differ")
     # If directory provenance is mixed, even disjoint sample rows are not accepted.
     fingerprint=digest({"train":ds.fingerprints,"val":vd.fingerprints,"train_files":[str(p.resolve()) for p in ds.files],"val_files":[str(p.resolve()) for p in vd.files]})
@@ -164,7 +200,7 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
         if ck["backend"]!=backend or ck["model_config"]!=asdict(model.config): raise ValueError("Warm-start architecture/backend mismatch")
         model.load_state_dict(ck["model_state"])
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg["learning_rate"],weight_decay=cfg["weight_decay"])
-    step=0; start_epoch=0; best=float("inf")
+    step=0; start_epoch=0; best=float("inf"); best_record=None
     if resume:
         ck=torch.load(resume,map_location="cpu",weights_only=True)
         if ck["backend"] != backend or ck["model_config"] != asdict(model.config): raise ValueError("Resume architecture/backend mismatch")
@@ -183,7 +219,11 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
     atomic_json(out/"run.json",{"backend":backend,"device":str(dev),"config":cfg,
                 "parameters":sum(p.numel() for p in model.parameters()),"data_fingerprint":fingerprint,
                 "data_provenance":{"train":ds.provenance,"val":vd.provenance},
-                "torch_version":str(torch.__version__),"amp_bfloat16":amp,"resume":str(resume),"init_checkpoint":str(init_checkpoint)})
+                "torch_version":str(torch.__version__),"amp_bfloat16":amp,"resume":str(resume),
+                "init_checkpoint":str(init_checkpoint),
+                "init_seed":cfg["init_seed"],"data_seed":cfg["data_seed"],
+                "validation_batches":cfg["validation_batches"],
+                "selection_metric":"kl_dev (mean over battles of battle mean decision-state KL)"})
     try:
         for epoch in range(start_epoch,cfg["epochs"]):
             if step>=cfg["max_updates"]: break
@@ -205,8 +245,13 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
                 if step % cfg["eval_every"]==0 or step==cfg["max_updates"]:
                     val=validate(model,vloader,dev,cfg["validation_batches"])
                     append_json(out/"validation.jsonl",{"step":step,**val})
-                    if val["loss"]<best:
-                        best=val["loss"]; _save(out/"best.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
+                    # Selection is the frozen primary metric: mean over battles of the
+                    # battle's mean decision-state KL. Ties keep the EARLIER step, so the
+                    # comparison is strict and the rule does not favour longer training.
+                    primary=val.get("kl_dev")
+                    if primary is not None and (best_record is None or primary<best_record[0]-1e-12):
+                        best=float(val["loss"]); best_record=(primary,step)
+                        _save(out/"best.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
                     model.train()
                 if step % cfg["save_every"]==0: _save(out/"last.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
                 if step>=cfg["max_updates"]: break
@@ -215,11 +260,17 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
             optimizer.zero_grad(set_to_none=True)
         if step==0: raise ValueError("No optimizer updates; reduce batch_size/accumulation_steps or collect more data")
         val=validate(model,vloader,dev,cfg["validation_batches"])
-        if val["loss"]<best or not (out/"best.pt").exists():
-            best=val["loss"]; _save(out/"best.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
+        primary=val.get("kl_dev")
+        if primary is not None and (best_record is None or primary<best_record[0]-1e-12) \
+                or not (out/"best.pt").exists():
+            best=float(val["loss"]) if best_record is None or primary is not None else best
+            best_record=(primary,step) if primary is not None else best_record
+            _save(out/"best.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
         _save(out/"last.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
         report={"steps":step,"backend":backend,"parameters":sum(p.numel() for p in model.parameters()),
-                "validation":val,"best_validation_loss":best,"elapsed_seconds":time.perf_counter()-started}
+                "validation":val,"best_validation_loss":best,"best_selection_metric":best_record,
+                "selection_metric":"kl_dev (mean over battles of battle mean decision-state KL)",
+                "elapsed_seconds":time.perf_counter()-started}
         atomic_json(out/"training_summary.json",report); return report
     except (KeyboardInterrupt,RuntimeError,FloatingPointError):
         # Save model + optimizer only at last complete update; partial gradients

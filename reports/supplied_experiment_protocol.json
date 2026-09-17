@@ -1,0 +1,127 @@
+{
+  "schema": "stsai.generalization_plan.v1",
+  "status": "planned_not_executed",
+  "is_project_cli_config": false,
+  "evidence": {
+    "source": "user-provided P0-P5 report",
+    "latest_bundle_independently_reviewed": false,
+    "target_gpu_run_here": false,
+    "game_differential_verified": false
+  },
+  "prerequisites": [
+    "clean_teacher_provenance",
+    "hidden_plan_sampler_noninterference",
+    "resolved_hashed_train_and_dev_manifests",
+    "fixed_loss_denominators",
+    "fixed_complete_dev_validation"
+  ],
+  "resolve_before_run": [
+    "full parent baseline id and new experiment freeze hash",
+    "actual clean source commit and teacher information version",
+    "engine revision and patch hashes",
+    "schema encoding utility scenario sampler versions",
+    "train/dev materialized manifests and checksums",
+    "R0 dropout and weight decay",
+    "common heads layers FFN ratio optimizer LR and schedule",
+    "effective batch and max_updates",
+    "auxiliary loss weights and normalization",
+    "source data decision-episode counts",
+    "actual CPU/CUDA configuration"
+  ],
+  "matrix": {
+    "widths": [
+      128,
+      192
+    ],
+    "regularization": [
+      "R0",
+      "R1"
+    ],
+    "training_seeds": [
+      17,
+      29,
+      43
+    ],
+    "run_count": 12,
+    "initialization": "fresh_random_no_old_warm_start",
+    "R0": "inherit resolved clean baseline",
+    "R1": {
+      "dropout": "min(R0.dropout + 0.10, 0.50)",
+      "weight_decay": "max(5 * R0.weight_decay, 0.01)",
+      "scope": "regularization package, not independent attribution",
+      "exception": "if R0.dropout >= 0.50 or optimizer incompatible, freeze legal alternative before seeing results"
+    },
+    "heads": "same divisor of both widths; inherit if valid, otherwise 4 with a fresh 128 control",
+    "budget": "same effective batch, max_updates and LR schedule; typically existing 500-update budget, not 2000",
+    "eval_every_updates_proposal": 25,
+    "gpu_scheduling": "serial"
+  },
+  "run_ids": [
+    "M128-R0-s17",
+    "M128-R0-s29",
+    "M128-R0-s43",
+    "M192-R0-s17",
+    "M192-R0-s29",
+    "M192-R0-s43",
+    "M128-R1-s17",
+    "M128-R1-s29",
+    "M128-R1-s43",
+    "M192-R1-s17",
+    "M192-R1-s29",
+    "M192-R1-s43"
+  ],
+  "checkpoint_selection": {
+    "primary": "episode_macro_decision_forward_KL_teacher_to_student",
+    "score_space": "action_id, plus equivalence-class secondary",
+    "coverage": "all frozen dev episodes",
+    "tie_break": "earlier checkpoint",
+    "excluded_from_primary": "states with only one legal action"
+  },
+  "development_rollout": {
+    "scenario_count": 256,
+    "role": "development_not_final_test",
+    "candidates": "all 12 selected checkpoints plus heuristic and clean search",
+    "primary": "paired episode utility",
+    "also_report": [
+      "win",
+      "death",
+      "truncation",
+      "latency",
+      "HP"
+    ],
+    "pure_model_inference_proposal": "CPU FP32 based on reported batch-1 profile",
+    "comparison_unit": "complete initial scenario/episode; honor higher-level sampling groups"
+  },
+  "action_audit": {
+    "max_roots": 64,
+    "max_one_root_per_episode": true,
+    "samples_per_disagreement_branch": 64,
+    "continuation": "freeze M128-R0 seed17 best dev-KL checkpoint for both branches",
+    "metric": "teacher_action_minus_student_action_utility_under_fixed_continuation",
+    "is_optimal_policy_regret": false,
+    "future_rng": "fresh legal belief samples, not actual hidden environment RNG"
+  },
+  "data_extension": {
+    "status": "conditional_after_matrix_and_development_rollout",
+    "choose_at_most_one": [
+      "nested_D1_D2_D4_same_teacher_same_distribution",
+      "bounded_student_visited_state_relabeling"
+    ],
+    "nested_data_max_additional_train_runs": 6,
+    "nested_data_max_total_size_multiplier": 4,
+    "primary_budget": "same sample-visit/update budget, with unique samples actually visited reported"
+  },
+  "brier": {
+    "contrast": "Brier_model_minus_Brier_frozen_baseline",
+    "baseline_fit": "training or separate calibration only",
+    "uncertainty": "paired, cluster/design-aware; not marginal CI overlap"
+  },
+  "not_in_this_round": [
+    "P6_final_1000_scenario_test",
+    "unverified_original_game_claims",
+    "new_mechanism_scope",
+    "hybrid_promotion",
+    "hard_wall_clock_claims_without_implementation"
+  ],
+  "run_state": "Every matrix row requires resolved configuration, executed command and actual outputs; no results implied here."
+}

@@ -1,0 +1,348 @@
+{
+  "scope": "DEVELOPMENT closed loop over frozen scenarios; not a test result and not original-game strength",
+  "scenarios": 256,
+  "master_seed": 20260917,
+  "agents": [
+    "heuristic",
+    "search",
+    "random",
+    "M128-R0-s17",
+    "M128-R0-s29",
+    "M128-R0-s43",
+    "M128-R1-s17",
+    "M128-R1-s29",
+    "M128-R1-s43",
+    "M192-R0-s17",
+    "M192-R0-s29",
+    "M192-R0-s43",
+    "M192-R1-s17",
+    "M192-R1-s29",
+    "M192-R1-s43"
+  ],
+  "by_agent": {
+    "heuristic": {
+      "episodes": 256,
+      "wins": 228,
+      "losses": 28,
+      "truncated": 0,
+      "mean_utility": 0.80732421875,
+      "mean_end_hp_survivors": 42.58771929824562,
+      "mean_decisions": 14.80859375,
+      "p50_ms": 0.03076724533457309,
+      "p95_ms": 0.058176465245196596
+    },
+    "search": {
+      "episodes": 256,
+      "wins": 245,
+      "losses": 11,
+      "truncated": 0,
+      "mean_utility": 0.8678125000000001,
+      "mean_end_hp_survivors": 42.710204081632654,
+      "mean_decisions": 14.44921875,
+      "p50_ms": 128.34226374980062,
+      "p95_ms": 457.1817844072938
+    },
+    "random": {
+      "episodes": 256,
+      "wins": 120,
+      "losses": 136,
+      "truncated": 0,
+      "mean_utility": 0.40845703125000005,
+      "mean_end_hp_survivors": 28.55,
+      "mean_decisions": 17.046875,
+      "p50_ms": 0.0010520016076043248,
+      "p95_ms": 0.009412898361915719
+    },
+    "M128-R0-s17": {
+      "episodes": 256,
+      "wins": 236,
+      "losses": 20,
+      "truncated": 0,
+      "mean_utility": 0.8298046875,
+      "mean_end_hp_survivors": 40.05084745762712,
+      "mean_decisions": 14.40625,
+      "p50_ms": 1.3417947411653586,
+      "p95_ms": 2.0202076382702217
+    },
+    "M128-R0-s29": {
+      "episodes": 256,
+      "wins": 236,
+      "losses": 20,
+      "truncated": 0,
+      "mean_utility": 0.829716796875,
+      "mean_end_hp_survivors": 40.01271186440678,
+      "mean_decisions": 14.6328125,
+      "p50_ms": 1.3226297523942776,
+      "p95_ms": 1.7388475702318826
+    },
+    "M128-R0-s43": {
+      "episodes": 256,
+      "wins": 236,
+      "losses": 20,
+      "truncated": 0,
+      "mean_utility": 0.8296484375000001,
+      "mean_end_hp_survivors": 39.983050847457626,
+      "mean_decisions": 14.27734375,
+      "p50_ms": 1.2743702536681667,
+      "p95_ms": 1.6674638107360809
+    },
+    "M128-R1-s17": {
+      "episodes": 256,
+      "wins": 235,
+      "losses": 21,
+      "truncated": 0,
+      "mean_utility": 0.826435546875,
+      "mean_end_hp_survivors": 40.11489361702127,
+      "mean_decisions": 14.265625,
+      "p50_ms": 1.2811617416446097,
+      "p95_ms": 1.7076290983823126
+    },
+    "M128-R1-s29": {
+      "episodes": 256,
+      "wins": 234,
+      "losses": 22,
+      "truncated": 0,
+      "mean_utility": 0.8224023437500001,
+      "mean_end_hp_survivors": 39.888888888888886,
+      "mean_decisions": 14.40234375,
+      "p50_ms": 1.289580250158906,
+      "p95_ms": 1.7381361496518366
+    },
+    "M128-R1-s43": {
+      "episodes": 256,
+      "wins": 233,
+      "losses": 23,
+      "truncated": 0,
+      "mean_utility": 0.82041015625,
+      "mean_end_hp_survivors": 40.55793991416309,
+      "mean_decisions": 14.3359375,
+      "p50_ms": 1.261449753656052,
+      "p95_ms": 1.7190409475006163
+    },
+    "M192-R0-s17": {
+      "episodes": 256,
+      "wins": 234,
+      "losses": 22,
+      "truncated": 0,
+      "mean_utility": 0.821416015625,
+      "mean_end_hp_survivors": 39.457264957264954,
+      "mean_decisions": 14.15234375,
+      "p50_ms": 1.5388574975077063,
+      "p95_ms": 2.0448722287255805
+    },
+    "M192-R0-s29": {
+      "episodes": 256,
+      "wins": 233,
+      "losses": 23,
+      "truncated": 0,
+      "mean_utility": 0.820537109375,
+      "mean_end_hp_survivors": 40.6137339055794,
+      "mean_decisions": 14.8515625,
+      "p50_ms": 1.5202592476271093,
+      "p95_ms": 2.022834441595478
+    },
+    "M192-R0-s43": {
+      "episodes": 256,
+      "wins": 235,
+      "losses": 21,
+      "truncated": 0,
+      "mean_utility": 0.8275390625000001,
+      "mean_end_hp_survivors": 40.59574468085106,
+      "mean_decisions": 14.52734375,
+      "p50_ms": 1.555850998556707,
+      "p95_ms": 2.009101597650442
+    },
+    "M192-R1-s17": {
+      "episodes": 256,
+      "wins": 235,
+      "losses": 21,
+      "truncated": 0,
+      "mean_utility": 0.824375,
+      "mean_end_hp_survivors": 39.217021276595744,
+      "mean_decisions": 14.46875,
+      "p50_ms": 1.5391250053653494,
+      "p95_ms": 2.019563350768294
+    },
+    "M192-R1-s29": {
+      "episodes": 256,
+      "wins": 237,
+      "losses": 19,
+      "truncated": 0,
+      "mean_utility": 0.83236328125,
+      "mean_end_hp_survivors": 39.63713080168776,
+      "mean_decisions": 14.01953125,
+      "p50_ms": 1.5681374934501946,
+      "p95_ms": 2.0765800269145984
+    },
+    "M192-R1-s43": {
+      "episodes": 256,
+      "wins": 237,
+      "losses": 19,
+      "truncated": 0,
+      "mean_utility": 0.8335546875,
+      "mean_end_hp_survivors": 40.151898734177216,
+      "mean_decisions": 14.140625,
+      "p50_ms": 1.538254255137872,
+      "p95_ms": 2.0332996718934737
+    }
+  },
+  "paired_vs_heuristic": {
+    "search_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.060488281250000005,
+      "bootstrap95": [
+        0.03470483398437501,
+        0.08753295898437498
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "random_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": -0.39886718750000005,
+      "bootstrap95": [
+        -0.45382739257812504,
+        -0.34395825195312507
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R0-s17_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.022480468750000003,
+      "bootstrap95": [
+        -0.002998291015625002,
+        0.04770849609374998
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R0-s29_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.022392578125000007,
+      "bootstrap95": [
+        -0.0005288085937499995,
+        0.046233886718749985
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R0-s43_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.022324218750000006,
+      "bootstrap95": [
+        -0.003948486328125002,
+        0.0497275390625
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R1-s17_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.019111328125,
+      "bootstrap95": [
+        -0.004814697265625002,
+        0.04355883789062498
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R1-s29_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.015078125000000001,
+      "bootstrap95": [
+        -0.010334472656249998,
+        0.040900634765625
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M128-R1-s43_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.013085937500000006,
+      "bootstrap95": [
+        -0.014201416015624992,
+        0.04076196289062501
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R0-s17_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.014091796874999998,
+      "bootstrap95": [
+        -0.0078525390625,
+        0.03659326171875
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R0-s29_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.013212890625000001,
+      "bootstrap95": [
+        -0.012099853515625002,
+        0.039639404296875
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R0-s43_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.020214843750000003,
+      "bootstrap95": [
+        -0.0023574218749999984,
+        0.04431762695312499
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R1-s17_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.01705078125,
+      "bootstrap95": [
+        -0.006173828125,
+        0.040400634765625006
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R1-s29_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.0250390625,
+      "bootstrap95": [
+        -0.0021975097656250003,
+        0.052500244140625006
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    },
+    "M192-R1-s43_minus_heuristic": {
+      "pairs": 256,
+      "mean_delta": 0.02623046875,
+      "bootstrap95": [
+        0.001845214843749998,
+        0.0521689453125
+      ],
+      "complete_pairs_only": true,
+      "dropped_incomplete": 0
+    }
+  },
+  "search_config": {
+    "simulations": 64,
+    "max_depth": 64,
+    "rollout_limit": 128,
+    "c_puct": 1.5,
+    "rollout_epsilon": 0.12,
+    "potion_cost": 0.02,
+    "use_leaf_value": false
+  },
+  "max_actions": 256,
+  "network_device": "cpu fp32 (batch one); GPU is used for training only",
+  "elapsed_seconds": 1218.8384402270021,
+  "caveats": [
+    "Only completed pairs enter the paired means; the dropped count is reported, not hidden.",
+    "Same initial seed does not give different policies the same future randomness.",
+    "This development set has now been seen; further reuse makes it less held out."
+  ]
+}

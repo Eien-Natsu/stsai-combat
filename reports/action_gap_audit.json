@@ -1,0 +1,33 @@
+{
+  "scope": "development action-value audit under one frozen continuation policy; not a strength claim",
+  "continuation_policy": "runs/matrix/M128-R0-s17/model/best.pt",
+  "root_rule": "first decision state of each episode, one root per episode, frozen episode order",
+  "roots_requested": 64,
+  "roots_used": 64,
+  "replay_failures": [],
+  "agreements": 47,
+  "disagreements": 17,
+  "delta_mean_all_roots": -0.009807128906250004,
+  "delta_bootstrap95_all_roots": [
+    -0.027031875610351575,
+    0.00045431518554687203
+  ],
+  "delta_mean_disputed_only": -0.03692095588235295,
+  "delta_bootstrap95_disputed_only": [
+    -0.09550821461397065,
+    0.0016187385110294098
+  ],
+  "delta_mean_one_per_battle": -0.009807128906250004,
+  "delta_bootstrap95_one_per_battle": [
+    -0.027031875610351575,
+    0.00045431518554687203
+  ],
+  "median_within_root_mc_se": 0.002967642314917237,
+  "truncated_branches": 0,
+  "elapsed_seconds": 63.23811344601563,
+  "caveats": [
+    "Values are expectations under one frozen continuation, not the optimal value of either action.",
+    "Agreements are kept in the totals as delta 0, so the mean is over all audited roots.",
+    "Belief samples are the adapter's independent-RNG approximation, not the game's posterior."
+  ]
+}
