@@ -1,0 +1,31 @@
+=== all 12 runs: kl_dev vs played utility (single-model numbers, NOT averaged) ===
+cell              kl_dev   kl(dec) policy_kl   utility  wins    params best_step
+M128-R0-s17      0.11309   0.10538   0.07887   0.82980   236   1949325       225
+M128-R0-s29      0.12100   0.12034   0.09007   0.82972   236   1949325       400
+M128-R0-s43      0.11881   0.11409   0.08539   0.82965   236   1949325       400
+M128-R1-s17      0.11243   0.10445   0.07818   0.82644   235   1949325       225
+M128-R1-s29      0.11698   0.11451   0.08571   0.82240   234   1949325       400
+M128-R1-s43      0.11231   0.11052   0.08272   0.82041   233   1949325       400
+M192-R0-s17      0.13287   0.11963   0.08954   0.82142   234   3587533       225
+M192-R0-s29      0.11889   0.10980   0.08218   0.82054   233   3587533       375
+M192-R0-s43      0.12869   0.11438   0.08561   0.82754   235   3587533       375
+M192-R1-s17      0.13919   0.11795   0.08829   0.82437   235   3587533       225
+M192-R1-s29      0.12418   0.11596   0.08680   0.83236   237   3587533       225
+M192-R1-s43      0.12605   0.11446   0.08567   0.83355   237   3587533       225
+
+Spearman rho(kl_dev, utility) over 12 runs = +0.182  (n=12)
+kl_dev range 0.11231..0.13919;  utility range 0.82041..0.83355
+
+rank by kl_dev  : ['M128-R1-s43', 'M128-R1-s17', 'M128-R0-s17', 'M128-R1-s29', 'M128-R0-s43', 'M192-R0-s29', 'M128-R0-s29', 'M192-R1-s29', 'M192-R1-s43', 'M192-R0-s43', 'M192-R0-s17', 'M192-R1-s17']
+rank by utility : ['M192-R1-s43', 'M192-R1-s29', 'M128-R0-s17', 'M128-R0-s29', 'M128-R0-s43', 'M192-R0-s43', 'M128-R1-s17', 'M192-R1-s17', 'M128-R1-s29', 'M192-R0-s17', 'M192-R0-s29', 'M128-R1-s43']
+
+per-seed KL/utility rank agreement: 2/12 exact
+
+=== training data coverage (data/dev/train) ===
+independent episodes=96  raw states=1774  decision states=1331 (75.0%)  forced=443
+unique (episode,turn,hp,energy) keys=1747 (98.5% of raw states)
+encounter strata (states): {'ACID_SLIME_L': 22, 'ACID_SLIME_M': 40, 'ACID_SLIME_S': 65, 'BLUE_SLAVER': 141, 'CULTIST': 184, 'FAT_GREMLIN': 64, 'FUNGI_BEAST': 81, 'GREEN_LOUSE': 38, 'GREMLIN_NOB': 84, 'GREMLIN_WIZARD': 11, 'JAW_WORM': 160, 'LAGAVULIN': 323, 'LOOTER': 12, 'MAD_GREMLIN': 13, 'RED_LOUSE': 21, 'RED_SLAVER': 18, 'SENTRY': 280, 'SNEAKY_GREMLIN': 35, 'SPIKE_SLIME_L': 20, 'SPIKE_SLIME_M': 64, 'SPIKE_SLIME_S': 98}
+family strata (states, by deck family): {'elite': 687, 'mixed': 397, 'starter': 309, 'swarm': 381}
+player HP at state: min 1 p25 34 median 48 p75 58 max 80
+starting deck size: min 13 median 14 max 16
+episodes per family: {'starter': 24, 'swarm': 24, 'elite': 24, 'mixed': 24}

@@ -1,0 +1,14 @@
+records: 3840 agents: ['M128-R0-s17', 'M128-R0-s29', 'M128-R0-s43', 'M128-R1-s17', 'M128-R1-s29', 'M128-R1-s43', 'M192-R0-s17', 'M192-R0-s29', 'M192-R0-s43', 'M192-R1-s17', 'M192-R1-s29', 'M192-R1-s43', 'heuristic', 'random', 'search'] scenarios: 256
+
+=== per-seed paired utility differences (resampling SCENARIOS only, conditional on these checkpoints) ===
+M128-R0-s17 - heuristic        n=256 dropped=0 mean=+0.02248 ci=[-0.00247,+0.04793] | A>B  63  B>A  85  tie 108
+M128-R0-s29 - heuristic        n=256 dropped=0 mean=+0.02239 ci=[-0.00061,+0.04730] | A>B  56  B>A  76  tie 124
+M128-R0-s43 - heuristic        n=256 dropped=0 mean=+0.02232 ci=[-0.00411,+0.04926] | A>B  66  B>A  84  tie 106
+M192-R1-s17 - heuristic        n=256 dropped=0 mean=+0.01705 ci=[-0.00512,+0.04030] | A>B  57  B>A  90  tie 109
+M192-R1-s29 - heuristic        n=256 dropped=0 mean=+0.02504 ci=[-0.00211,+0.05281] | A>B  59  B>A  94  tie 103
+M192-R1-s43 - heuristic        n=256 dropped=0 mean=+0.02623 ci=[+0.00214,+0.05219] | A>B  57  B>A  87  tie 112
+search - heuristic             n=256 dropped=0 mean=+0.06049 ci=[+0.03534,+0.08981] | A>B  78  B>A  23  tie 155
+search - M128-R0-s17           n=256 dropped=0 mean=+0.03801 ci=[+0.01833,+0.06136] | A>B 116  B>A  41  tie  99
+search - M128-R0-s29           n=256 dropped=0 mean=+0.03810 ci=[+0.02046,+0.05874] | A>B 111  B>A  37  tie 108
+search - M128-R0-s43           n=256 dropped=0 mean=+0.03816 ci=[+0.01987,+0.05962] | A>B 112  B>A  39  tie 105
+M192-R1-s43 - M128-R0-s17      n=256 dropped=0 mean=+0.00375 ci=[-0.01492,+0.02349] | A>B  44  B>A  41  tie 171

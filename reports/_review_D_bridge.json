@@ -1,0 +1,24 @@
+{
+  "q_eval": 0.13636363636363635,
+  "q_frozen": 0.2463359639233371,
+  "rows": 330,
+  "battles": 24,
+  "table": {
+    "dev_base2 (used by old calibration_val.json)": {
+      "model_brier": 0.09014306529641579,
+      "baseline_eval_rate": 0.11776859504132232,
+      "baseline_frozen": 0.1298625078702204,
+      "diff_eval_rate": -0.027625529744906535,
+      "diff_frozen": -0.03971944257380462,
+      "sha": "39ca4bb0321dfbae7a96eaddd84f963fee8e06a91f56fce9948b3d448d1ba506"
+    },
+    "M128-R0-s17 (used by this round)": {
+      "model_brier": 0.13146041993477384,
+      "baseline_eval_rate": 0.11776859504132232,
+      "baseline_frozen": 0.1298625078702204,
+      "diff_eval_rate": 0.013691824893451512,
+      "diff_frozen": 0.001597912064553425,
+      "sha": "45d89b848b21b5748c94650545f16737a6521e8a6fa749b913832afb6a66054d"
+    }
+  }
+}

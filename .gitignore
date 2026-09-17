@@ -14,3 +14,6 @@ logs/
 *.pyd
 *.pt
 .DS_Store
+
+# Large derived inference weights ship in the review archive, not in git.
+review_weights/*.inference.pt

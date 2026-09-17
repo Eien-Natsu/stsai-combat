@@ -1,0 +1,210 @@
+{
+  "note": "Public states taken from the frozen development scenario index 0 (master_seed 20260917). Expected values are CPU float32 forward passes of the inference-only weights.",
+  "scenario_index": 0,
+  "master_seed": 20260917,
+  "episode_seed": 1093063465449290429,
+  "models": {
+    "M128-R0-s17": {
+      "config": {
+        "d_model": 128,
+        "layers": 4,
+        "heads": 4,
+        "dropout": 0.1
+      },
+      "step": 225,
+      "predictions": [
+        {
+          "state_index": 0,
+          "turn": 0,
+          "legal_actions": 6,
+          "argmax_action": 0,
+          "argmax_action_id": "0",
+          "top3": [
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.29258280992507935
+            },
+            {
+              "index": 4,
+              "action_id": "4",
+              "prob": 0.2178603708744049
+            },
+            {
+              "index": 1,
+              "action_id": "1",
+              "prob": 0.16053172945976257
+            }
+          ],
+          "value": 0.9066838622093201
+        },
+        {
+          "state_index": 1,
+          "turn": 0,
+          "legal_actions": 6,
+          "argmax_action": 3,
+          "argmax_action_id": "3",
+          "top3": [
+            {
+              "index": 3,
+              "action_id": "3",
+              "prob": 0.2640298306941986
+            },
+            {
+              "index": 2,
+              "action_id": "2",
+              "prob": 0.1884702891111374
+            },
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.1774858683347702
+            }
+          ],
+          "value": 0.8962438106536865
+        },
+        {
+          "state_index": 2,
+          "turn": 0,
+          "legal_actions": 5,
+          "argmax_action": 2,
+          "argmax_action_id": "2",
+          "top3": [
+            {
+              "index": 2,
+              "action_id": "2",
+              "prob": 0.32492536306381226
+            },
+            {
+              "index": 1,
+              "action_id": "1",
+              "prob": 0.23109211027622223
+            },
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.21316185593605042
+            }
+          ],
+          "value": 0.8965082764625549
+        },
+        {
+          "state_index": 3,
+          "turn": 0,
+          "legal_actions": 1,
+          "argmax_action": 0,
+          "argmax_action_id": "2147483648",
+          "top3": [
+            {
+              "index": 0,
+              "action_id": "2147483648",
+              "prob": 1.0
+            }
+          ],
+          "value": 0.8957316279411316
+        }
+      ]
+    },
+    "M192-R1-s43": {
+      "config": {
+        "d_model": 192,
+        "layers": 4,
+        "heads": 4,
+        "dropout": 0.2
+      },
+      "step": 225,
+      "predictions": [
+        {
+          "state_index": 0,
+          "turn": 0,
+          "legal_actions": 6,
+          "argmax_action": 0,
+          "argmax_action_id": "0",
+          "top3": [
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.3016379475593567
+            },
+            {
+              "index": 4,
+              "action_id": "4",
+              "prob": 0.1957497000694275
+            },
+            {
+              "index": 1,
+              "action_id": "1",
+              "prob": 0.1665586680173874
+            }
+          ],
+          "value": 0.9048845171928406
+        },
+        {
+          "state_index": 1,
+          "turn": 0,
+          "legal_actions": 6,
+          "argmax_action": 3,
+          "argmax_action_id": "3",
+          "top3": [
+            {
+              "index": 3,
+              "action_id": "3",
+              "prob": 0.24189580976963043
+            },
+            {
+              "index": 2,
+              "action_id": "2",
+              "prob": 0.19019952416419983
+            },
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.1852150708436966
+            }
+          ],
+          "value": 0.9147598743438721
+        },
+        {
+          "state_index": 2,
+          "turn": 0,
+          "legal_actions": 5,
+          "argmax_action": 2,
+          "argmax_action_id": "2",
+          "top3": [
+            {
+              "index": 2,
+              "action_id": "2",
+              "prob": 0.295011043548584
+            },
+            {
+              "index": 1,
+              "action_id": "1",
+              "prob": 0.23271895945072174
+            },
+            {
+              "index": 0,
+              "action_id": "0",
+              "prob": 0.22843800485134125
+            }
+          ],
+          "value": 0.917394757270813
+        },
+        {
+          "state_index": 3,
+          "turn": 0,
+          "legal_actions": 1,
+          "argmax_action": 0,
+          "argmax_action_id": "2147483648",
+          "top3": [
+            {
+              "index": 0,
+              "action_id": "2147483648",
+              "prob": 1.0
+            }
+          ],
+          "value": 0.9195640683174133
+        }
+      ]
+    }
+  }
+}

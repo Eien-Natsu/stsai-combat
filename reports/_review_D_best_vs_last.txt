@@ -1,0 +1,8 @@
+frozen baseline = 0.1298625079
+
+checkpoint                          step   model Brier  frozen-best_val
+runs/matrix/M128-R0-s17/model/best.pt   225  0.1314604199        18.277417
+runs/matrix/M128-R0-s17/model/last.pt   500  0.1626291775        18.277417
+runs/matrix/M128-R0-s29/model/last.pt   500  0.1698962094        18.638891
+runs/matrix/M192-R1-s43/model/last.pt   500  0.1714243550        18.531963
+runs/dev_base2/model/last.pt         500  0.1769293374         2.220538

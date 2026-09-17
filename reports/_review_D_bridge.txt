@@ -1,0 +1,18 @@
+rows=330 battles=24 deaths=45
+q_eval (evaluation-set death rate) = 0.1363636364
+q_frozen (frozen from data/dev/train) = 0.2463359639
+
+dev_base2 (used by old calibration_val.json)
+   model Brier                    = 0.0901430653
+   baseline @ q_eval  = 0.1177685950  ->  diff = -0.0276255297
+   baseline @ q_frozen= 0.1298625079  ->  diff = -0.0397194426
+M128-R0-s17 (used by this round)
+   model Brier                    = 0.1314604199
+   baseline @ q_eval  = 0.1177685950  ->  diff = +0.0136918249
+   baseline @ q_frozen= 0.1298625079  ->  diff = +0.0015979121
+
+bridge of the reviewer's arithmetic:
+   reviewer: old model @ q_eval = 0.0901430653, and swapping only the constant gives -0.0397194426
+   reviewer's computed new-constant Brier = 0.1298633956 ; mine = 0.1298625079  (match: False)
+   but this round used a DIFFERENT checkpoint: model Brier moved 0.0901430653 -> 0.1314604199
+   state-weighted diff for the new model = +0.0015979121  (vs reviewer's inferred -0.03972)

@@ -1,0 +1,14 @@
+observed_move exported in current adapter: False
+
+training states whose enemy sits on an ambiguous coarse intent:
+  ACID_SLIME_M   states=   79 ( 4.45% of 1774)  decision states=   61 ( 4.58% of 1331)
+  JAW_WORM       states=  111 ( 6.26% of 1774)  decision states=   86 ( 6.46% of 1331)
+  LAGAVULIN      states=  128 ( 7.22% of 1774)  decision states=   95 ( 7.14% of 1331)
+  LOOTER         states=   20 ( 1.13% of 1774)  decision states=   15 ( 1.13% of 1331)
+  TOTAL           states=  338 (19.05%)  decision states=  257 (19.31%)
+
+Each of the four pairs is separated by the real game's Intent enum:
+  JAW_WORM       ATTACK (Chomp vs Thrash; game shows ATTACK vs ATTACK_DEFEND)
+  ACID_SLIME_M   ATTACK (Corrosive Spit vs Tackle; game shows ATTACK_DEBUFF vs ATTACK)
+  LAGAVULIN      BUFF (Sleep vs Siphon Soul; game shows SLEEP vs DEBUFF)
+  LOOTER         BUFF (Escape vs Smoke Bomb; game shows ESCAPE vs DEFEND)
