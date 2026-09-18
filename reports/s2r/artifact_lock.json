@@ -1,0 +1,15 @@
+{
+  "package": "stsai_s2_review_253e391.zip",
+  "package_manifest_sha256": "92a07276a2dabef7def32c80d30bdccd63a4e0ed628e26576f3c6721f8ef4d52",
+  "purpose": "sha256 lock for the S2 artefacts that are not tracked by git",
+  "round_head": "253e3914a2da95bd5984b45c1559635f5f1621c3",
+  "sha256": {
+    "model/D384_s17_selected.pt": "ce9ff924499ccae817f919b6091833564383db3918f32b64948acedf1ef0648b",
+    "runs/s2/evaluation/decision_latency.jsonl.gz": "c0c8ac50c1c7f7e2763729bf8b5024f3a131a5822ed72a3c8e772249a835a3d2",
+    "runs/s2/evaluation/episodes.jsonl.gz": "55e03a6a2c142c08d6e26905cdc55af2facf66f53de14a3887c2ef55a154f30a",
+    "runs/s2/package_data/data/composition_and_shards.json": "4266d4e4b3ed17c26ac358c5f437bfdfc99957b90e94016ff6b231a871f67b2b",
+    "runs/s2/package_data/data/coverage.json": "d960bd920e6f28151081a04cc335900e68be571cfef86ed50346fc75d9f066b5",
+    "runs/s2/package_data/data/initial_scenarios.json.gz": "71ce6d3470a981f3efc98c20e6723e929d72ba0fc09a669a4dc70bab22a16db2",
+    "runs/s2/package_data/evaluation/scenarios.json.gz": "3a75ed6103c3f0aa934061c3260ae8e67077acc015af8f51ddec9dd5755ff72b"
+  }
+}

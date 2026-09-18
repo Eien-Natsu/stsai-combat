@@ -1,0 +1,68 @@
+{
+  "16x2": {
+    "adamw_update": {
+      "abs_max": 0.00021920492872595787,
+      "abs_sum": 0.00021920492872595787,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "allclose_at_1e-5_rtol_1e-4": true,
+    "gradient": {
+      "abs_max": 2.7124769985675812e-08,
+      "abs_sum": 2.7124769985675812e-08,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "max_abs_diff_over_all_parameters": 1.2870877981185913e-06,
+    "value_after": -0.004241785500198603,
+    "value_before": -0.0044609904289245605
+  },
+  "32x1": {
+    "adamw_update": {
+      "abs_max": 0.00021791784092783928,
+      "abs_sum": 0.00021791784092783928,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "allclose_at_1e-5_rtol_1e-4": true,
+    "gradient": {
+      "abs_max": 2.6542693376541138e-08,
+      "abs_sum": 2.6542693376541138e-08,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "max_abs_diff_over_all_parameters": 0.0,
+    "value_after": -0.004243072587996721,
+    "value_before": -0.0044609904289245605
+  },
+  "8x4": {
+    "adamw_update": {
+      "abs_max": 0.00021882308647036552,
+      "abs_sum": 0.00021882308647036552,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "allclose_at_1e-5_rtol_1e-4": true,
+    "gradient": {
+      "abs_max": 2.695014700293541e-08,
+      "abs_sum": 2.695014700293541e-08,
+      "numel": 1,
+      "shape": [
+        1
+      ]
+    },
+    "max_abs_diff_over_all_parameters": 9.052455425262451e-07,
+    "value_after": -0.004242167342454195,
+    "value_before": -0.0044609904289245605
+  }
+}

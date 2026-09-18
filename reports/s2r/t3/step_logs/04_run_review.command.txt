@@ -1,0 +1,7 @@
+cwd: /home/node/stsai-s2r
+command: /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/run_review.py --repo /home/node/s2r-t3/checkout --package /home/node/s2r-t3/out/work/package --sources /home/node/s2r-t3/out/work/package/native_sources.tar.gz --model /home/node/s2r-t3/out/work/package/model/D384_s17_selected.pt --jobs 2 --timeout 1800 --work /home/node/s2r-t3/out/work/review --receipt /home/node/s2r-t3/out/review_receipt.json
+env: HOME=/home/node/s2r-t3/out/isolated-home PATH=/home/node/s2r-cpu-venv/bin:/usr/local/bin:/usr/bin:/bin
+started: 2026-09-18T17:09:00Z
+finished: 2026-09-18T17:09:27Z
+elapsed_seconds: 27.9
+exit_code: 0

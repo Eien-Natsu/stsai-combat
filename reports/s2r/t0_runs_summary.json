@@ -1,0 +1,134 @@
+{
+  "assertion_threshold": {
+    "atol": 1e-05,
+    "effective_tolerance_at_value": 1.05e-05,
+    "rtol": 0.0001
+  },
+  "budget": {
+    "targeted_runs_allowed": 2,
+    "targeted_runs_used": 2,
+    "timeout_seconds": 60
+  },
+  "ci_run": {
+    "counts": {
+      "failed": 1,
+      "passed": 111,
+      "skipped": 6
+    },
+    "failed_test": "tests/test_training_loss.py::test_effective_batch_partition_invariance_end_to_end",
+    "head": "2cc0c759a4900bb3822a47609bdf6a0a62f824b8",
+    "id": 35369602279,
+    "job": 105680168167,
+    "tested_merge_recorded": "3eb32ec766476016964248ee0b9791a17c3da72e"
+  },
+  "kind": "t0_targeted_diagnosis_summary",
+  "runs": {
+    "run1_historical_venv_torch_2.9.1+cu128": {
+      "environment": {
+        "cpu_count": 1,
+        "cuda_available": false,
+        "loss_revision": 2,
+        "machine": "x86_64",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+        "processor": "",
+        "python": "3.12.14",
+        "stsai_module": "/home/node/stsai-s2r/src/stsai/__init__.py",
+        "torch": "2.9.1+cu128",
+        "torch_cuda_build": "12.8",
+        "work": "/tmp/t0-partition-kep8hxuy"
+      },
+      "per_partition": {
+        "16x2": {
+          "adamw_update": [
+            0.00021920492872595787
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 1.2870877981185913e-06,
+          "policy_2_bias_gradient": [
+            -2.7124769985675812e-08
+          ],
+          "value_after": -0.004241785500198603,
+          "value_before": -0.0044609904289245605
+        },
+        "32x1": {
+          "adamw_update": [
+            0.00021791784092783928
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 0.0,
+          "policy_2_bias_gradient": [
+            -2.6542693376541138e-08
+          ],
+          "value_after": -0.004243072587996721,
+          "value_before": -0.0044609904289245605
+        },
+        "8x4": {
+          "adamw_update": [
+            0.00021882308647036552
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 9.052455425262451e-07,
+          "policy_2_bias_gradient": [
+            -2.695014700293541e-08
+          ],
+          "value_after": -0.004242167342454195,
+          "value_before": -0.0044609904289245605
+        }
+      }
+    },
+    "run2_ci_equivalent_venv_torch_2.9.1+cpu": {
+      "environment": {
+        "cpu_count": 1,
+        "cuda_available": false,
+        "loss_revision": 2,
+        "machine": "x86_64",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+        "processor": "",
+        "python": "3.12.14",
+        "stsai_module": "/home/node/stsai-s2r/src/stsai/__init__.py",
+        "torch": "2.9.1+cpu",
+        "torch_cuda_build": null,
+        "work": "/tmp/t0-partition-ucazy46t"
+      },
+      "per_partition": {
+        "16x2": {
+          "adamw_update": [
+            0.00021920492872595787
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 1.2870877981185913e-06,
+          "policy_2_bias_gradient": [
+            -2.7124769985675812e-08
+          ],
+          "value_after": -0.004241785500198603,
+          "value_before": -0.0044609904289245605
+        },
+        "32x1": {
+          "adamw_update": [
+            0.00021791784092783928
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 0.0,
+          "policy_2_bias_gradient": [
+            -2.6542693376541138e-08
+          ],
+          "value_after": -0.004243072587996721,
+          "value_before": -0.0044609904289245605
+        },
+        "8x4": {
+          "adamw_update": [
+            0.00021882308647036552
+          ],
+          "assertion_passed": true,
+          "max_abs_diff_vs_32x1": 9.052455425262451e-07,
+          "policy_2_bias_gradient": [
+            -2.695014700293541e-08
+          ],
+          "value_after": -0.004242167342454195,
+          "value_before": -0.0044609904289245605
+        }
+      }
+    }
+  },
+  "runs_are_bit_identical": true
+}

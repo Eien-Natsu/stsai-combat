@@ -1,0 +1,16 @@
+PASS     package_root           zip package at /home/node/s2r-t3/out/work/package
+PASS     archive_safety         no unsafe archive members
+PASS     layout                 all 28 required inputs are present
+PASS     manifest               33 members verify against the manifest
+PASS     path_scope             every input stays inside the package root
+PASS     provenance             provenance is consistent with the checkout and the package (4 digests)
+PASS     versions               6 declared revisions match this build
+PASS     protocol_identity      volume protocol, 6 runs declared: ['D384_s17', 'D384_s29', 'D384_s43']...
+PASS     model_identity         optimizer-free export of best.pt at step 500
+PASS     evaluation_records     4096 per-episode records, 4096 unique declared keys
+PASS     decision_records       59812 decisions match the episodes step by step
+PASS     training_records       six runs recorded, 6 carry selected and last hashes
+PASS     native_sources         snapshot verified, 129 members, base 7476a8195402
+PASS     artifact_lock          7 artefact inputs match the lock
+receipt: /home/node/s2r-t3/out/input_receipt.json
+the package satisfies the input contract

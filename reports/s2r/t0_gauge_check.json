@@ -1,0 +1,35 @@
+{
+  "conclusion": "Every shift leaves the policy log-probabilities and the loss unchanged, so policy.2.bias carries no loss information; the residue gradient and its AdamW update are numerical, not signal.",
+  "kind": "t0_gauge_check",
+  "reference_loss": 1.8918395042419434,
+  "samples": 6,
+  "shifts": [
+    {
+      "bias_shift": 0.5,
+      "loss_after": 1.8918395042419434,
+      "loss_before": 1.8918395042419434,
+      "loss_change": 0.0,
+      "max_abs_log_softmax_change": 1.1920928955078125e-07,
+      "max_abs_logits_change_on_legal_actions": 0.5,
+      "value_head_change": 0.0
+    },
+    {
+      "bias_shift": -3.0,
+      "loss_after": 1.8918395042419434,
+      "loss_before": 1.8918395042419434,
+      "loss_change": 0.0,
+      "max_abs_log_softmax_change": 2.384185791015625e-07,
+      "max_abs_logits_change_on_legal_actions": 3.0,
+      "value_head_change": 0.0
+    },
+    {
+      "bias_shift": 1000.0,
+      "loss_after": 1.891839822133382,
+      "loss_before": 1.8918395042419434,
+      "loss_change": 3.1789143872806847e-07,
+      "max_abs_log_softmax_change": 1024.0,
+      "max_abs_logits_change_on_legal_actions": 1000.0000610351562,
+      "value_head_change": 0.0
+    }
+  ]
+}

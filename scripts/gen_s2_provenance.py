@@ -18,6 +18,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "review"))
+
+import package_contract as contract  # noqa: E402
 
 
 def sha256(path):
@@ -35,7 +38,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--bundle", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--artifacts", default=str(ROOT),
+                        help="root holding the run artefacts the checkout does not track "
+                             "(weights, per-episode records, evaluation environment)")
     args = parser.parse_args()
+    artifacts = Path(args.artifacts).resolve()
 
     from stsai.encoding import ENCODING_REVISION
     from stsai.native import SAMPLER_REVISION
@@ -54,7 +61,7 @@ def main():
     runs = json.loads((ROOT / "training/runs.json").read_text())
     lists = json.loads((ROOT / "reports/s2_dev_lists.json").read_text())
     add288 = json.loads((ROOT / "reports/s2_collection_report.json").read_text())
-    environment = json.loads((ROOT / "runs/s2/evaluation/environment.json").read_text())
+    environment = json.loads((artifacts / "runs/s2/evaluation/environment.json").read_text())
 
     record = {
         "purpose": "Provenance for the S2 review package.",
@@ -90,12 +97,15 @@ def main():
              "selected_step": r["selected"]["step"], "selected_sha256": r["selected"]["sha256"],
              "last_step": r["last"]["step"], "last_sha256": r["last"]["sha256"],
              "data_fingerprint": r["data_fingerprint"]} for r in runs["runs"]]},
-        "model": {"shipped": entry(ROOT / "model/D384_s17_selected.pt"),
+        "model": {"shipped": entry(contract.resolve_source(
+                      contract.required("model/D384_s17_selected.pt"), ROOT, artifacts)),
                   "smoke_observations": entry(ROOT / "model/smoke_observations.jsonl.gz"),
                   "smoke_expected": entry(ROOT / "model/smoke_expected.json")},
         "evaluation": {"environment": environment,
-                       "episodes": entry(ROOT / "runs/s2/evaluation/episodes.jsonl.gz"),
-                       "decisions": entry(ROOT / "runs/s2/evaluation/decision_latency.jsonl.gz"),
+                       "episodes": entry(contract.resolve_source(
+                           contract.required("evaluation/episodes.jsonl.gz"), ROOT, artifacts)),
+                       "decisions": entry(contract.resolve_source(
+                           contract.required("evaluation/decision_latency.jsonl.gz"), ROOT, artifacts)),
                        "paired_summary": entry(ROOT / "reports/s2_paired_summary.json")},
         "claim": "unverified simulator pilot with a declared sampling approximation; "
                  "game_differential_verified=false",

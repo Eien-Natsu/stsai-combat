@@ -1,0 +1,323 @@
+test	Set up job	﻿2026-09-18T16:37:51.7747314Z Current runner version: '2.337.0'
+test	Set up job	2026-09-18T16:37:51.7784412Z ##[group]Runner Image Provisioner
+test	Set up job	2026-09-18T16:37:51.7785698Z Hosted Compute Agent
+test	Set up job	2026-09-18T16:37:51.7786643Z Version: 20260828.587
+test	Set up job	2026-09-18T16:37:51.7787779Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+test	Set up job	2026-09-18T16:37:51.7789339Z Build Date: 2026-08-28T16:44:25Z
+test	Set up job	2026-09-18T16:37:51.7790587Z Worker ID: {10f0a9f4-1b2f-4d8a-8f32-253e92f4e05b}
+test	Set up job	2026-09-18T16:37:51.7791751Z Azure Region: eastus2
+test	Set up job	2026-09-18T16:37:51.7792683Z ##[endgroup]
+test	Set up job	2026-09-18T16:37:51.7795027Z ##[group]Operating System
+test	Set up job	2026-09-18T16:37:51.7796109Z Ubuntu
+test	Set up job	2026-09-18T16:37:51.7797079Z 24.04.5
+test	Set up job	2026-09-18T16:37:51.7797878Z LTS
+test	Set up job	2026-09-18T16:37:51.7798971Z ##[endgroup]
+test	Set up job	2026-09-18T16:37:51.7800131Z ##[group]Runner Image
+test	Set up job	2026-09-18T16:37:51.7801195Z Image: ubuntu-24.04
+test	Set up job	2026-09-18T16:37:51.7802174Z Version: 20260907.300.1
+test	Set up job	2026-09-18T16:37:51.7804041Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+test	Set up job	2026-09-18T16:37:51.7806975Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+test	Set up job	2026-09-18T16:37:51.7808619Z ##[endgroup]
+test	Set up job	2026-09-18T16:37:51.7810904Z ##[group]GITHUB_TOKEN Permissions
+test	Set up job	2026-09-18T16:37:51.7813868Z Contents: read
+test	Set up job	2026-09-18T16:37:51.7814845Z Metadata: read
+test	Set up job	2026-09-18T16:37:51.7815766Z Packages: read
+test	Set up job	2026-09-18T16:37:51.7816796Z ##[endgroup]
+test	Set up job	2026-09-18T16:37:51.7820032Z Secret source: Actions
+test	Set up job	2026-09-18T16:37:51.7821683Z Cache mode: write
+test	Set up job	2026-09-18T16:37:51.7822801Z Prepare workflow directory
+test	Set up job	2026-09-18T16:37:51.8295294Z Prepare all required actions
+test	Set up job	2026-09-18T16:37:51.8366901Z Getting action download info
+test	Set up job	2026-09-18T16:37:52.0645193Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test	Set up job	2026-09-18T16:37:52.1872944Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+test	Set up job	2026-09-18T16:37:52.3710468Z Complete job name: test
+test	Run actions/checkout@v4	﻿2026-09-18T16:37:52.4502946Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4512168Z ##[group]Run actions/checkout@v4
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4513005Z with:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4513532Z   repository: Eien-Natsu/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4517362Z   token: ***
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4517797Z   ssh-strict: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4518242Z   ssh-user: git
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4518910Z   persist-credentials: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4519419Z   clean: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4519867Z   sparse-checkout-cone-mode: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4520409Z   fetch-depth: 1
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4520844Z   fetch-tags: false
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4521341Z   show-progress: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4521791Z   lfs: false
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4522209Z   submodules: false
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4522705Z   set-safe-directory: true
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4523226Z   allow-unsafe-pr-checkout: false
+test	Run actions/checkout@v4	2026-09-18T16:37:52.4524015Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5575062Z Syncing repository: Eien-Natsu/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5577735Z ##[group]Getting Git version info
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5579245Z Working directory is '/home/runner/work/stsai-combat/stsai-combat'
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5581018Z [command]/usr/bin/git version
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5650351Z git version 2.55.0
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5672270Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5695757Z Temporarily overriding HOME='/home/runner/work/_temp/2ea57ebf-e8db-485c-8391-b5237b569fde' before making global git config changes
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5698363Z Adding repository directory to the temporary git global config as a safe directory
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5700944Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/stsai-combat/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5754426Z Deleting the contents of '/home/runner/work/stsai-combat/stsai-combat'
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5758981Z ##[group]Initializing the repository
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5763088Z [command]/usr/bin/git init /home/runner/work/stsai-combat/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5883830Z hint: Using 'master' as the name for the initial branch. This default branch name
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5885739Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5887394Z hint: to use in all of your new repositories, which will suppress this warning,
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5888608Z hint: call:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5889465Z hint:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5890278Z hint: 	git config --global init.defaultBranch <name>
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5891364Z hint:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5892409Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5893969Z hint: 'development'. The just-created branch can be renamed via this command:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5895241Z hint:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5895927Z hint: 	git branch -m <name>
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5896779Z hint:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5897810Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5900185Z Initialized empty Git repository in /home/runner/work/stsai-combat/stsai-combat/.git/
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5904163Z [command]/usr/bin/git remote add origin https://github.com/Eien-Natsu/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5955067Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5956406Z ##[group]Disabling automatic garbage collection
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5960047Z [command]/usr/bin/git config --local gc.auto 0
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5996739Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:52.5998460Z ##[group]Setting up auth
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6005936Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6042839Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6439087Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6480459Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6709354Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6746671Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Run actions/checkout@v4	2026-09-18T16:37:52.6979166Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test	Run actions/checkout@v4	2026-09-18T16:37:52.7019260Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:52.7020706Z ##[group]Fetching the repository
+test	Run actions/checkout@v4	2026-09-18T16:37:52.7031194Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3eb32ec766476016964248ee0b9791a17c3da72e:refs/remotes/pull/2/merge
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0654651Z From https://github.com/Eien-Natsu/stsai-combat
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0655952Z  * [new ref]         3eb32ec766476016964248ee0b9791a17c3da72e -> pull/2/merge
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0659641Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0660510Z ##[group]Determining the checkout info
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0662372Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0668843Z [command]/usr/bin/git sparse-checkout disable
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0724632Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0756738Z ##[group]Checking out the ref
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0760685Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0947061Z Note: switching to 'refs/remotes/pull/2/merge'.
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0947962Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0948591Z You are in 'detached HEAD' state. You can look around, make experimental
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0949765Z changes and commit them, and you can discard any commits you make in this
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0950865Z state without impacting any branches by switching back to a branch.
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0951712Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0952230Z If you want to create a new branch to retain commits you create, you may
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0953133Z do so (now or later) by using -c with the switch command. Example:
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0953643Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0953869Z   git switch -c <new-branch-name>
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0954232Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0954445Z Or undo this operation with:
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0954777Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0954971Z   git switch -
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0955274Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0955688Z Turn off this advice by setting config variable advice.detachedHead to false
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0956264Z 
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0956916Z HEAD is now at 3eb32ec Merge 2cc0c759a4900bb3822a47609bdf6a0a62f824b8 into de266c4cf79fe3543d6fcfc1b69028c702e5d4d0
+test	Run actions/checkout@v4	2026-09-18T16:37:53.0960603Z ##[endgroup]
+test	Run actions/checkout@v4	2026-09-18T16:37:53.1001692Z [command]/usr/bin/git log -1 --format=%H
+test	Run actions/checkout@v4	2026-09-18T16:37:53.1027972Z 3eb32ec766476016964248ee0b9791a17c3da72e
+test	Run actions/setup-python@v5	﻿2026-09-18T16:37:53.1403017Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1409332Z ##[group]Run actions/setup-python@v5
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1409966Z with:
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1410397Z   python-version: 3.12
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1410883Z   check-latest: false
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1414618Z   token: ***
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1415067Z   update-environment: true
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1415607Z   allow-prereleases: false
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1416098Z   freethreaded: false
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.1416557Z ##[endgroup]
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.2807382Z ##[group]Installed versions
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.2898966Z (node:2315) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.2901395Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.2902873Z Successfully set up CPython (3.12.14)
+test	Run actions/setup-python@v5	2026-09-18T16:37:53.2904317Z ##[endgroup]
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	﻿2026-09-18T16:37:53.3131723Z ##[group]Run python -m pip install -r requirements/base.txt -r requirements/dev.txt
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3133001Z ^[[36;1mpython -m pip install -r requirements/base.txt -r requirements/dev.txt^[[0m
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3194539Z shell: /usr/bin/bash -e {0}
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3195331Z env:
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3195908Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3196793Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3197621Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3198367Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3199513Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3200680Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:53.3202378Z ##[endgroup]
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.4376284Z Collecting numpy==2.2.6 (from -r requirements/base.txt (line 1))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.4969827Z   Downloading numpy-2.2.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.5483947Z Collecting pytest==8.3.5 (from -r requirements/dev.txt (line 1))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.5560477Z   Downloading pytest-8.3.5-py3-none-any.whl.metadata (7.6 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.5770784Z Collecting pybind11==2.13.6 (from -r requirements/dev.txt (line 2))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.5857562Z   Downloading pybind11-2.13.6-py3-none-any.whl.metadata (9.5 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.6972282Z Collecting cmake>=3.20 (from -r requirements/dev.txt (line 3))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7103768Z   Downloading cmake-4.4.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7263346Z Collecting iniconfig (from pytest==8.3.5->-r requirements/dev.txt (line 1))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7336678Z   Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7535631Z Collecting packaging (from pytest==8.3.5->-r requirements/dev.txt (line 1))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7607965Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7765243Z Collecting pluggy<2,>=1.5 (from pytest==8.3.5->-r requirements/dev.txt (line 1))
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7842488Z   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:54.7975668Z Downloading numpy-2.2.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.5 MB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.1170227Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.5/16.5 MB 54.7 MB/s  0:00:00
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.1281590Z Downloading pytest-8.3.5-py3-none-any.whl (343 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.1439387Z Downloading pybind11-2.13.6-py3-none-any.whl (243 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.1542986Z Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.1639652Z Downloading cmake-4.4.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (30.2 MB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.3125049Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 30.2/30.2 MB 206.0 MB/s  0:00:00
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.3199744Z Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.3293247Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:55.4887272Z Installing collected packages: pybind11, pluggy, packaging, numpy, iniconfig, cmake, pytest
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:58.6807874Z 
+test	Run python -m pip install -r requirements/base.txt -r requirements/dev.txt	2026-09-18T16:37:58.6822316Z Successfully installed cmake-4.4.3 iniconfig-2.3.0 numpy-2.2.6 packaging-26.3 pluggy-1.6.0 pybind11-2.13.6 pytest-8.3.5
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	﻿2026-09-18T16:37:58.7414383Z ##[group]Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7415182Z ^[[36;1mpython -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu^[[0m
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7454652Z shell: /usr/bin/bash -e {0}
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7454948Z env:
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7455236Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7455734Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7456206Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7456596Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7456984Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7457383Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:58.7457714Z ##[endgroup]
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.0776463Z Looking in indexes: https://download.pytorch.org/whl/cpu
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.3367315Z Collecting torch==2.9.1
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.4987135Z   Downloading torch-2.9.1%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (29 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.5327993Z Collecting filelock (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.5896226Z   Downloading filelock-3.32.3-py3-none-any.whl.metadata (2.0 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.6118708Z Collecting typing-extensions>=4.10.0 (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.6194605Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.6379979Z Collecting setuptools (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.6493246Z   Downloading setuptools-78.1.0-py3-none-any.whl.metadata (6.6 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7068238Z Collecting sympy>=1.13.3 (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7147408Z   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7584968Z Collecting networkx>=2.5.1 (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7659833Z   Downloading networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7857101Z Collecting jinja2 (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.7933521Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.8335209Z Collecting fsspec>=0.8.5 (from torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.8409749Z   Downloading fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.8781549Z Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.8859231Z   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.9122910Z Collecting MarkupSafe>=2.0 (from jinja2->torch==2.9.1)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.9201139Z   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:37:59.9384955Z Downloading torch-2.9.1%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl (184.4 MB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.8818452Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 184.4/184.4 MB 198.5 MB/s  0:00:00
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.8891516Z Downloading fsspec-2026.7.0-py3-none-any.whl (206 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.9213695Z Downloading networkx-3.6.1-py3-none-any.whl (2.1 MB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.9550133Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 70.9 MB/s  0:00:00
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.9617987Z Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:00.9924930Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 215.6 MB/s  0:00:00
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0010351Z Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0060617Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 94.8 MB/s  0:00:00
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0131258Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0229573Z Downloading filelock-3.32.3-py3-none-any.whl (98 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0336545Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0445290Z Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0545433Z Downloading setuptools-78.1.0-py3-none-any.whl (1.3 MB)
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.0766135Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 67.6 MB/s  0:00:00
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:01.4385299Z Installing collected packages: mpmath, typing-extensions, sympy, setuptools, networkx, MarkupSafe, fsspec, filelock, jinja2, torch
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:20.2441921Z 
+test	Run python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu	2026-09-18T16:38:20.2465546Z Successfully installed MarkupSafe-3.0.3 filelock-3.32.3 fsspec-2026.7.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.6.1 setuptools-78.1.0 sympy-1.14.0 torch-2.9.1+cpu typing-extensions-4.16.0
+test	Run python -m pip install -e . --no-deps	﻿2026-09-18T16:38:20.3186798Z ##[group]Run python -m pip install -e . --no-deps
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3187233Z ^[[36;1mpython -m pip install -e . --no-deps^[[0m
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3225081Z shell: /usr/bin/bash -e {0}
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3225344Z env:
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3225627Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3226095Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3226560Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3226973Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3227384Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3227799Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.3228158Z ##[endgroup]
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.6549070Z Obtaining file:///home/runner/work/stsai-combat/stsai-combat
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:20.6566240Z   Installing build dependencies: started
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:21.5187118Z   Installing build dependencies: finished with status 'done'
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:21.5194193Z   Checking if build backend supports build_editable: started
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:21.8402758Z   Checking if build backend supports build_editable: finished with status 'done'
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:21.8413543Z   Getting requirements to build editable: started
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.1806953Z   Getting requirements to build editable: finished with status 'done'
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.1817312Z   Preparing editable metadata (pyproject.toml): started
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.3774959Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.3815402Z Building wheels for collected packages: stsai-combat
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.3823199Z   Building editable for stsai-combat (pyproject.toml): started
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.5962974Z   Building editable for stsai-combat (pyproject.toml): finished with status 'done'
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.5969694Z   Created wheel for stsai-combat: filename=stsai_combat-0.1.0-0.editable-py3-none-any.whl size=2532 sha256=ac51d137edcb2a49c0257e4b269fbe165313e9df78862e8c50dfd144b9ec35bc
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.5971731Z   Stored in directory: /tmp/pip-ephem-wheel-cache-__iom0vj/wheels/e2/ea/19/d235eeec786b5c417c3843f22b3a83c867b83c7fb7cc812465
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.5992435Z Successfully built stsai-combat
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.6100598Z Installing collected packages: stsai-combat
+test	Run python -m pip install -e . --no-deps	2026-09-18T16:38:22.6181720Z Successfully installed stsai-combat-0.1.0
+test	Run python -m pytest -q	﻿2026-09-18T16:38:22.6750341Z ##[group]Run python -m pytest -q
+test	Run python -m pytest -q	2026-09-18T16:38:22.6750700Z ^[[36;1mpython -m pytest -q^[[0m
+test	Run python -m pytest -q	2026-09-18T16:38:22.6788019Z shell: /usr/bin/bash -e {0}
+test	Run python -m pytest -q	2026-09-18T16:38:22.6788282Z env:
+test	Run python -m pytest -q	2026-09-18T16:38:22.6788553Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pytest -q	2026-09-18T16:38:22.6789270Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+test	Run python -m pytest -q	2026-09-18T16:38:22.6789733Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pytest -q	2026-09-18T16:38:22.6790148Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pytest -q	2026-09-18T16:38:22.6790555Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+test	Run python -m pytest -q	2026-09-18T16:38:22.6790954Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+test	Run python -m pytest -q	2026-09-18T16:38:22.6791291Z ##[endgroup]
+test	Run python -m pytest -q	2026-09-18T16:38:29.1647772Z ........................................................................ [ 63%]
+test	Run python -m pytest -q	2026-09-18T16:38:29.9743554Z ..............s.......................F..                                [100%]
+test	Run python -m pytest -q	2026-09-18T16:38:29.9744568Z =================================== FAILURES ===================================
+test	Run python -m pytest -q	2026-09-18T16:38:29.9745643Z _____________ test_effective_batch_partition_invariance_end_to_end _____________
+test	Run python -m pytest -q	2026-09-18T16:38:29.9746332Z 
+test	Run python -m pytest -q	2026-09-18T16:38:29.9747291Z synthetic = (PosixPath('/tmp/pytest-of-runner/pytest-0/synthetic0/train'), PosixPath('/tmp/pytest-of-runner/pytest-0/synthetic0/val'))
+test	Run python -m pytest -q	2026-09-18T16:38:29.9749252Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_effective_batch_partition0')
+test	Run python -m pytest -q	2026-09-18T16:38:29.9749811Z 
+test	Run python -m pytest -q	2026-09-18T16:38:29.9750233Z     def test_effective_batch_partition_invariance_end_to_end(synthetic, tmp_path):
+test	Run python -m pytest -q	2026-09-18T16:38:29.9751002Z         """32x1, 16x2 and 8x4 must produce the same parameters after one update.
+test	Run python -m pytest -q	2026-09-18T16:38:29.9751529Z     
+test	Run python -m pytest -q	2026-09-18T16:38:29.9751954Z         Dropout is off and the data order is fixed, so the only difference is how
+test	Run python -m pytest -q	2026-09-18T16:38:29.9752671Z         the same 32 samples are grouped. The superseded rule averaged microbatch
+test	Run python -m pytest -q	2026-09-18T16:38:29.9753433Z         means, which weighted microbatches by their decision-state count instead of
+test	Run python -m pytest -q	2026-09-18T16:38:29.9754038Z         by the effective batch.
+test	Run python -m pytest -q	2026-09-18T16:38:29.9754369Z         """
+test	Run python -m pytest -q	2026-09-18T16:38:29.9754650Z         train_dir, val_dir = synthetic
+test	Run python -m pytest -q	2026-09-18T16:38:29.9755032Z         reference = None
+test	Run python -m pytest -q	2026-09-18T16:38:29.9755386Z         for batch, accum in ((32, 1), (16, 2), (8, 4)):
+test	Run python -m pytest -q	2026-09-18T16:38:29.9755866Z             out = tmp_path / f"partition_{batch}_{accum}"
+test	Run python -m pytest -q	2026-09-18T16:38:29.9756487Z             train([str(train_dir)], [str(val_dir)], str(out), backend=BACKEND, device="cpu",
+test	Run python -m pytest -q	2026-09-18T16:38:29.9757107Z                   config=_config(batch, accum))
+test	Run python -m pytest -q	2026-09-18T16:38:29.9757762Z             state = torch.load(out / "last.pt", map_location="cpu", weights_only=True)["model_state"]
+test	Run python -m pytest -q	2026-09-18T16:38:29.9758417Z             if reference is None:
+test	Run python -m pytest -q	2026-09-18T16:38:29.9758905Z                 reference = state
+test	Run python -m pytest -q	2026-09-18T16:38:29.9759246Z                 continue
+test	Run python -m pytest -q	2026-09-18T16:38:29.9759572Z             for key in reference:
+test	Run python -m pytest -q	2026-09-18T16:38:29.9760118Z >               assert torch.allclose(reference[key], state[key], atol=1e-5, rtol=1e-4), \
+test	Run python -m pytest -q	2026-09-18T16:38:29.9760871Z                     f"parameters differ for batch={batch} accum={accum} at {key}"
+test	Run python -m pytest -q	2026-09-18T16:38:29.9761379Z E               AssertionError: parameters differ for batch=8 accum=4 at policy.2.bias
+test	Run python -m pytest -q	2026-09-18T16:38:29.9761790Z E               assert False
+test	Run python -m pytest -q	2026-09-18T16:38:29.9762676Z E                +  where False = <built-in method allclose of type object at 0x7f6edf53a8c0>(tensor([-0.0047]), tensor([-0.0046]), atol=1e-05, rtol=0.0001)
+test	Run python -m pytest -q	2026-09-18T16:38:29.9763452Z E                +    where <built-in method allclose of type object at 0x7f6edf53a8c0> = torch.allclose
+test	Run python -m pytest -q	2026-09-18T16:38:29.9763807Z 
+test	Run python -m pytest -q	2026-09-18T16:38:29.9763930Z tests/test_training_loss.py:199: AssertionError
+test	Run python -m pytest -q	2026-09-18T16:38:29.9764302Z =========================== short test summary info ============================
+test	Run python -m pytest -q	2026-09-18T16:38:29.9765173Z FAILED tests/test_training_loss.py::test_effective_batch_partition_invariance_end_to_end - AssertionError: parameters differ for batch=8 accum=4 at policy.2.bias
+test	Run python -m pytest -q	2026-09-18T16:38:29.9766149Z assert False
+test	Run python -m pytest -q	2026-09-18T16:38:29.9766664Z  +  where False = <built-in method allclose of type object at 0x7f6edf53a8c0>(tensor([-0.0047]), tensor([-0.0046]), atol=1e-05, rtol=0.0001)
+test	Run python -m pytest -q	2026-09-18T16:38:29.9767378Z  +    where <built-in method allclose of type object at 0x7f6edf53a8c0> = torch.allclose
+test	Run python -m pytest -q	2026-09-18T16:38:29.9767823Z 1 failed, 111 passed, 6 skipped in 7.02s
+test	Run python -m pytest -q	2026-09-18T16:38:30.4301742Z ##[error]Process completed with exit code 1.
+test	Post Run actions/checkout@v4	﻿2026-09-18T16:38:30.4472909Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.4474186Z Post job cleanup.
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5340707Z [command]/usr/bin/git version
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5385788Z git version 2.55.0
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5430293Z Temporarily overriding HOME='/home/runner/work/_temp/f617dcc5-4d1e-4b4e-a790-e124321c9c43' before making global git config changes
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5431804Z Adding repository directory to the temporary git global config as a safe directory
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5434595Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/stsai-combat/stsai-combat
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5479367Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5524835Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5783951Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5821175Z http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5833020Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.5869447Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.6138245Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Post Run actions/checkout@v4	2026-09-18T16:38:30.6177311Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Complete job	﻿2026-09-18T16:38:30.6565669Z Cleaning up orphan processes
+test	Complete job	2026-09-18T16:38:30.6866632Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

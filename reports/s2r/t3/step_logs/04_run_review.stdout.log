@@ -1,0 +1,9 @@
+PASS     attachments    manifest verified
+PASS     native_build   built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so
+PASS     import         revision 7476a8195402, 5 patches
+PASS     intent         native/intent_table.def matches the derivation (50 rows)
+PASS     tests          277 tests, 0 failed, 0 skipped, 155 native/regression cases
+PASS     counterfactual 5 steps replayed, 1024 sampler seeds, root stable=True
+PASS     model_smoke    12 observations loaded and run; max probability delta 0.00e+00; 0 failures
+receipt: /home/node/s2r-t3/out/review_receipt.json
+all required checks passed on this machine
