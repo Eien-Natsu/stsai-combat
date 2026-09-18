@@ -1,0 +1,120 @@
+{
+  "purpose": "S2 data lists and development sets, frozen before collection and training.",
+  "master_seeds": {
+    "training_and_validation": 20260916,
+    "dev_old256": 20260917,
+    "dev_probe256": 20260919
+  },
+  "shards": {
+    "D96": {
+      "label": "D96",
+      "verified": 96,
+      "expected": 96,
+      "problems": [],
+      "ok": true
+    },
+    "V24": {
+      "label": "V24",
+      "verified": 24,
+      "expected": 24,
+      "problems": [],
+      "ok": true
+    },
+    "D96_manifest_sha256": "c7cce53eb67e0694f228b8db7f7f07f1b6c3a091c6cbde629521a62944ca1287",
+    "V24_manifest_sha256": "3857734662b323d3acc4c88433f8c807134d2a02e6beec20bad4017042849142"
+  },
+  "lists": {
+    "D96": {
+      "count": 96,
+      "definition": "make_scenario(train, index 0-95, master_seed 20260916)",
+      "sha256": "a572eee93885ced5244d031a1a6fe30cbaede51cfd7309c31293afbf5f946781"
+    },
+    "Dadd288": {
+      "count": 288,
+      "definition": "make_scenario(train, index 96-383, master_seed 20260916)",
+      "sha256": "dd7ac983aba02fb51f387adaea56f3e2571cd92080f6dd6b9ee364cafe1acd6b"
+    },
+    "D384": {
+      "count": 384,
+      "definition": "D96 union Dadd288; D96 is a strict subset and appears once"
+    },
+    "V24": {
+      "count": 24,
+      "definition": "make_scenario(val, index 0-23, master_seed 20260916)",
+      "sha256": "43d74488cac4109b48298717301af8dc70ae8d60e870ea7d5797c5001347c0df"
+    },
+    "DEV_OLD256": {
+      "count": 256,
+      "sha256": "61731c6c7175644fd6ab0480d28433876c4d77dc690b6ad4cd2c30c433ab6547"
+    },
+    "DEV_PROBE256": {
+      "count": 256,
+      "sha256": "15bfe445f264a60ada7050b2966e681fc432d6b461b53b6327162e64f969e344"
+    }
+  },
+  "DEV_OLD256_regenerates": true,
+  "overlaps": [
+    {
+      "left": "DEV_PROBE256",
+      "right": "D96",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "DEV_PROBE256",
+      "right": "V24",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "DEV_PROBE256",
+      "right": "Dadd288",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "DEV_OLD256",
+      "right": "D96",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "DEV_OLD256",
+      "right": "V24",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "DEV_OLD256",
+      "right": "Dadd288",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    },
+    {
+      "left": "D96",
+      "right": "Dadd288",
+      "identical_scenario_and_episode_seed": 0,
+      "identical_public_opening_different_seed": 0,
+      "duplicate_examples": [],
+      "note": "a shared opening with a different episode seed is the generator coinceding, not leakage; an identical (scenario, seed) pair would be a duplicate"
+    }
+  ],
+  "generator": {
+    "module": "stsai.scenarios.make_scenario",
+    "source_sha256": "7538120ef03f8b955b35a37ff3e227c8ac9ac3baa74c08aad6fa46b900acd5e3",
+    "scenario_revision": 3
+  },
+  "probe_policy": "DEV_PROBE256 enters no training and no validation; it is run only after all six checkpoints are selected on V24, and it is reused afterwards at its own risk"
+}
