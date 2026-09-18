@@ -1,9 +1,19 @@
 # 下一轮执行指令：S2R-REPRO
 
-状态：待执行，不是完成报告。执行者：实施 agent；完成后交 ChatGPT review。
-主线与长期约束只见 [PROJECT_MAINLINE.md](PROJECT_MAINLINE.md)。本轮目的：把已有 S2 结果变成有来源、可获取、可在干净环境复核的交付，不启动新的学习实验。
-基线：包含本轮文档整理的 `s2/fixed-budget-data` 后续提交；代码/历史证据锚点为 `de266c4cf79fe3543d6fcfc1b69028c702e5d4d0`。不要从仍停在初交付的 main 另起一套实现。
-先确认文档 PR 已合入目标开发分支，或由所有者明确指定该文档 PR HEAD；记录完整 SHA。不要自动合并本 PR、旧 PR #1 或实现主线。
+- Task ID：`S2R-REPRO-001`。
+- 状态：`READY`，待一个新本地 agent session 领取；不是执行或完成报告。
+- 协作规则：`PROJECT_MAINLINE.md` 版本 2，第 7 节；每轮新 Chat、每步新 agent session。
+- 计划来源：所有者批准的 S2R 任务与新会话协作要求；本次为 bootstrap，不伪造前次 review。
+- 既有任务来源提交：`4462a7c048beebd1caed82a7c0ba1fc80d0cb16b`；新增协作规则须从本文件所在的固定提交读取。
+- Plan commit：领取时记录所有者指定的、包含本任务的完整 Git SHA；不使用会移动的“最新”别名，也不在文件内自引用本提交。
+- 目标开发分支：`s2/fixed-budget-data`；尚未合并的文档 PR #2 要列为依赖，不自动合并/关闭 #1/#2。
+- Budget scope ID：`S2R-REPRO`；开始前合计已有执行/审查的消耗，未知则阻塞受限运行，不能预填为 0。
+- 下一接收者：`NEW_CHAT_REVIEWER`；执行者发布交接后结束，不能等结果后继续同一 session。
+
+主线与长期约束只见 [PROJECT_MAINLINE.md](PROJECT_MAINLINE.md)。本任务的唯一目标是恢复既有 S2 结果的可追溯交付与复核闭环，不启动新的学习实验。
+T0–T4 是同一任务内的必要子步骤，不是允许连续承接多轮 review 的许可。完整计划/预算不明、必须改验收/训练语义或前置阻塞时，遵守下文停止条件，保存证据并结束 session。
+代码/历史证据锚点为 `de266c4cf79fe3543d6fcfc1b69028c702e5d4d0`；不要从仍停在初交付的 main 另起一套实现。先核对本轮 plan_commit 与实现基线，并在自己的独立工作区实施。
+已经按旧计划开工的 session 不热切换或重新领取本任务：先提交阶段交接及已消耗预算，由新 Chat 决定剩余一步。新的执行 session 不读取旧 session 内部记忆来补齐缺失证据。
 
 ## 1. 为什么现在做这个
 
@@ -109,3 +119,11 @@ GCC 14 / CUDA / 原游戏 / 另外五个模型的加载，逐项写实际状态�
 
 以 GitHub PR 为主要交付，Chat 中不散贴大量日志。需要聊天上传时，优先一个 ZIP + 一份简短 SUMMARY；沿用原 S2 项目预算不超过 40 MB / 40 包内文件，但这不是对当前 Chat 上传上限的保证。先压缩日志，超出时使用已授权附件存放方式，不删失败证据；不上传游戏/存档/密钥/venv/编译产物/optimizer。
 到此停止并交回 review。后续优化预算或数据实验只列为候选问题，不能自行开始训练。
+
+## 6. 新 session 的持久交接
+
+按 [.github/agent_handoff_template.md](.github/agent_handoff_template.md) 新建 `handoffs/S2R-REPRO-001/EXECUTION.md`，引用本轮 `reports/s2r/` 中的实际证据，不重复堆放日志。已有交接则先核对是否为恢复任务，不覆盖或重跑已完成部分。
+必须记录 task_id、独立 executor_session_id、plan_commit、执行起点/实现 SHA、目标分支、request_id、T0–T4 实际状态、来源与产物 hash、问题和可复现命令，以及 `S2R-REPRO` 范围内的累计/剩余预算。
+含交接文件的最终 HEAD 在 commit/push 后核对并写入 PR；在 [handoffs/README.md](handoffs/README.md) 增加本任务交接入口，索引不取代 NEXT_ACTIONS。PR 明确下一角色为 NEW_CHAT_REVIEWER，不要求新 Chat 读取本 agent 的内部历史。
+就绪或 BLOCKED 都要提交现有证据并结束本地 session。不要自行替换 NEXT_ACTIONS 为自己想做的下一任务，不把旧计划重新标 READY。由下一全新 Chat 进行 review、发布后续一份 NEXT_ACTIONS 及 REVIEW，再由全新的 agent session 执行。
+本轮实验/测试预算仍严格按第 2 节与 T0 执行；这次增加交接格式没有分配新预算。若额度已被旧 session 使用，新 session 必须继承真实消耗。

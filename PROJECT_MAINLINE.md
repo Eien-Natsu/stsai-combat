@@ -1,6 +1,6 @@
 # STSAI 唯一主线控制文档
 
-文档版本：1。状态核对基线：`s2/fixed-budget-data@de266c4cf79fe3543d6fcfc1b69028c702e5d4d0`。
+文档版本：2。状态核对基线：`s2/fixed-budget-data@de266c4cf79fe3543d6fcfc1b69028c702e5d4d0`。
 本文件集中定义目标、当前证据、验收、优先级、资源边界及双方协作。它不是“本轮所有检查已通过”的证明。
 
 ## 1. 入口与权威
@@ -95,39 +95,87 @@ G3 缺游戏时允许明确标注“未认证 simulator pilot”的有界研发�
 
 数据按整场/近重复快照分组，分别记录训练与目标分布，不按决策行随机切分；探索性分层结果必须带 n，不据此临时改采样或判据。长期资源（药水、永久成长等）不由当前单战效用自动完整表示。
 
-## 7. 实施 agent 与 ChatGPT 的统一协作
+## 7. 固定协作模式：每轮新 Chat，每步新 agent session
 
-所有者决定目标、资源、规则变更和合并；实施者负责独立分支上的代码与实际证据；reviewer 负责固定版本审查和可执行下一轮计划，不默默修改实现或授予新预算。
-当前可用的是用户在 Chat 发起的一轮操作，通过已授权 Remote Desktop Commander 调用本机 Git/gh。clone、push、开 PR 已有实测；评论/标签状态转换仍须逐项验证，不能从 PR 创建成功推断全部写操作成功。
-期望方案 A 为 `pull_request/labeled` 且标签为 `agent-ready-for-review`。**事件订阅尚未创建、无任务 ID、未端到端验收。** 贴标签或连接设备不自动唤醒 Chat；不擅自改为轮询、daemon、Codex 或付费 API reviewer。
+这是强制协作规则，不是可选建议。一次循环定义为：
 
-### 7.1 交接与状态
-
-实施者 push 完成后，更新 [.github/pull_request_template.md](.github/pull_request_template.md)：目标、run/request ID、完整 HEAD、目标分支、上一轮计划、验证命令/结果/证据、未验证项和已知问题；最后贴 ready 标签，冻结代码与 handoff。
-默认只接收本仓库来源、打开且非 draft 的 PR。文档过渡期允许经所有者授权将 `s2/fixed-budget-data` 作为 base；以后默认 main。目标分支必须在交接中明确，不能隐式重定向。
-协议状态标签互斥，其余标签保留：ready → reviewing → needs-work / review-approved / blocked，完整名称均为 `agent-` 前缀（ready 为 `agent-ready-for-review`）。无状态标签表示实施中，不代表通过。
-`agent-review-approved` 不是 GitHub APPROVE，不是合并授权，不等于 G0–G5 全过；approved 或 blocked 时停止自动实施。禁止自动 merge、auto-merge、force-push、直接写 main 或反复改标签造成事件风暴。
-
-### 7.2 版本固定、授权与去重
-
-reviewer 先核实请求来源授权，读取当前 PR 状态及已批准基线规则，记录 repo、PR、HEAD、BASE、request ID、主线版本、唯一 run ID；手动运行注明 `manual-chat`，不伪造事件任务 ID。
-将 PR body 的 CRLF/CR 归一为 LF，以 UTF-8 计算 SHA256，单独记录 handoff_sha256，不回填 body 造成自引用。handoff 声明的 SHA 不符则阻塞，不自行审另一版本。
-检查受信任 reviewer 的认领/完整结果，以 `(repo, PR, HEAD, BASE, request ID, handoff_sha256, 主线版本)` 去重；同一 PR 串行，评论与标签不是原子锁。身份共享时标记不能证明独立审查，仍由所有者确认。
-认领需记录 UTC 时间/run ID，再换 reviewing。发布前复查 HEAD/BASE/body/request/开闭状态；变动则旧结果只标 stale，等新的明确交接。实施者执行前也要复核快照，避免检查后更新的竞态。
-同快照的正常重复事件不重审；CI 补齐、base 变动或所有者要求复审时使用新 request ID 并写原因。评论成功而标签失败时只修标签，不能重复生成计划。
-临时错误、缺权限/证据、超时分别记录，不写完成标记。遗留 reviewing 经确认旧运行停止后恢复；每次交接只做一轮，最多连续 3 轮自动修复，同一阻塞两轮无进展或需扩大权限/资源就交回所有者。
-
-### 7.3 必须交付的 review 与下一轮计划
-
-同一 PR 发布一份完整结果：`Review`（Critical/Important/Minor，路径/行号/条件/影响/证据）→ `Verification`（实际读了什么、CI 被测 SHA、亲自跑的命令、仅观察的结果、NOT_RUN 项）→ `Next Agent Plan`（顺序、文件、改动、预算、验证、完成条件）→ `Completion Criteria` → `Reviewed Snapshot`。
-Snapshot 必须含 repo/PR/HEAD/BASE/request/handoff_sha256/主线版本/trigger/run。最终标记格式如下，所有占位符须替换：
-
-```html
-<!-- agent-review mainline=1 pr=NUMBER head=SHA base=SHA request=ID handoff=SHA256 status=complete verdict=needs-work -->
+```text
+新 Chat R_n：读取仓库与 Task_n 交付 → review → 拆出一个 Task_(n+1) → 写回仓库 → 结束
+新本地 agent session A_(n+1)：读取已发布任务 → 执行一个有界目标 → 写回证据 → 结束
+新 Chat R_(n+1)：重新读取仓库并审查该交付 → 再决定下一步
 ```
 
-标记不是签名或授权。blocked/失败/过期不能冒充完成；每条确定缺陷和待验证疑点分开。写回失败则把结果留在 Chat 并明确说明，不把“已经起草”写成“已发到 GitHub”。
-最新可信 review 的计划需同步到 NEXT_ACTIONS.md 才成为下一轮执行文档；实施者只在自己分支做该同步，并核对匹配快照。不得自行添加新目标或把这次计划扩展成无限循环。
+每次 review/规划必须新建 Chat，每个新任务必须新建本地 agent session。上一位 reviewer 不在原 Chat 继续下一轮审查；上一位 agent 不等待新计划后原地续跑。一个任务可以有必需的内部子步骤，但不能把整个路线图当成一次 session 的授权。
+同一 session 内允许完成本任务的工具调用、已批准次数内的诊断/修复和交接；收到下一轮计划、增加目标或超出边界即为下一步，必须换新 session。成功、失败、BLOCKED 或预算耗尽都要持久化交接并结束。
+新会话不保证审查天然正确，也不改变证据标准。不能把“另一个 Chat 看过”当独立实验、测试通过或合并授权。
+
+### 7.1 仓库是跨会话记忆
+
+新 session 不以旧聊天记忆、项目记忆、上一位 agent 的内部状态或本地临时文件作为执行前提。恢复上下文只依赖获授权的固定提交、仓库交接记录、对应 PR 与可校验产物。
+`PROJECT_MAINLINE.md` 是唯一规则来源；`NEXT_ACTIONS.md` 是唯一当前任务单；[handoffs/README.md](handoffs/README.md) 只是历史交接索引。旧计划从其固定 Git 提交读取，不复制多个可执行“当前计划”。
+每个任务使用不可复用的 `task_id`，每次交接使用 `request_id`；Chat 与本地 agent 分别记录新的 `reviewer_session_id`、`executor_session_id`，不能冒用上轮 ID。工具没有原生 session ID 时可生成并明确标为本地记录 ID，不要求上传私密聊天链接/全文。
+交接记录位于 `handoffs/<task_id>/EXECUTION.md` 和 `handoffs/<task_id>/REVIEW.md`；原始日志/收据可保留在 `reports/<round>/`，通过文件路径、完整提交或附件 SHA256 引用，不重复搬运大文件。
+[实施交接模板](.github/agent_handoff_template.md)、[review 交接模板](.github/review_handoff_template.md)、[下一步任务模板](.github/next_actions_template.md) 只规定字段，不是额外任务单；提交的交接不得留占位符。
+
+### 7.2 新 Chat 的启动与职责
+
+所有者提供仓库及待审实施 PR/完整提交，指定这是 reviewer 角色即可；不需要再粘贴上一段长聊天。新 Chat 先实际核实工具、仓库与产物权限，不推断上一 Chat 的连接、文件和执行权限自动可用。
+先读取交接中的已授权 `plan_commit` 版本的 AGENTS/主线/NEXT_ACTIONS，再读 EXECUTION、前次 REVIEW、预算记录和被引用证据；核对 PR 当前 HEAD/BASE/request。待审 PR 自行修改的规则只能作为改动审查，不自动获得授权。
+reviewer 必须审查代码与证据并决定一个下一步，不仅复述 agent 的结论。缺输入或计划版本不明时先写 BLOCKED，不凭聊天补造任务、测试或预算。只有明确的初始启动可用所有者指令代替前次 REVIEW，须注明 bootstrap。
+reviewer 可在既有授权与剩余预算内核验；不接管实施者目录、不修改业务实现、不开展下一轮训练。输出 Review（分级问题及文件/行号/条件/证据）、Verification（亲自执行/仅阅读/未验证）、结论、一个 Next Agent Plan、完成条件及完整快照。
+结论区分 needs-work、accepted、blocked；accepted 仅表示本任务审查结论，不是 G0–G5 全过，不授权合并。BLOCKED 仍应保存诊断与所需决定，不伪装成功。
+
+### 7.3 reviewer 必须把下一步写回 Git
+
+在独立的 reviewer 规划分支（例如 `chatgpt/plan/<next_task_id>`）从明确审查的代码 HEAD 建立文档提交，保存本任务 REVIEW，并更新 NEXT_ACTIONS 为一个下一任务。允许写控制文档和交接记录，不顺便改实现。不要改动或重置实施者冻结的分支。
+NEXT_ACTIONS 必须写 task_id、状态、来源 review/session/已审 HEAD、代码基线、目标分支、唯一目标、文件范围、步骤、预算继承、验收、交付与停止条件。先列候选再选择一步；其他候选不得成为并行执行许可。
+没有可安全执行的下一步时，把 NEXT_ACTIONS 置为 WAITING_OWNER 或 STOP 并写原因；不能保留上一任务的 READY 状态让新 agent 重跑。此时结束 reviewer session，等待所有者决定后另开新 Chat。
+提交并 push 后，将真实的 `plan_commit` 完整 SHA 和分支/规划 PR 写到当前实施 PR 的交接回复或索引；自引用的提交 SHA 不写进它自身。读回 GitHub 验证内容与 SHA 后才算已发布。规划提交可以在未合并分支上，由所有者指向新 session；不自动合并来发布计划。
+PR 评论可链接仓库 REVIEW/NEXT_ACTIONS，但不能代替仓库文件。评论失败而文件已发布时，向所有者提供可核验的规划提交；文件写回失败则仅为 PLAN_NOT_PUBLISHED，当前 Chat 的草稿/下载文件不能算新 agent 的执行依据。
+若需受限的中转写入，由所有者或独立的发布 session 原样落库并回读验证；不得让已结束的实施 session 接着承接下一步。所有者确认选定已发布计划后，创建新的实施 session。reviewer 到此结束，不在本 Chat 审查后续交付。
+
+### 7.4 新本地 agent session 的启动与退出
+
+新 session 领取指定的 plan_commit，读取 AGENTS → 主线 → NEXT_ACTIONS → 来源 REVIEW 与相关证据；核对任务为 READY、版本一致、前次任务未在运行且本任务尚未交付。只有仓库名而有多个候选计划时先询问，不按最新分支或 PR 编号猜测。
+在自己的独立 branch/worktree 工作，记录新 executor_session_id、task_id、plan_commit、执行起点 SHA、目标分支及已消耗预算。不清理/切换其他 session 的工作目录；新的 session 可以使用已校验的已有产物，无须重做全部实验。
+仅执行这一个任务及其必要子步骤，按 NEXT_ACTIONS 的范围、次数和停止条件运行。遇到必须改验收/训练语义/目标/预算的问题，交付 BLOCKED；不能自行充当 reviewer 批准扩大范围。
+结束前提交 EXECUTION、实际代码/文档、原始证据与预算用量，push 并创建/更新本轮实施 PR。模板见 [.github/pull_request_template.md](.github/pull_request_template.md)。记录计划来源、实现提交、最终交接 HEAD、request_id、所有失败/未运行项和下一角色为 NEW_CHAT_REVIEWER。
+EXECUTION 记录已知的实现代码 SHA；含交接文件的最终 HEAD 在 commit 后写入 PR，避免文件自引用。新 Chat 要固定最终 PR HEAD，并分清实现 SHA 与文档提交；原始实验绑定的 SHA 不因后补文档而改写。
+最后发布 ready 或 blocked 状态、冻结分支和 PR body、向所有者返回 PR/提交/交接路径，结束 session。不得在同一 session 等 review 后继续修复；修复也必须由下一新 Chat 制定任务，再由新的 agent session 执行。
+
+### 7.5 预算、失败恢复与单步门禁
+
+预算绑定 `budget_scope_id` 和任务来源，不绑定会话寿命。每份 EXECUTION/REVIEW 写清授权上限、进入时已用、本 session 实用、累计及剩余，包含失败、超时和 reviewer 复跑。换 Chat、换 session、换分支或 request_id 均不清零。
+有父范围上限时，各子任务共享该上限；剩余额度无法核实时阻塞相关运行。新 Chat 可以提出新增预算，但必须获得所有者明确授权并写进计划后生效，不自动授予自己或 agent。
+崩溃/中断后先确认旧 session/命令已停止，保存部分交接；恢复必须新建 session、记录 resume_from 和剩余预算。同任务续接可沿用 task_id，但新 session/request_id 不复用；先前证据和消耗必须保留，不重复执行已完成步骤。
+同一任务同一时刻只允许一个执行者/审查者认领。标签/评论不是原子锁，无法保证单消费者时由所有者串行发起，不并发抢任务。重复通知只返回已有结果，不重新规划。
+不再采用“同一个 agent 连续自动修复 3 轮”的约定。每完成一步都强制经过新 Chat，再启新 agent；同一阻塞在连续两次交接中无实质进展，停止并请所有者决策。
+
+### 7.6 快照、去重与 PR 状态
+
+每次认领记录 repo、task_id、plan_commit、PR、实现 SHA、当前 HEAD/BASE、request_id、两个角色的 session ID、主线版本和唯一 run ID；未知项写明原因，不伪造。
+PR body 先将 CRLF/CR 归一为 LF，再以 UTF-8 计算 handoff_sha256；摘要不回填 body。按 `(repo, task_id, HEAD, BASE, request_id, handoff_sha256, mainline_version)` 去重，先查受信任来源的既有结果/认领。
+发布 review 前复查 HEAD/BASE/body/request/开闭状态；变化时旧结论仅标 stale，不能当当前通过。新 agent 开始前再次核对 plan_commit 与 source_review 的已审 SHA，不把规划文档提交误当已审实现提交。
+同快照正常重复事件不重审；CI 补齐、base 变化或所有者指定复审，须新 request_id 和新 Chat，并写理由、继承消耗。session ID 和机器标记不是签名/独立性证明；共用 GitHub 身份时仍需核对所有者授权链。
+只接收明确目标分支、本仓库来源、打开且非 draft 的实施 PR。当前过渡允许经所有者指定的 s2/fixed-budget-data 或规划分支；其他目标不得隐式重定向。未合并的依赖 PR 必须列出，并单列 plan_commit..HEAD 的实施差异。
+五个状态标签互斥并保留其他标签：agent-ready-for-review → agent-reviewing → agent-needs-work / agent-review-approved / agent-blocked。需求修复必须等新计划和新 session；review-approved 不等于 GitHub APPROVE 或合并授权。
+完整且非 blocked/stale 的 review 发布成功后可用下列标记；所有占位符须替换。标签写回失败只修状态，不生成第二份计划。
+
+```html
+<!-- agent-review mainline=2 task=TASK_ID pr=NUMBER head=SHA base=SHA request=ID handoff=SHA256 reviewer=SESSION_ID status=complete verdict=needs-work -->
+```
+
+### 7.7 手动换会话与未来触发器
+
+当前运行方式：所有者在 Chat 发起一次操作，双方工具权限每个新 session 实际核实。设备连接/标签都不能自行新建 Chat 或启动本地 agent；本协议不是已部署的调度器。
+期望通知仍可用 pull_request/labeled + agent-ready-for-review，但事件订阅未创建、无任务 ID、无端到端验收；不得宣称无人值守或静默改用轮询、daemon、Codex、外部收费模型 API。
+未来任何自动化也必须创建新 reviewer Chat 与新 executor session，携带仓库/固定提交/任务指针且保持单消费者；只能通知旧 session 的 hook 不满足本协议。发布文件不等于已经执行这一步，结束 session 是流程交接，不是关机或停止远程连接服务。
+
+### 7.8 本次过渡
+
+本修改由所有者明确要求设定协作方式，属于规则初始化，不冒充一次独立 S2R 审查。当前 NEXT_ACTIONS 的 S2R-REPRO 是一份有界任务，T0–T4 为内部子步骤；实验范围、停止条件和总预算不因该修改扩大。
+若 agent 尚未领取，使用本协议所在的固定规划提交新建 session。若已经按旧 4462a7c 计划开工，不热替换其任务或并行再开一份；先让它保存实际进度、证据、消耗与阶段交接并结束，再由新 Chat 决定剩余一步。
+旧 4462a7c 是可追溯的任务来源，不被悄悄改写。旧下载开场文件不再作为控制入口；未来只需给新角色仓库、指定规划提交或待审 PR，它应按仓库规则恢复上下文。
 
 ## 8. 文档生命周期与证据索引
 

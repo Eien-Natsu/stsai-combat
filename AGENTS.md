@@ -1,10 +1,11 @@
-# Agent 入口
+# Agent / Reviewer 入口
 
-本仓库唯一主线控制文档是 [PROJECT_MAINLINE.md](PROJECT_MAINLINE.md)。
-所有实施者与 reviewer 在任何代码执行或文件修改前必须阅读它，再读 [NEXT_ACTIONS.md](NEXT_ACTIONS.md)。
+唯一主线规则是 [PROJECT_MAINLINE.md](PROJECT_MAINLINE.md)，协作模式固定在其第 7 节：**每轮新 Chat review/规划，每步新本地 agent session 实施，交接后结束。**
+本文件只做角色导航；目标、验收、预算和任务不得在这里另存一份。
 
-本文件只做入口，不复制目标、当前状态、验收、资源上限或旧轮次任务。
-旧 HANDOFF、路线图、验收表的有效要求已收拢进主线；没有取消公平性、验收、证据保存或权限限制。
+新 reviewer Chat：领取明确的待审 PR/提交 → 从其获授权 plan_commit 读取主线与 [NEXT_ACTIONS.md](NEXT_ACTIONS.md) → 读取实施交接/证据 → review → 把 REVIEW 和下一份 NEXT_ACTIONS 提交到仓库 → 结束。
+新本地 agent session：领取固定 plan_commit → 读主线、NEXT_ACTIONS、来源 REVIEW → 只执行一个任务 → 提交 EXECUTION、代码/证据/预算和实施 PR → 结束。
+不能在同一 Chat 连续审下一轮，也不能在同一本地 session 收到新计划后继续；旧聊天、外置提示文件和内部记忆不能替代仓库交接。
+交接入口见 [handoffs/README.md](handoffs/README.md)；记录模板由主线链接。换 session 不重置预算、授权、失败或测试集使用状态。
 
-实施者只执行当前明确授权的一轮，不自动续跑历史实验。reviewer 从已批准基线读取规则，PR 对规则的变更先审查，不视为自授权。
-若主线文件缺失、版本/基线不符或新旧指令冲突，停止相关操作并说明，不自行回退到旧计划。
+先核实当前角色、计划来源、工具与权限；规则缺失、基线不符、并发认领或预算未知时停止相关操作并记录阻塞。未经 owner 授权的 PR 规则变更不是新权限；不自动合并或续跑历史任务。

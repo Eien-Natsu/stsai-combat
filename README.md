@@ -4,7 +4,8 @@
 
 ## [阅读 PROJECT_MAINLINE.md](PROJECT_MAINLINE.md)
 
-下一轮执行者直接阅读 [NEXT_ACTIONS.md](NEXT_ACTIONS.md)，不要续跑初交付时期的安装/训练工单。
+协作固定为：**新 Chat review/规划 → 写回仓库 → 新本地 agent session 执行一个任务 → 交接并结束 → 下一新 Chat**。具体规则见主线第 7 节，不依赖旧聊天或单独下载的提示文件。
+新角色先从 [AGENTS.md](AGENTS.md) 进入，按指定的 PR / plan_commit 恢复；当前任务只见 [NEXT_ACTIONS.md](NEXT_ACTIONS.md)，不要续跑初交付时期的安装/训练工单。
 
 ## 导航
 
@@ -12,6 +13,7 @@
 | --- | --- |
 | 唯一主线 | [PROJECT_MAINLINE.md](PROJECT_MAINLINE.md) |
 | 当前单轮执行指令 | [NEXT_ACTIONS.md](NEXT_ACTIONS.md) |
+| 跨 session 实施/review 交接索引 | [handoffs/README.md](handoffs/README.md) |
 | 架构与目标函数技术参考 | [docs/01_ARCHITECTURE.md](docs/01_ARCHITECTURE.md) |
 | 信息边界技术参考 | [docs/02_FAIRNESS.md](docs/02_FAIRNESS.md) |
 | 命令与环境参考（不是执行许可） | [docs/03_RUNBOOK.md](docs/03_RUNBOOK.md) |
