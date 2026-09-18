@@ -2,7 +2,8 @@
 """Re-run the S1R checks from this package in one command; non-zero on failure.
 
     python review/run_review.py --repo <checkout of repo.bundle> \
-        --sources native_sources.tar.gz [--package <unpacked package>] [--model model/policy_weights.pt]
+        --sources native_sources.tar.gz [--package <unpacked package>] \
+        [--model model/D384_s17_selected.pt] [--jobs 2]
 
 Order, and it matters:
 
@@ -18,6 +19,10 @@ Order, and it matters:
                 hashes against the built engine
   model_smoke   only when a model is supplied: load it and run the 12 shipped
                 public observations
+
+`--jobs` is forwarded to the offline build's `cmake --build --parallel`; that
+compile step defaults to four workers on its own, which is over the project's
+two-worker budget, so the default here is 2.
 
 Running pytest first and building afterwards would leave the native tests
 skipped and the build unverified, and reading a saved boolean is not running the
@@ -99,14 +104,15 @@ def step_attachments(package):
                             else "manifest verified")
 
 
-def step_build(repo, sources, work, timeout):
+def step_build(repo, sources, work, timeout, jobs):
     receipt = work / "native_build_receipt.json"
     logs = work / "logs"
     logs.mkdir(parents=True, exist_ok=True)
     try:
         result = python(str(HERE / "offline_native_build.py"), "--repo", str(repo), "--sources",
                         str(sources), "--receipt", str(receipt), "--logs", str(logs),
-                        "--timeout", str(timeout), cwd=PKG, timeout=timeout + 60)
+                        "--jobs", str(jobs), "--timeout", str(timeout), cwd=PKG,
+                        timeout=timeout + 60)
     except subprocess.TimeoutExpired:
         return "TIMEOUT", f"the build step exceeded {timeout + 60}s of wall clock", {}
     (logs / "offline_build_stdout.log").write_text(
@@ -241,7 +247,7 @@ def step_model(repo, model, package, work, build_detail, timeout):
     return result.returncode == 0, tail[-1] if tail else ""
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", required=True)
     parser.add_argument("--sources", default=None, help="native_sources.tar.gz")
@@ -249,9 +255,16 @@ def main():
     parser.add_argument("--model", default=None, help="a selected inference checkpoint")
     parser.add_argument("--work", default=None)
     parser.add_argument("--receipt", default=None, help="where to write the structured receipt")
+    parser.add_argument("--jobs", type=int, default=2,
+                        help="compile parallelism forwarded to the offline build; the project "
+                             "budget is 2 workers unless the round says otherwise")
     parser.add_argument("--timeout", type=float, default=1800.0,
                         help="seconds per external step; a step that overruns reports TIMEOUT")
-    args = parser.parse_args()
+    return parser
+
+
+def main():
+    args = build_parser().parse_args()
 
     repo = Path(args.repo).resolve()
     if args.work:
@@ -269,7 +282,7 @@ def main():
         build_ok, build_note, detail = None, "no --sources given", {}
     else:
         build_ok, build_note, detail = step_build(repo, Path(args.sources).resolve(), work,
-                                                  args.timeout)
+                                                  args.timeout, args.jobs)
         report.add("native_build", build_ok, build_note)
 
     ok, note = step_import(repo, detail)
