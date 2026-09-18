@@ -14,3 +14,4 @@ logs/
 *.pyd
 *.pt
 .DS_Store
+delivery/
