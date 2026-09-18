@@ -70,6 +70,21 @@ def collate_samples(samples):
             "decision":torch.tensor([int(batch["action_mask"][i].sum())>1 for i in range(len(samples))])}
     return batch,labels
 
+def policy_term(elementwise,decision):
+    """Mean cross-entropy over states that actually have a choice.
+
+    `elementwise` is expected to be already reduced over actions, so it is
+    (batch,) and so is `decision`. The mask is applied elementwise. Reshaping
+    the mask to (batch,1) would broadcast the product into a (batch,batch) grid
+    and sum batch*batch terms instead of batch, silently scaling the policy
+    gradient by the batch size while the auxiliary heads keep their scale. The
+    shape check makes that mistake loud instead of silent.
+    """
+    if elementwise.shape != decision.shape:
+        raise ValueError(f"policy term needs matching shapes, got {tuple(elementwise.shape)} "
+                         f"and {tuple(decision.shape)}; a (batch,1) mask would build a (batch,batch) grid")
+    return (elementwise*decision).sum()/decision.sum().clamp_min(1)
+
 def losses(output,labels):
     """Auxiliary heads keep the batch mean; the policy head is normalised by the
     number of DECISION states. A state with one legal action contributes ~0 to
@@ -78,8 +93,7 @@ def losses(output,labels):
     against the outcome and value heads."""
     elementwise=-(labels["policy"]*output["policy_logits"].log_softmax(-1)).sum(-1)
     decision=labels["decision"]
-    # (b,) -> (b,1): elementwise is per action, the mask is per sample.
-    policy=(elementwise*decision.unsqueeze(-1)).sum()/decision.sum().clamp_min(1)
+    policy=policy_term(elementwise,decision)
     mask=labels["value_mask"]; count=mask.sum().clamp_min(1)
     outcome=(-(labels["outcome"]*output["outcome_logits"].log_softmax(-1)).sum(-1)*mask).sum()/count
     value=(((output["value"]-labels["value"])**2)*mask).sum()/count

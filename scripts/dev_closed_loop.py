@@ -59,6 +59,10 @@ def main():
     parser.add_argument("--output", default="reports/dev_closed_loop")
     parser.add_argument("--scenarios", type=int, default=256)
     parser.add_argument("--matrix", default="runs/matrix")
+    parser.add_argument("--model-dirs", nargs="+", default=None,
+                        help="explicit checkpoint directories; default is every cell under --matrix")
+    parser.add_argument("--baselines", nargs="+", default=["heuristic", "search", "random"],
+                        help="baseline agents to run alongside the models")
     parser.add_argument("--config", default="configs/native_pilot.json")
     args = parser.parse_args()
 
@@ -81,11 +85,14 @@ def main():
     base = json.loads((ROOT / args.config).read_text())["search"]
     sc = SearchConfig(**base)
 
-    cells = sorted(p.name for p in (ROOT / args.matrix).iterdir() if p.is_dir())
     from stsai.model import ModelEvaluator
+    if args.model_dirs:
+        sources = [(Path(d).name, ROOT / d / "model" / "best.pt") for d in args.model_dirs]
+    else:
+        sources = [(cell, ROOT / args.matrix / cell / "model" / "best.pt")
+                   for cell in sorted(p.name for p in (ROOT / args.matrix).iterdir() if p.is_dir())]
     models = {}
-    for cell in cells:
-        ckpt = ROOT / args.matrix / cell / "model" / "best.pt"
+    for cell, ckpt in sources:
         if ckpt.exists():
             models[cell] = (ModelEvaluator.from_checkpoint(str(ckpt), "cpu", "lightspeed_pilot"),
                             ckpt, "cpu")
@@ -98,7 +105,7 @@ def main():
     started = time.perf_counter()
     for entry in scenarios:
         scenario = entry["scenario"]; seed = entry["episode_seed"]; index = entry["index"]
-        for agent in ["heuristic", "search", "random"] + list(models):
+        for agent in list(args.baselines) + list(models):
             env = make_env("lightspeed_pilot", scenario, seed)
             if agent == "random":
                 rng = np.random.default_rng(index)
@@ -132,7 +139,7 @@ def main():
         for record in records:
             handle.write(json.dumps(record) + "\n")
 
-    agents = ["heuristic", "search", "random"] + list(models)
+    agents = list(args.baselines) + list(models)
     by_agent = {}
     for agent in agents:
         rows = [r for r in records if r["agent"] == agent]

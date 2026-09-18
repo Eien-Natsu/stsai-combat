@@ -1,67 +1,84 @@
-"""Regression coverage for the training objective's normalisation.
+"""Regression tests for the policy term in the training objective.
 
-The generalisation matrix was trained while `losses()` contained a broadcasting
-error: the policy term multiplied a per-sample vector (b,) by a per-sample mask
-reshaped to (b,1), which numpy/torch broadcast into a (b,b) outer product. The
-sum then ran over b*b terms instead of b, inflating the policy term by roughly
-the batch size and starving the auxiliary heads.
-
-These tests pin the defect down numerically so it cannot be reintroduced or
-silently "fixed" without a re-run. The passing test records what the shipped
-code currently does; the strict xfail records what it is supposed to do and
-turns into a failure the moment someone changes the behaviour, which is exactly
-the signal that the frozen matrix would need retraining.
+The generalisation matrix at fb9bf6e was trained while this term broadcast a
+(batch,) vector against a (batch,1) mask, producing a (batch,batch) outer
+product: the sum ran over batch*batch entries instead of batch, inflating the
+policy loss by roughly the batch size while the auxiliary heads kept their
+scale. These tests pin the shape, the hand-computed value, and the absence of
+the broadcast.
 """
 import pytest
 import torch
 
-from stsai.training import losses
+from stsai.training import losses, policy_term
 
 
-def synthetic(batch=8, actions=4):
+def synthetic(batch=4, decision=(1.0, 0.0, 1.0, 0.0), actions=4):
     torch.manual_seed(0)
     logits = torch.randn(batch, actions)
     policy = torch.softmax(torch.randn(batch, actions), -1)
-    decision = torch.ones(batch, dtype=torch.bool)
-    decision[2] = decision[5] = False          # two forced single-action states
+    decision = torch.tensor(decision, dtype=torch.bool)
     output = {"policy_logits": logits,
               "outcome_logits": torch.randn(batch, 11),
               "value": torch.rand(batch)}
     labels = {"policy": policy, "decision": decision,
               "outcome": torch.full((batch, 11), 1.0 / 11),
               "value": torch.rand(batch), "value_mask": torch.ones(batch)}
-    return output, labels, policy, decision, logits
+    return output, labels
 
 
-def test_policy_term_is_inflated_by_the_outer_product():
-    """Documents the shipped behaviour: the (b,) x (b,1) product is a (b,b) grid."""
-    output, labels, policy, decision, logits = synthetic()
-    elementwise = -(policy * logits.log_softmax(-1)).sum(-1)          # (b,)
-    current = (elementwise * decision.unsqueeze(-1)).sum() / decision.sum().clamp_min(1)
-    intended = (elementwise * decision).sum() / decision.sum().clamp_min(1)
-    assert (elementwise * decision.unsqueeze(-1)).shape == (8, 8)
-    assert (elementwise * decision).shape == (8,)
-    assert float(current) > 3 * float(intended), \
-        "the inflation is real: the current form sums over b*b terms"
-
-
-@pytest.mark.xfail(strict=True, reason=(
-    "Known defect: stsai.training.losses() broadcasts (b,) x (b,1) into a (b,b) outer "
-    "product, inflating the policy term ~batch_size x. The generalisation matrix at "
-    "commit fb9bf6e was trained under this objective, so the fix must land together "
-    "with a retrain, not silently. See evidence_response.md section 0.1."))
-def test_policy_term_is_mean_over_decision_states():
-    """The intended semantics: mean cross-entropy over states that have a choice."""
-    output, labels, policy, decision, logits = synthetic()
+# --- Test 1: loss shape ------------------------------------------------------
+def test_losses_returns_scalar_policy_term():
+    output, labels = synthetic(batch=4, decision=(1, 0, 1, 0))
     _, parts = losses(output, labels)
-    elementwise = -(policy * logits.log_softmax(-1)).sum(-1)
-    intended = (elementwise * decision).sum() / decision.sum().clamp_min(1)
-    assert torch.isclose(parts["policy_loss"], intended, atol=1e-6)
+    assert parts["policy_loss"].shape == torch.Size([]), "policy loss must be a scalar"
+    assert parts["outcome_loss"].shape == torch.Size([])
+    assert parts["value_loss"].shape == torch.Size([])
 
 
-def test_auxiliary_heads_are_not_affected_by_the_policy_defect():
-    """The defect is confined to the policy term; the auxiliary terms are the batch mean."""
-    output, labels, _, _, _ = synthetic()
+# --- Test 2: hand-computed value --------------------------------------------
+def test_policy_term_matches_hand_computation():
+    elementwise = torch.tensor([1.0, 2.0, 3.0, 4.0])
+    decision = torch.tensor([1, 0, 1, 0], dtype=torch.bool)
+    assert float(policy_term(elementwise, decision)) == pytest.approx(2.0)
+
+
+# --- Test 3: broadcasting is forbidden --------------------------------------
+def test_policy_term_rejects_a_broadcasting_mask():
+    """A (batch,1) mask must raise rather than build a (batch,batch) grid."""
+    elementwise = torch.tensor([1.0, 2.0, 3.0, 4.0])
+    with pytest.raises(ValueError, match="batch,batch"):
+        policy_term(elementwise, torch.tensor([1.0, 0.0, 1.0, 0.0]).unsqueeze(-1))
+
+
+def test_broadcast_value_is_not_what_the_term_returns():
+    """The defect would have produced 10 here; the correct term is 2.
+
+    The product is rows of [1,2,3,4] repeated for each decision-flagged sample:
+    its sum is 20 against a denominator of 2, i.e. 10. Pinning both the correct
+    value and the defective one means a reintroduction cannot pass by looking
+    merely plausible.
+    """
+    elementwise = torch.tensor([1.0, 2.0, 3.0, 4.0])
+    decision = torch.tensor([1.0, 0.0, 1.0, 0.0])
+    grid = elementwise * decision.unsqueeze(-1)
+    assert grid.shape == (4, 4)
+    broadcast = float(grid.sum() / decision.sum())
+    assert broadcast == pytest.approx(10.0)
+    assert float(policy_term(elementwise, decision.bool())) == pytest.approx(2.0)
+
+
+def test_policy_term_is_invariant_to_batch_size():
+    """The defect scaled with batch size; the correct term must not."""
+    elementwise = torch.tensor([1.0, 3.0])
+    decision = torch.tensor([True, True])
+    small = float(policy_term(elementwise, decision))
+    big = float(policy_term(torch.cat([elementwise] * 8), torch.cat([decision] * 8)))
+    assert small == pytest.approx(big)
+
+
+def test_auxiliary_heads_are_unaffected():
+    output, labels = synthetic()
     _, parts = losses(output, labels)
-    assert parts["outcome_loss"].ndim == 0 and float(parts["outcome_loss"]) > 0
-    assert parts["value_loss"].ndim == 0 and float(parts["value_loss"]) > 0
+    assert float(parts["outcome_loss"]) > 0
+    assert float(parts["value_loss"]) > 0
