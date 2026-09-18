@@ -199,6 +199,7 @@ def main():
     parser.add_argument("--package", default=None, help="the unpacked review package")
     parser.add_argument("--model", default=None, help="a selected inference checkpoint")
     parser.add_argument("--work", default=None)
+    parser.add_argument("--receipt", default=None, help="where to write the structured receipt")
     args = parser.parse_args()
 
     repo = Path(args.repo).resolve()
@@ -230,10 +231,12 @@ def main():
     ok, note = step_model(repo, Path(args.model).resolve() if args.model else None, work, detail)
     report.add("model_smoke", ok, note, required=args.model is not None)
 
-    (work / "review_receipt.json").write_text(json.dumps(
+    receipt = Path(args.receipt).resolve() if args.receipt else work / "review_receipt.json"
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    receipt.write_text(json.dumps(
         {"repo": str(repo), "sources": args.sources, "package": args.package,
          "steps": report.rows}, indent=2) + "\n", encoding="utf-8")
-    print(f"receipt: {work / 'review_receipt.json'}")
+    print(f"receipt: {receipt}")
     raise SystemExit(report.exit_code())
 
 
