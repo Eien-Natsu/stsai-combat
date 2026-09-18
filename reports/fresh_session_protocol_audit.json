@@ -1,0 +1,207 @@
+{
+  "purpose": "Static verification of owner-requested fresh-chat/fresh-agent-session protocol; not an implementation or experiment review",
+  "baseline": "4462a7c048beebd1caed82a7c0ba1fc80d0cb16b",
+  "mainline_version": 2,
+  "utc_checked_at": "2026-09-18T17:11:50.661327+00:00",
+  "changed_existing": [
+    "PROJECT_MAINLINE.md",
+    "NEXT_ACTIONS.md",
+    "AGENTS.md",
+    "README.md",
+    ".github/pull_request_template.md"
+  ],
+  "new_documents": [
+    ".github/agent_handoff_template.md",
+    ".github/review_handoff_template.md",
+    ".github/next_actions_template.md",
+    "handoffs/README.md"
+  ],
+  "non_target_original_files_byte_identical": 181,
+  "protected_mainline_goals_evidence_acceptance_sections_2_to_6": "unchanged after EOL normalization",
+  "original_S2R_T0_T4_tasks_and_resource_limits": "retained unchanged after EOL normalization",
+  "local_markdown_links_checked": 40,
+  "utf8_and_fences": "PASS",
+  "git_diff_check": "PASS",
+  "link_checks": [
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "NEXT_ACTIONS.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "engine_lock.json"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "reports/s2_volume_protocol.json"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "reports/s2_junit.xml"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "reports/s2_build_and_test.log"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "delivery_docs/s2/SUMMARY.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "reports/s2_paired_summary.json"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "reports/docs_consolidation_audit.json"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "handoffs/README.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": ".github/agent_handoff_template.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": ".github/review_handoff_template.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": ".github/next_actions_template.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": ".github/pull_request_template.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "delivery_docs/README.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "docs/SOURCES.md"
+    },
+    {
+      "from": "PROJECT_MAINLINE.md",
+      "target": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "from": "NEXT_ACTIONS.md",
+      "target": "PROJECT_MAINLINE.md"
+    },
+    {
+      "from": "NEXT_ACTIONS.md",
+      "target": ".github/agent_handoff_template.md"
+    },
+    {
+      "from": "NEXT_ACTIONS.md",
+      "target": "handoffs/README.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "target": "PROJECT_MAINLINE.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "target": "NEXT_ACTIONS.md"
+    },
+    {
+      "from": "AGENTS.md",
+      "target": "handoffs/README.md"
+    },
+    {
+      "from": "README.md",
+      "target": "PROJECT_MAINLINE.md"
+    },
+    {
+      "from": "README.md",
+      "target": "AGENTS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "NEXT_ACTIONS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "PROJECT_MAINLINE.md"
+    },
+    {
+      "from": "README.md",
+      "target": "NEXT_ACTIONS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "handoffs/README.md"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/01_ARCHITECTURE.md"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/02_FAIRNESS.md"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/03_RUNBOOK.md"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/04_NATIVE.md"
+    },
+    {
+      "from": "README.md",
+      "target": "delivery_docs/README.md"
+    },
+    {
+      "from": "README.md",
+      "target": "docs/SOURCES.md"
+    },
+    {
+      "from": "README.md",
+      "target": "THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "from": "handoffs/README.md",
+      "target": "../PROJECT_MAINLINE.md#7-固定协作模式每轮新-chat每步新-agent-session"
+    },
+    {
+      "from": "handoffs/README.md",
+      "target": "../NEXT_ACTIONS.md"
+    },
+    {
+      "from": "handoffs/README.md",
+      "target": "../.github/agent_handoff_template.md"
+    },
+    {
+      "from": "handoffs/README.md",
+      "target": "../.github/review_handoff_template.md"
+    },
+    {
+      "from": "handoffs/README.md",
+      "target": "../.github/next_actions_template.md"
+    }
+  ],
+  "scope": "documentation and handoff templates only",
+  "project_tests_run_by_this_session": false,
+  "training_collection_or_evaluation_launched_by_this_session": false,
+  "event_subscription_created": false,
+  "new_agent_session_launched": false,
+  "current_S2R_execution_or_review_created": false,
+  "prior_CI_failure": "preserved in mainline, not fixed by this documentation change",
+  "transition": "existing old-plan work must be handed off with consumed budget; no hot replacement or duplicate run",
+  "working_copy_document_sha256": {
+    "PROJECT_MAINLINE.md": "97d23ddb27f9e75b1d0395a9d252a6653d12de77d3a802554abf739886cd7395",
+    "NEXT_ACTIONS.md": "b670f78f35db4fb8a3f1f0411d3d04c0bbf9175c66379d72eef139bb1040a066",
+    "AGENTS.md": "642db37066bc5d76dbe24d92cc11bba87d41588675f7dce01cc72a961268744d",
+    "README.md": "785f8111e51339e443893b47888638696e3ba287aa37346268cc98812c64e310",
+    ".github/pull_request_template.md": "8e5255cedcaa76186f0d66554075b77614194438c0e5de8c8e0175055cb2121a",
+    ".github/agent_handoff_template.md": "d606acaf2f746dad5f934df8e8b0600d4f352772acccbe5a38e7be9c3cccb8a7",
+    ".github/review_handoff_template.md": "4978a50924e69dabf90d5dfe7ac66b7e4f331c86df761b0486dca4a7e8f1c887",
+    ".github/next_actions_template.md": "f597b344f1fc52959d9f3cb2dea28f429693ded5902022c11ff11c1b6ff47c8a",
+    "handoffs/README.md": "647a458c25ec418f2d89bb9662b5c0a1c5a1b9e16012ffe79dfd0e08430dcffd"
+  },
+  "hash_scope": "before/after local Windows checkout bytes; not a cross-platform EOL promise"
+}
