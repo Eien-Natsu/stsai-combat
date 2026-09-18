@@ -1,0 +1,49 @@
+{
+  "repo": "/home/node/s2r-t3/checkout",
+  "sources": "/home/node/s2r-t3/out/work/package/native_sources.tar.gz",
+  "package": "/home/node/s2r-t3/out/work/package",
+  "steps": [
+    {
+      "step": "attachments",
+      "status": "PASS",
+      "note": "manifest verified",
+      "required": true
+    },
+    {
+      "step": "native_build",
+      "status": "PASS",
+      "note": "built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so",
+      "required": true
+    },
+    {
+      "step": "import",
+      "status": "PASS",
+      "note": "revision 7476a8195402, 5 patches",
+      "required": true
+    },
+    {
+      "step": "intent",
+      "status": "PASS",
+      "note": "native/intent_table.def matches the derivation (50 rows)",
+      "required": true
+    },
+    {
+      "step": "tests",
+      "status": "PASS",
+      "note": "277 tests, 0 failed, 0 skipped, 155 native/regression cases",
+      "required": true
+    },
+    {
+      "step": "counterfactual",
+      "status": "PASS",
+      "note": "5 steps replayed, 1024 sampler seeds, root stable=True",
+      "required": true
+    },
+    {
+      "step": "model_smoke",
+      "status": "PASS",
+      "note": "12 observations loaded and run; max probability delta 0.00e+00; 0 failures",
+      "required": true
+    }
+  ]
+}

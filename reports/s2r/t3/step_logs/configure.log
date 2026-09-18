@@ -1,0 +1,17 @@
+$ cmake -S /home/node/s2r-t3/checkout/native -B /home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/build -DCMAKE_BUILD_TYPE=Release -DSTS_ENGINE_DIR=/home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/engine -DSTSAI_ENGINE_REVISION=7476a81954020087da31d41d16fddf475746ec2d -DSTSAI_ENGINE_PATCHES=6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db,1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab,312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5,bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796,762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f -DPython_EXECUTABLE=/home/node/s2r-cpu-venv/bin/python -Dpybind11_DIR=/home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/src/native_sources/pybind11/share/cmake/pybind11 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/module -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=/home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/module
+exit code: 0
+
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python: /home/node/s2r-cpu-venv/bin/python (found version "3.12.14") found components: Interpreter Development.Module
+-- Performing Test HAS_FLTO
+-- Performing Test HAS_FLTO - Success
+-- Found pybind11: /home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/src/native_sources/pybind11/include (found version "2.13.6")
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/build
+

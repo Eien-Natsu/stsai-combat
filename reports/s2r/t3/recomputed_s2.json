@@ -1,0 +1,346 @@
+{
+  "purpose": "Independent recomputation of the S2 paired statistics.",
+  "episodes_read": 4096,
+  "sets": [
+    "dev_old256",
+    "dev_probe256"
+  ],
+  "policies": [
+    "D384_s17",
+    "D384_s29",
+    "D384_s43",
+    "D96_s17",
+    "D96_s29",
+    "D96_s43",
+    "heuristic",
+    "search"
+  ],
+  "bootstrap": {
+    "replicates": 20000,
+    "seed": 20260920,
+    "unit": "scenario"
+  },
+  "truncated": {},
+  "comparisons": {
+    "dev_old256": {
+      "D384_minus_D96_per_seed": {
+        "s17": {
+          "scenarios": 256,
+          "mean": 0.00015625000000000014,
+          "ci95": [
+            -0.0178125,
+            0.01816455078124996
+          ],
+          "lower_above_zero": false
+        },
+        "s29": {
+          "scenarios": 256,
+          "mean": 0.018759765624999997,
+          "ci95": [
+            -0.001787109375000001,
+            0.040762207031249956
+          ],
+          "lower_above_zero": false
+        },
+        "s43": {
+          "scenarios": 256,
+          "mean": 0.018603515625000004,
+          "ci95": [
+            0.0024313964843750034,
+            0.03636743164062499
+          ],
+          "lower_above_zero": true
+        }
+      },
+      "D384_minus_D96_joint": {
+        "scenarios": 256,
+        "mean": 0.012506510416666667,
+        "ci95": [
+          -0.00032576497395833285,
+          0.02612638346354166
+        ],
+        "lower_above_zero": false
+      },
+      "seed_means": [
+        0.00015625000000000014,
+        0.018759765624999997,
+        0.018603515625000004
+      ],
+      "mean_of_seed_means": 0.012506510416666667,
+      "all_same_direction": true,
+      "D384_s17_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.018105468750000003,
+        "ci95": [
+          -0.010751953124999996,
+          0.047548828125
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s17_minus_search": {
+        "scenarios": 256,
+        "mean": -0.04241210937500001,
+        "ci95": [
+          -0.065156494140625,
+          -0.02208959960937502
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s29_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.0233984375,
+        "ci95": [
+          -0.0017292480468750016,
+          0.04973632812500001
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s29_minus_search": {
+        "scenarios": 256,
+        "mean": -0.037119140625000005,
+        "ci95": [
+          -0.058926025390625004,
+          -0.017275390625000005
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s43_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.02951171875,
+        "ci95": [
+          0.003075927734374999,
+          0.05714843750000001
+        ],
+        "lower_above_zero": true
+      },
+      "D384_s43_minus_search": {
+        "scenarios": 256,
+        "mean": -0.031005859375000007,
+        "ci95": [
+          -0.053174072265625004,
+          -0.011015625000000001
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s17_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.017949218750000006,
+        "ci95": [
+          -0.007705322265625,
+          0.044824218750000006
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s17_minus_search": {
+        "scenarios": 256,
+        "mean": -0.042568359375,
+        "ci95": [
+          -0.0635546875,
+          -0.02402319335937502
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s29_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.0046386718750000035,
+        "ci95": [
+          -0.023486572265625,
+          0.03328173828124996
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s29_minus_search": {
+        "scenarios": 256,
+        "mean": -0.055878906250000006,
+        "ci95": [
+          -0.08045898437500001,
+          -0.033866699218750046
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s43_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.010908203125000005,
+        "ci95": [
+          -0.018007812499999998,
+          0.040849609375000005
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s43_minus_search": {
+        "scenarios": 256,
+        "mean": -0.049609375000000004,
+        "ci95": [
+          -0.072568359375,
+          -0.02921875000000001
+        ],
+        "lower_above_zero": false
+      }
+    },
+    "dev_probe256": {
+      "D384_minus_D96_per_seed": {
+        "s17": {
+          "scenarios": 256,
+          "mean": 0.009033203124999998,
+          "ci95": [
+            -0.010078125,
+            0.028857666015624978
+          ],
+          "lower_above_zero": false
+        },
+        "s29": {
+          "scenarios": 256,
+          "mean": 0.006904296875000005,
+          "ci95": [
+            -0.009902343749999997,
+            0.02388696289062498
+          ],
+          "lower_above_zero": false
+        },
+        "s43": {
+          "scenarios": 256,
+          "mean": 0.012119140625,
+          "ci95": [
+            -0.006611328125,
+            0.031709228515624986
+          ],
+          "lower_above_zero": false
+        }
+      },
+      "D384_minus_D96_joint": {
+        "scenarios": 256,
+        "mean": 0.009352213541666664,
+        "ci95": [
+          -0.0034831542968750038,
+          0.02330428059895831
+        ],
+        "lower_above_zero": false
+      },
+      "seed_means": [
+        0.009033203124999998,
+        0.006904296875000005,
+        0.012119140625
+      ],
+      "mean_of_seed_means": 0.009352213541666668,
+      "all_same_direction": true,
+      "D384_s17_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.031855468750000004,
+        "ci95": [
+          0.004511718750000001,
+          0.061133544921874935
+        ],
+        "lower_above_zero": true
+      },
+      "D384_s17_minus_search": {
+        "scenarios": 256,
+        "mean": -0.0446484375,
+        "ci95": [
+          -0.0692294921875,
+          -0.022343505859375022
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s29_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.04218750000000001,
+        "ci95": [
+          0.018535156250000007,
+          0.06860400390624997
+        ],
+        "lower_above_zero": true
+      },
+      "D384_s29_minus_search": {
+        "scenarios": 256,
+        "mean": -0.03431640625,
+        "ci95": [
+          -0.053232421875,
+          -0.018358642578125056
+        ],
+        "lower_above_zero": false
+      },
+      "D384_s43_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.031826171875,
+        "ci95": [
+          0.003720214843750003,
+          0.061552734375
+        ],
+        "lower_above_zero": true
+      },
+      "D384_s43_minus_search": {
+        "scenarios": 256,
+        "mean": -0.04467773437500001,
+        "ci95": [
+          -0.06777392578125001,
+          -0.02334936523437502
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s17_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.022822265625,
+        "ci95": [
+          -0.005751953124999999,
+          0.052695312499999994
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s17_minus_search": {
+        "scenarios": 256,
+        "mean": -0.053681640625,
+        "ci95": [
+          -0.079189697265625,
+          -0.030331787109375022
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s29_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.035283203125,
+        "ci95": [
+          0.007021484375000011,
+          0.06513720703124996
+        ],
+        "lower_above_zero": true
+      },
+      "D96_s29_minus_search": {
+        "scenarios": 256,
+        "mean": -0.041220703125,
+        "ci95": [
+          -0.063115478515625,
+          -0.02142578125
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s43_minus_heuristic": {
+        "scenarios": 256,
+        "mean": 0.019707031250000003,
+        "ci95": [
+          -0.008281494140625,
+          0.04872094726562499
+        ],
+        "lower_above_zero": false
+      },
+      "D96_s43_minus_search": {
+        "scenarios": 256,
+        "mean": -0.056796875,
+        "ci95": [
+          -0.08142578125,
+          -0.034745605468750045
+        ],
+        "lower_above_zero": false
+      }
+    }
+  },
+  "verdict": {
+    "all_three_seeds_same_direction": true,
+    "mean_of_seed_means": 0.009352213541666668,
+    "joint_ci95": [
+      -0.0034831542968750038,
+      0.02330428059895831
+    ],
+    "supports_D384": false,
+    "how_to_read": "applies to this probe and these three seeds at this budget"
+  }
+}

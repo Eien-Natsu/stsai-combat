@@ -1,0 +1,44 @@
+{
+  "trace": "/home/node/s2r-t3/checkout/tests/fixtures/ambiguity_public_trace.json",
+  "scenario": {
+    "deck": [
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+",
+      "DISARM+"
+    ],
+    "encounter": "TWO_LOUSE",
+    "ascension": 20,
+    "hp": 200,
+    "max_hp": 200,
+    "floor": 1,
+    "act": 1,
+    "potions": []
+  },
+  "seed": 985017620115975495,
+  "steps_replayed": 5,
+  "observation_hash_mismatches": [],
+  "sampler_seeds": 1024,
+  "root_stable": true,
+  "candidates_seen": [
+    6,
+    7,
+    8
+  ],
+  "public_interval": [
+    6,
+    8
+  ],
+  "pair_roots_identical": true,
+  "fixed_sampler_agrees_on": 4,
+  "fixed_sampler_diverges_on": 0,
+  "prefix_sampler_diverges_on": 4,
+  "counterfactual_shows_dependency": true,
+  "counterfactual_removed_by_fix": true
+}

@@ -1,0 +1,7 @@
+       0 00_verify_and_extract          1.2s  /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/check_review_inputs.py --re
+       0 01_clone_bundle                0.1s  git clone /home/node/s2r-t3/out/work/package/repo.bundle /home/node/s2r-t3/checkout
+       0 02_checkout_pinned_commit      0.0s  git -C /home/node/s2r-t3/checkout checkout --detach 253e3914a2da95bd5984b45c1559635f5f1621
+       0 03_contract_against_checkout     1.2s  /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/check_review_inputs.py --re
+       0 04_run_review                 27.9s  /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/run_review.py --repo /home/
+       0 05_recompute_s2                2.7s  /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/recompute_s2.py --package /
+cold review: PASS; summary in /home/node/s2r-t3/out/cold_review.json

@@ -1,0 +1,13 @@
+$ offline_native_build.py
+exit code: 0
+
+[snapshot_archive] {"sha256": "f9eaf1cd3ea6e5c3ea68e3e9d3d7165970e042ba9e0220ef895d82a153e9df77", "verified": true}
+[snapshot_files] {"verified": 129, "patch_state": "PRE_PATCH"}
+[patch_series] {"applied": 5, "files": ["include/combat/BattleContext.h", "src/combat/Actions.cpp", "src/combat/BattleContext.cpp", "src/combat/CardInstance.cpp", "src/combat/CardManager.cpp", "src/combat/MonsterGroup.cpp", "src/combat/MonsterSpecific.cpp", "src/sim/search/BattleScumSearcher2.cpp", "src/sim/search
+[toolchain] {"compiler": "/usr/bin/c++"}
+[build] {"ok": true, "directory": "/home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/build", "log": "/home/node/s2r-t3/out/work/review/logs/build.log"}
+[installed] {"module": "_lightspeed.cpython-312-x86_64-linux-gnu.so"}
+[import] {"revision": "7476a8195402", "patches": 5}
+engine sources for the intent generator: /home/node/s2r-t3/out/tmp/stsai-native-jgim04v_/engine
+artifacts in /home/node/s2r-t3/out/tmp/stsai-native-jgim04v_
+

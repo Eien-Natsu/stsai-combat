@@ -1,0 +1,7 @@
+cwd: /home/node/stsai-s2r
+command: /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/check_review_inputs.py --repo /home/node/stsai-s2r --package /workspaces/stsai_web/stsai_s2_review_253e391.zip --work /home/node/s2r-t3/out/work --out /home/node/s2r-t3/out/input_receipt.json --lock /home/node/stsai-s2r/reports/s2r/artifact_lock.json
+env: HOME=/home/node/s2r-t3/out/isolated-home PATH=/home/node/s2r-cpu-venv/bin:/usr/local/bin:/usr/bin:/bin
+started: 2026-09-18T17:08:57Z
+finished: 2026-09-18T17:08:58Z
+elapsed_seconds: 1.2
+exit_code: 0

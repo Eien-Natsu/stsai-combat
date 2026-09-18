@@ -1,0 +1,7 @@
+cwd: /home/node/s2r-t3/out
+command: git clone /home/node/s2r-t3/out/work/package/repo.bundle /home/node/s2r-t3/checkout
+env: HOME=/home/node/s2r-t3/out/isolated-home PATH=/home/node/s2r-cpu-venv/bin:/usr/local/bin:/usr/bin:/bin
+started: 2026-09-18T17:08:58Z
+finished: 2026-09-18T17:08:58Z
+elapsed_seconds: 0.1
+exit_code: 0

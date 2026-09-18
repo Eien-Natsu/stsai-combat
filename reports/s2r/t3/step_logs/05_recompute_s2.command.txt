@@ -1,0 +1,7 @@
+cwd: /home/node/stsai-s2r
+command: /home/node/s2r-cpu-venv/bin/python /home/node/stsai-s2r/review/recompute_s2.py --package /home/node/s2r-t3/out/work/package --out /home/node/s2r-t3/out/recomputed_s2.json
+env: HOME=/home/node/s2r-t3/out/isolated-home PATH=/home/node/s2r-cpu-venv/bin:/usr/local/bin:/usr/bin:/bin
+started: 2026-09-18T17:09:27Z
+finished: 2026-09-18T17:09:30Z
+elapsed_seconds: 2.7
+exit_code: 0

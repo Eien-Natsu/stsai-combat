@@ -1,0 +1,101 @@
+{
+  "checks": [
+    {
+      "check": "package_root",
+      "note": "directory package at /home/node/s2r-t3/out/work/package",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "archive_safety",
+      "note": "no unsafe archive members",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "layout",
+      "note": "all 28 required inputs are present",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "manifest",
+      "note": "33 members verify against the manifest",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "path_scope",
+      "note": "every input stays inside the package root",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "provenance",
+      "note": "provenance is consistent with the checkout and the package (4 digests)",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "versions",
+      "note": "6 declared revisions match this build",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "protocol_identity",
+      "note": "volume protocol, 6 runs declared: ['D384_s17', 'D384_s29', 'D384_s43']...",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "model_identity",
+      "note": "optimizer-free export of best.pt at step 500",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "evaluation_records",
+      "note": "4096 per-episode records, 4096 unique declared keys",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "decision_records",
+      "note": "59812 decisions match the episodes step by step",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "training_records",
+      "note": "six runs recorded, 6 carry selected and last hashes",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "native_sources",
+      "note": "snapshot verified, 129 members, base 7476a8195402",
+      "required": true,
+      "status": "PASS"
+    },
+    {
+      "check": "artifact_lock",
+      "note": "7 artefact inputs match the lock",
+      "required": true,
+      "status": "PASS"
+    }
+  ],
+  "contract_version": 1,
+  "kind": "s2r_input_contract_check",
+  "manifest": {
+    "entries": 33,
+    "mismatched": [],
+    "missing": [],
+    "unlisted_files": [],
+    "verified": 33
+  },
+  "package": "/home/node/s2r-t3/out/work/package",
+  "package_kind": "directory",
+  "repo": "/home/node/s2r-t3/checkout",
+  "required_inputs": 28
+}
