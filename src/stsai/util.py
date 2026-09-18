@@ -10,8 +10,10 @@ from typing import Any
 # enemy's planned move; bumped 2->3 when the enemy intent was widened from
 # ATTACK/BUFF to the classes the game actually shows, and previous_move
 # became previous_intent (a class, not an identity). A reader of schema 2
-# would misread both fields.
-SCHEMA_VERSION = 3
+# would misread both fields. Bumped 3->4 when the adapter began exporting the
+# public-derived attack-base range for monsters whose base is rolled at
+# construction (the louse), so a schema-3 reader would miss it.
+SCHEMA_VERSION = 4
 
 def canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)

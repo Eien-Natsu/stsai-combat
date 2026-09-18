@@ -96,6 +96,8 @@ KNOWN_FIRST = {"CULTIST": ("CULTIST_INCANTATION", "BUFF"),
 PUBLIC_ENEMY_KEYS = frozenset({
     "id", "slot", "hp", "max_hp", "block", "strength", "weak", "vulnerable",
     "artifact", "half_dead", "intent_damage", "hits", "intent", "previous_intent",
+    # public-derived memory of a construction-time hidden attack base
+    "attack_base_low", "attack_base_high",
 })
 
 
@@ -240,3 +242,148 @@ def test_the_held_move_is_determined_by_public_information():
     collisions = {k: sorted(v) for k, v in signatures.items() if len(v) > 1}
     assert not collisions, f"held move is not public-determined: {collisions}"
     assert checked > 2000, f"too few states inspected to support the claim: {checked}"
+
+
+# --- lifecycle paths that are inside the supported range ---------------------
+#
+# The event log replaces inference from the turn counter, so these cover the
+# cases the old state machine could not express: a monster that never acts, a
+# battle that ends on one enemy's action while another has not acted, and a slot
+# that is taken over by a new entity.
+
+def test_a_monster_that_never_acted_reports_none():
+    """Death before acting must leave the executed record untouched."""
+    scenario = {**SCENARIO, "deck": ["STRIKE_RED"] * 10, "encounter": "SMALL_SLIMES",
+                "hp": 80, "max_hp": 80}
+    env = NativeBattle(scenario, 5)
+    obs = env.observe()
+    while True:
+        plays = [a for a in obs["actions"] if a["kind"] == "play"]
+        if not plays or obs["terminal"]:
+            break
+        obs = env.step(plays[0])
+    acted = [slot for slot, name in internals(env)["executed_moves"].items() if name != "INVALID"]
+    assert not acted, f"no monster should have acted inside turn 0, saw {acted}"
+    assert all(e["previous_intent"] == "NONE" for e in obs["enemies"])
+
+
+def test_the_move_that_ends_the_battle_is_recorded_from_the_event():
+    """A Looter escaping ends the fight on its own action, and still counts."""
+    env = NativeBattle({**SCENARIO, "deck": ["DEFEND_RED"] * 10, "encounter": "LOOTER",
+                        "hp": 200, "max_hp": 200}, 1)
+    obs = env.observe()
+    for _ in range(40):
+        if obs["terminal"]:
+            break
+        obs = env.step(end_turn(obs))
+    assert obs["terminal"], "the Looter should resolve the fight"
+    assert internals(env)["executed_moves"][0] == "LOOTER_ESCAPE"
+    assert obs["enemies"][0]["previous_intent"] == "ESCAPE"
+
+
+def test_observations_are_idempotent_under_repeated_calls():
+    """Processing the same event log twice must not advance anything."""
+    env = NativeBattle({**SCENARIO, "deck": ["DEFEND_RED"] * 10, "encounter": "JAW_WORM",
+                        "hp": 200, "max_hp": 200}, 3)
+    env.step(end_turn(env.observe()))
+    first = env.observe()
+    for _ in range(5):
+        assert env.observe() == first, "repeated observe() changed the observation"
+    assert internals(env)["executed_moves"][0] == "JAW_WORM_CHOMP"
+
+
+def test_a_new_entity_does_not_inherit_the_old_slot_history():
+    """LARGE_SLIME splits into the same slots; the new slimes start clean.
+
+    The oracle is the engine's own event log: it shows the large slime executing
+    SPLIT and then two SPAWNED events taking over slots 0 and 1. Consuming them
+    in order must clear the previous occupant's execution record and its public
+    base memory, because neither belongs to the monster now in the slot.
+    """
+    scenario = {**SCENARIO, "deck": ["STRIKE_RED"] * 10, "encounter": "LARGE_SLIME",
+                "hp": 200, "max_hp": 200}
+    env = NativeBattle(scenario, 3)
+    obs = env.observe()
+    for _ in range(40):
+        if obs["terminal"]:
+            break
+        plays = [a for a in obs["actions"] if a["kind"] == "play"]
+        obs = env.step(plays[0] if plays else end_turn(obs))
+        info = internals(env)
+        spawns = [e for e in info["events"]
+                  if e["kind"] == "SPAWNED" and e["move"].startswith(("ACID_SLIME_M", "SPIKE_SLIME_M"))]
+        if spawns:
+            break
+    else:
+        pytest.fail("the large slime never split inside the fixture budget")
+
+    kinds = [(e["kind"], e["slot"]) for e in info["events"]]
+    assert ("EXECUTED", 0) in kinds, "the split itself must be recorded as an execution"
+    assert [e["slot"] for e in spawns] == [0, 1], spawns
+    assert info["executed_moves"][0] == "INVALID", \
+        "the new occupant inherited the previous monster's executed move"
+    assert info["executed_moves"][1] == "INVALID"
+    assert info["held_moves"][0].startswith(("ACID_SLIME_M", "SPIKE_SLIME_M")), info["held_moves"][0]
+    for slot in (0, 1):
+        assert info["public_attack_base"][slot]["applicable"] is False, \
+            "a medium slime has no hidden attack base"
+        assert obs["enemies"][slot]["previous_intent"] == "NONE", \
+            "the observation must not attribute the old monster's action to the new one"
+
+
+def test_enemies_after_the_killing_blow_never_acted():
+    """When one enemy kills the player, the later ones never take their turn.
+
+    The pre-fix code inferred execution from a turn change and, at a decided
+    battle, assumed any surviving enemy had acted. Here slot 0 kills the player,
+    so slot 2 is alive but never acted; reporting its held move as executed would
+    invent an action that never happened.
+    """
+    for encounter, seed, later_slots in (("TWO_LOUSE", 0, [1]), ("THREE_LOUSE", 1, [2]),
+                                         ("THREE_SENTRIES", 2, [2])):
+        env = NativeBattle({**SCENARIO, "deck": ["DEFEND_RED"] * 10, "encounter": encounter,
+                            "hp": 1, "max_hp": 80}, seed)
+        obs = env.observe()
+        for _ in range(6):
+            if obs["terminal"]:
+                break
+            obs = env.step(end_turn(obs))
+        assert obs["terminal"] and not obs["won"], f"{encounter}: the fixture should end in a loss"
+        info = internals(env)
+        executed = [e["slot"] for e in info["events"] if e["kind"] == "EXECUTED"]
+        assert executed, f"{encounter}: at least one enemy should have acted"
+        for slot in later_slots:
+            assert slot not in executed, f"{encounter}: slot {slot} never acted but has an event"
+            assert info["executed_moves"][slot] == "INVALID", \
+                f"{encounter}: slot {slot} never acted but reports an execution"
+            assert obs["enemies"][slot]["previous_intent"] == "NONE", \
+                f"{encounter}: the observation invented an action for slot {slot}"
+
+
+def test_negative_control_the_prefix_rule_would_invent_an_action():
+    """SOURCE_ARGUMENT_ONLY for the old rule, run against the current binaries.
+
+    The pre-fix state machine set `last_executed = last_planned` on every turn
+    change and, at a decided battle, assumed a surviving enemy had acted. The
+    held move that enemy was carrying is non-INVALID, so that rule would have
+    published a concrete intent for a monster that never took its turn. The event
+    log contradicts it, and this test records both readings side by side.
+    """
+    for encounter, seed, slot in (("THREE_LOUSE", 1, 2), ("THREE_SENTRIES", 2, 2)):
+        env = NativeBattle({**SCENARIO, "deck": ["DEFEND_RED"] * 10, "encounter": encounter,
+                            "hp": 1, "max_hp": 80}, seed)
+        obs = env.observe()
+        for _ in range(6):
+            if obs["terminal"]:
+                break
+            obs = env.step(end_turn(obs))
+        info = internals(env)
+        held_class = info["held_classes"][slot]
+        assert held_class != "NONE", "the enemy must be holding something for this to be a control"
+        assert obs["enemies"][slot]["hp"] > 0, "the control needs a surviving enemy"
+        # what the old rule would have published
+        assert held_class != obs["enemies"][slot]["previous_intent"], \
+            "if they agreed the control would be vacuous"
+        # what the engine's own events say
+        assert slot not in [e["slot"] for e in info["events"] if e["kind"] == "EXECUTED"]
+        assert obs["enemies"][slot]["previous_intent"] == "NONE"

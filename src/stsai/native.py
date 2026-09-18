@@ -3,8 +3,10 @@ from .contracts import validate_public
 from .hints import enrich
 
 # Belief model of the native adapter. It resamples every RNG stream
-# independently; it is NOT the original game's correlated posterior.
-SAMPLER_REVISION = "independent_rng_approximation/1"
+# independently and draws construction-time hidden attack bases from the
+# candidate set public history allows; it is NOT the original game's
+# correlated posterior and does not claim to be.
+SAMPLER_REVISION = "public_history_candidate_sampling/2"
 
 # First native compilation and game differential testing must be performed on
 # the target machine. Import failure does NOT fall back to the reference engine.

@@ -405,6 +405,8 @@ def test_gremlin_nob_follows_the_a18_fixed_pattern():
 PUBLIC_ENEMY_KEYS = frozenset({
     "id", "slot", "hp", "max_hp", "block", "strength", "weak", "vulnerable",
     "artifact", "half_dead", "intent_damage", "hits", "intent", "previous_intent",
+    # public-derived memory of a construction-time hidden attack base
+    "attack_base_low", "attack_base_high",
 })
 
 

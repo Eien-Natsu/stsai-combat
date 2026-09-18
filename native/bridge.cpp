@@ -105,6 +105,16 @@ static std::string public_intent(MMID move) {
         throw std::runtime_error("Move has no audited public intent; extend the mapping before widening the pilot");
     return found->second;
 }
+// Which monsters have a construction-time hidden attack base, and the public
+// range it is drawn from. Mirrors Monster.cpp::construct:118-120 (louse, 6-8 at
+// A>=2 and 5-7 below) and :126-128 (darkling, not reachable in the pilot).
+static bool hidden_attack_base(MonsterId id, int ascension, int &low, int &high) {
+    if (id == MonsterId::GREEN_LOUSE || id == MonsterId::RED_LOUSE) {
+        if (ascension >= 2) { low = 6; high = 8; } else { low = 5; high = 7; }
+        return true;
+    }
+    return false;
+}
 static std::string move_name(MMID move) {
     const auto index = static_cast<std::size_t>(move);
     return index < std::size(monsterMoveStrings) ? std::string(monsterMoveStrings[index])
@@ -134,14 +144,25 @@ static py::dict public_card(const CardInstance &c) {
 class PilotBattle {
     BattleContext bc{};
     int potions_used = 0;
-    // What the player watched the enemy do. moveHistory[] is a history of ROLLED
-    // moves, not of executed ones: a monster that keeps using the same move is
-    // never re-rolled, so moveHistory[1] goes stale (a Cultist attacking every
-    // turn still reports INCANTATION). Track the move that was current during the
-    // last turn we saw instead; that is the one the player watched resolve.
-    mutable int seen_turn = -1;
-    mutable std::array<MMID, 8> last_planned{};
+    // What the player watched the enemy do, taken from the engine's own
+    // observability event log rather than inferred from a turn counter.
+    // moveHistory[] cannot be used for this: it is a history of ROLLED moves, so
+    // a monster that keeps using one move is never re-rolled and moveHistory[1]
+    // goes stale (a Cultist attacking every turn still reported INCANTATION).
+    mutable int consumed_events = 0;
     mutable std::array<MMID, 8> last_executed{};
+    // Some monsters have a base attack value rolled at construction and stored
+    // in miscInfo (louse BITEs, MonsterSpecific.cpp:745/:1006). Until the enemy
+    // shows an attack, the player cannot see it. This keeps, per slot, only the
+    // candidates CONSISTENT WITH PUBLIC HISTORY, so a belief sample never reads
+    // the true hidden value. `determined` means public history pins it exactly.
+    struct PublicBase {
+        bool applicable = false;
+        int low = 0;
+        int high = 0;
+    };
+    mutable std::array<PublicBase, 8> public_base{};
+    mutable std::array<bool, 8> base_initialised{};
 public:
     PilotBattle() = default;
     PilotBattle(const PilotBattle&) = default;
@@ -207,16 +228,56 @@ public:
     }
     py::dict observe() const {
         check_supported_state();
-        if (bc.turn != seen_turn) {
-            for (int i=0; i<bc.monsters.monsterCount && i<int(last_planned.size()); ++i) {
-                if (seen_turn >= 0) last_executed[i] = last_planned[i];
-                last_planned[i] = bc.monsters.arr[i].moveHistory[0];
+        // Consume the engine's event log. Only a monster that actually took its
+        // turn produces an execute event, so a monster killed before acting, or
+        // one that never got a turn because the battle ended, stays untouched.
+        // Repeated observe() calls process nothing new, so observations are
+        // idempotent by construction.
+        for (int e=consumed_events; e<bc.combatEventCount; ++e) {
+            const auto &ev=bc.combatEvents[e];
+            if (ev.slot<0 || ev.slot>=int(last_executed.size())) continue;
+            if (ev.kind==BattleContext::EVENT_EXECUTED) {
+                last_executed[ev.slot]=static_cast<MMID>(ev.move);
+            } else if (ev.kind==BattleContext::EVENT_SPAWNED) {
+                // A new entity occupies the slot: it inherits neither the previous
+                // occupant's execution history nor its public memory of a hidden
+                // attack base.
+                last_executed[ev.slot]=MMID::INVALID;
+                base_initialised[ev.slot]=false;
             }
-            seen_turn = bc.turn;
+        }
+        if (bc.combatEventCount>=BattleContext::EVENT_CAPACITY)
+            throw std::runtime_error("Combat event log overflowed; the adapter refuses to guess");
+        consumed_events=bc.combatEventCount;
+
+        // Public memory of any construction-time hidden attack base. Only ever
+        // narrowed by a damage number the player was actually shown.
+        for (int i=0; i<bc.monsters.monsterCount && i<int(public_base.size()); ++i) {
+            const auto &m=bc.monsters.arr[i];
+            int low=0, high=0;
+            const bool applies=hidden_attack_base(m.id, bc.ascension, low, high);
+            if (!base_initialised[i]) {
+                base_initialised[i]=true;
+                public_base[i].applicable=applies;
+                public_base[i].low=low; public_base[i].high=high;
+            } else if (applies && !public_base[i].applicable) {
+                public_base[i].applicable=true; public_base[i].low=low; public_base[i].high=high;
+            }
+            if (!applies || !m.isAttacking() || !m.isTargetable()) continue;
+            // The displayed number is public, so every candidate that reproduces
+            // it stays; rounding or a zeroed hit may leave several.
+            const int shown=m.calculateDamageToPlayer(bc, m.getMoveBaseDamage(bc).damage);
+            int keepLow=-1, keepHigh=-1;
+            for (int b=public_base[i].low; b<=public_base[i].high; ++b) {
+                if (m.calculateDamageToPlayer(bc, b)!=shown) continue;
+                if (keepLow<0) keepLow=b;
+                keepHigh=b;
+            }
+            if (keepLow>=0) { public_base[i].low=keepLow; public_base[i].high=keepHigh; }
         }
         py::dict o,p; py::list enemies,hand,draw,discard,exhaust,acts,powers,relics;
         // Must match stsai.util.SCHEMA_VERSION; validate_public rejects a mismatch.
-        o["schema_version"]=3; o["backend"]="lightspeed_pilot";
+        o["schema_version"]=4; o["backend"]="lightspeed_pilot";
         o["turn"]=bc.turn; o["phase"]="PLAYER_NORMAL"; o["ascension"]=bc.ascension;
         p["hp"]=bc.player.curHp; p["max_hp"]=bc.player.maxHp;
         p["block"]=bc.player.block; p["energy"]=bc.player.energy;
@@ -245,17 +306,16 @@ public:
             // are deliberately NOT separated here; the identity never leaves this
             // function.
             e["intent"]=public_intent(m.moveHistory[0]);
-            MMID executed = (seen_turn > 0 && i < int(last_executed.size()))
-                            ? last_executed[i] : MMID::INVALID;
-            // A battle can end on the enemy's own action -- a Looter escaping
-            // never gets a next turn -- and the player still watched that move.
-            // A dead enemy may have been killed before it acted, so only a
-            // surviving one confirms the move it was holding.
-            if (bc.outcome != Outcome::UNDECIDED && m.curHp > 0 && i < int(last_planned.size()))
-                executed = last_planned[i];
-            // The executed move is reported as its PUBLIC class too: the player
-            // watched it resolve, but its identity is still not exported.
-            e["previous_intent"]=public_intent(executed);
+            // Straight from the event log: nothing is inferred from the turn
+            // counter, so a Looter escaping still counts (it did take its turn)
+            // and a monster killed before acting still reports NONE.
+            e["previous_intent"]=public_intent(i<int(last_executed.size()) ? last_executed[i]
+                                                                          : MMID::INVALID);
+            // Minimal public-derived memory: the range of base attack values the
+            // player's own observations still allow. -1 means the monster has no
+            // hidden base. Equal bounds mean public history pinned it down.
+            e["attack_base_low"]=public_base[i].applicable?public_base[i].low:-1;
+            e["attack_base_high"]=public_base[i].applicable?public_base[i].high:-1;
             // Never expose miscInfo, stored future damage rolls, hidden seeds,
             // or latent enemy plans.
             enemies.append(e);
@@ -313,21 +373,69 @@ public:
     // that observe() exposes none of these keys.
     py::dict debug_internals() const {
         check_supported_state();
-        py::dict out; py::list moves, classes; py::dict executed;
+        py::dict out; py::list moves, classes; py::dict executed, true_bases, public_bases;
         for (int i=0; i<bc.monsters.monsterCount; ++i) {
             const auto &m=bc.monsters.arr[i];
             moves.append(move_name(m.moveHistory[0]));
             classes.append(public_intent(m.moveHistory[0]));
-            MMID done = (seen_turn > 0 && i < int(last_executed.size()))
-                        ? last_executed[i] : MMID::INVALID;
-            // mirror observe(): a surviving enemy at a decided battle has acted
-            if (bc.outcome != Outcome::UNDECIDED && m.curHp > 0 && i < int(last_planned.size()))
-                done = last_planned[i];
-            executed[py::int_(i)] = move_name(done);
+            executed[py::int_(i)] = move_name(i<int(last_executed.size()) ? last_executed[i]
+                                                                          : MMID::INVALID);
+            true_bases[py::int_(i)] = int(m.miscInfo);
+            py::dict pub; pub["applicable"]=public_base[i].applicable;
+            pub["low"]=public_base[i].low; pub["high"]=public_base[i].high;
+            public_bases[py::int_(i)] = pub;
         }
+        // The independent oracle the lifecycle tests assert against: the engine's
+        // own execution/spawn events, in order, exactly as recorded.
+        py::list events;
+        for (int e=0; e<bc.combatEventCount; ++e) {
+            const auto &ev=bc.combatEvents[e]; py::dict d;
+            // A spawn event carries a MonsterId, an execute event carries a
+            // MonsterMoveId. Two different enums; naming one with the other's
+            // table silently invents a move that never happened.
+            const bool executed=ev.kind==BattleContext::EVENT_EXECUTED;
+            d["kind"]=executed ? "EXECUTED" : "SPAWNED";
+            d["slot"]=int(ev.slot);
+            if (executed) {
+                d["move"]=move_name(static_cast<MMID>(ev.move));
+            } else {
+                const auto index=static_cast<std::size_t>(static_cast<std::uint16_t>(ev.move));
+                d["move"]=index<std::size(monsterIdStrings) ? std::string(monsterIdStrings[index])
+                                                            : std::string("UNKNOWN");
+            }
+            events.append(d);
+        }
+        out["events"]=events;
         out["held_moves"]=moves; out["held_classes"]=classes; out["executed_moves"]=executed;
+        out["true_attack_bases"]=true_bases;
+        out["public_attack_base"]=public_bases;
         out["warning"]="test-only; never exported by observe() and never a training input";
         return out;
+    }
+    // TEST-ONLY: force a monster's construction-time hidden base, so a test can
+    // build two roots with the same public history and different hidden values.
+    void debug_set_attack_base(int slot, int value) {
+        if (slot < 0 || slot >= bc.monsters.monsterCount)
+            throw std::invalid_argument("slot out of range");
+        bc.monsters.arr[slot].miscInfo = value;
+    }
+    // TEST-ONLY negative control: the PRE-FIX sampler, which copied the hidden
+    // base verbatim. Kept so the counterfactual can demonstrate the dependency
+    // it used to leak, without needing the old binary.
+    std::unique_ptr<PilotBattle> debug_sample_with_true_base(std::uint64_t sampler_seed) const {
+        check_supported_state();
+        auto result=std::make_unique<PilotBattle>(*this);
+        std::mt19937_64 rng(sampler_seed);
+        result->bc.aiRng=Random(rng()); result->bc.cardRandomRng=Random(rng());
+        result->bc.miscRng=Random(rng()); result->bc.monsterHpRng=Random(rng());
+        result->bc.potionRng=Random(rng()); result->bc.shuffleRng=Random(rng());
+        auto &draw=result->bc.cards.drawPile;
+        std::sort(draw.begin(),draw.end(),[](const CardInstance &a,const CardInstance &b) {
+            return std::make_tuple(card_name(a.id),a.upgraded,int(a.costForTurn),a.specialData,a.freeToPlayOnce,a.retain)
+                 < std::make_tuple(card_name(b.id),b.upgraded,int(b.costForTurn),b.specialData,b.freeToPlayOnce,b.retain);
+        });
+        std::shuffle(draw.begin(),draw.end(),rng);
+        return result;   // miscInfo deliberately NOT replaced
     }
     std::unique_ptr<PilotBattle> sample(std::uint64_t sampler_seed) const {
         check_supported_state();
@@ -346,6 +454,18 @@ public:
                  < std::make_tuple(card_name(b.id),b.upgraded,int(b.costForTurn),b.specialData,b.freeToPlayOnce,b.retain);
         });
         std::shuffle(draw.begin(),draw.end(),rng);
+        // Any construction-time hidden attack base is replaced by something the
+        // player's own history allows: the exact value when public observations
+        // pinned it, otherwise ONE draw from the candidate set, kept for the whole
+        // simulation. The true value is never read here, so two roots with the
+        // same public history but different hidden bases produce the same belief.
+        for (int i=0; i<result->bc.monsters.monsterCount && i<int(public_base.size()); ++i) {
+            if (!public_base[i].applicable) continue;
+            const int low=public_base[i].low, high=public_base[i].high;
+            const int drawn = (high<=low) ? low
+                            : low + int(rng() % static_cast<std::uint64_t>(high-low+1));
+            result->bc.monsters.arr[i].miscInfo = drawn;
+        }
         return result;
     }
 };
@@ -355,7 +475,9 @@ PYBIND11_MODULE(_lightspeed,m) {
         .def("observe",&PilotBattle::observe)
         .def("step",&PilotBattle::step)
         .def("sample",&PilotBattle::sample)
-        .def("debug_internals",&PilotBattle::debug_internals);
+        .def("debug_internals",&PilotBattle::debug_internals)
+        .def("debug_set_attack_base",&PilotBattle::debug_set_attack_base)
+        .def("debug_sample_with_true_base",&PilotBattle::debug_sample_with_true_base);
     m.def("build_info",[](){py::dict d; d["revision"]=STSAI_ENGINE_REVISION;
         // Local rule patches applied on top of `revision`; empty means the tree
         // is byte-for-byte upstream. Tests assert against these hashes.

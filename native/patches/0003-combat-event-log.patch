@@ -1,0 +1,104 @@
+diff --git a/include/combat/BattleContext.h b/include/combat/BattleContext.h
+index 767bbcd..f2b69da 100644
+--- a/include/combat/BattleContext.h
++++ b/include/combat/BattleContext.h
+@@ -70,6 +70,20 @@ namespace sts {
+         InputState inputState = InputState::EXECUTING_ACTIONS;
+         CardSelectInfo cardSelectInfo;
+ 
++        // OBSERVABILITY-ONLY event log. No rule reads it; it exists so an adapter
++        // can know what actually executed and what actually spawned instead of
++        // inferring it from the turn counter. Reset and copied like any state.
++        struct CombatEvent { std::int8_t kind; std::int8_t slot; std::int16_t move; };
++        static constexpr std::int8_t EVENT_EXECUTED = 0;
++        static constexpr std::int8_t EVENT_SPAWNED = 1;
++        static constexpr int EVENT_CAPACITY = 512;
++        std::array<CombatEvent, EVENT_CAPACITY> combatEvents{};
++        int combatEventCount = 0;
++        void recordCombatEvent(std::int8_t kind, int slot, int move) {
++            if (combatEventCount < EVENT_CAPACITY)
++                combatEvents[combatEventCount++] = CombatEvent{kind, std::int8_t(slot), std::int16_t(move)};
++        }
++
+         int monsterTurnIdx = 6;
+ 
+         bool isBattleOver = false;
+diff --git a/src/combat/BattleContext.cpp b/src/combat/BattleContext.cpp
+index 965faef..3336125 100644
+--- a/src/combat/BattleContext.cpp
++++ b/src/combat/BattleContext.cpp
+@@ -1279,7 +1279,9 @@ void BattleContext::useSkillCard() {
+             break;
+ 
+         case CardId::DISARM:
+-            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, -2, false) );
++            // Disarm+ removes 3 Strength; the base card removes 2. Upstream
++            // ignored `up` here, so upgraded Disarm only ever removed 2.
++            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, up ? -3 : -2, false) );
+             break;
+ 
+         case CardId::DISCOVERY:
+diff --git a/src/combat/MonsterGroup.cpp b/src/combat/MonsterGroup.cpp
+index 5252cdc..29221a6 100644
+--- a/src/combat/MonsterGroup.cpp
++++ b/src/combat/MonsterGroup.cpp
+@@ -89,6 +89,7 @@ void MonsterGroup::init(BattleContext &bc, MonsterEncounter encounter) {
+ }
+ 
+ void MonsterGroup::createMonster(BattleContext &bc, MonsterId id) {
++    bc.recordCombatEvent(BattleContext::EVENT_SPAWNED, monsterCount, int(id));
+     arr[monsterCount].construct(bc, id, monsterCount);
+     ++monsterCount;
+     ++monstersAlive;
+@@ -576,6 +577,8 @@ void MonsterGroup::doMonsterTurn(BattleContext &bc) {
+         if (skipTurn[bc.monsterTurnIdx]) {
+             skipTurn.set(bc.monsterTurnIdx, false);
+         } else {
++            // record the move that is actually about to execute, for observability
++            bc.recordCombatEvent(BattleContext::EVENT_EXECUTED, bc.monsterTurnIdx, int(m.moveHistory[0]));
+             m.takeTurn(bc);
+         }
+     }
+diff --git a/src/combat/MonsterSpecific.cpp b/src/combat/MonsterSpecific.cpp
+index f6f6c4a..9c251ab 100644
+--- a/src/combat/MonsterSpecific.cpp
++++ b/src/combat/MonsterSpecific.cpp
+@@ -2410,18 +2410,21 @@ MMID Monster::getMoveForRoll(BattleContext &bc, int &monsterData, const int roll
+             }
+ 
+             if (asc18) {
+-                if (!lastTwoMoves(MMID::GREMLIN_NOB_SKULL_BASH)) {
++                // At A18+ the random choice becomes the fixed cycle
++                // Bellow, Skull Bash, Rush, Rush, Skull Bash, ... Upstream
++                // guarded on lastTwoMoves(SKULL_BASH), which cannot be true
++                // before a first Skull Bash is ever returned, so Skull Bash
++                // was unreachable and the Nob only ever used Rush.
++                if (lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {
++                    return (MMID::GREMLIN_NOB_SKULL_BASH);
++                }
++                if (lastMove(MMID::GREMLIN_NOB_SKULL_BASH)) {
+                     return (MMID::GREMLIN_NOB_RUSH);
+-                    break;
+                 }
+-
+-                if (lastTwoMoves(MMID(MMID::GREMLIN_NOB_RUSH))) {
++                if (lastMove(MMID::GREMLIN_NOB_BELLOW)) {
+                     return (MMID::GREMLIN_NOB_SKULL_BASH);
+-
+-                } else {
+-                    return (MMID::GREMLIN_NOB_RUSH);
+                 }
+-                break;
++                return (MMID::GREMLIN_NOB_RUSH);
+             }
+ 
+             if (roll < 33 || lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {
+@@ -3347,6 +3350,8 @@ void Monster::largeSlimeSplit(BattleContext &bc, const MonsterId mediumSlimeType
+     const auto idx1 = placeIdx;
+     const auto idx2 = placeIdx + 1;
+ 
++    bc.recordCombatEvent(BattleContext::EVENT_SPAWNED, idx1, int(mediumSlimeType));
++    bc.recordCombatEvent(BattleContext::EVENT_SPAWNED, idx2, int(mediumSlimeType));
+     bc.monsters.arr[idx1] = Monster();
+     bc.monsters.arr[idx1].initSpawnedMonster(bc, mediumSlimeType, idx1, hp);
+ 

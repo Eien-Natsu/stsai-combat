@@ -11,7 +11,7 @@ VOCAB = 8192
 # Bump when the encoder changes which information reaches the model. Checkpoints
 # record it and refuse to load across a mismatch, so an old model can never be
 # silently evaluated on inputs it was not trained on.
-ENCODING_REVISION = 3
+ENCODING_REVISION = 4
 MAX_SELECTION = 10
 KIND = {"play": 0, "end": 1, "potion": 2, "select": 3, "select_many": 4}
 ZONE = {"player": 1, "enemies": 2, "hand": 3, "draw_pile": 4, "discard_pile": 5,
