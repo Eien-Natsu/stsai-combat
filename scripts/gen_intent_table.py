@@ -88,8 +88,14 @@ def classify(body):
     return "UNKNOWN"
 
 
-def derive():
-    lines = MONSTER_CPP.read_text().splitlines()
+def derive(monster_cpp=None):
+    # The source can come from the offline snapshot when the review machine has no
+    # checkout of the upstream repository.
+    source_path = Path(monster_cpp) if monster_cpp else MONSTER_CPP
+    if not source_path.is_file():
+        raise SystemExit(f"upstream source not found at {source_path}; pass --monster-cpp or run "
+                         "fetch_engine.py")
+    lines = source_path.read_text().splitlines()
     start = next(i for i, l in enumerate(lines) if l.startswith("void Monster::takeTurn"))
     cases = []
     for i in range(start, len(lines)):
@@ -154,8 +160,10 @@ def main():
     parser.add_argument("--def-path", default="native/intent_table.def")
     parser.add_argument("--csv", default="input/intent_mapping.csv")
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument("--monster-cpp", default=None,
+                        help="path to the locked MonsterSpecific.cpp; defaults to the vendored checkout")
     args = parser.parse_args()
-    rows = derive()
+    rows = derive(args.monster_cpp)
     if args.verify:
         on_disk = read_def(ROOT / args.def_path)
         fresh = [(r["internal_move"], r["public_intent"]) for r in rows]

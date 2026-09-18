@@ -56,10 +56,18 @@ def step_provenance(repo):
     return True, f"{len(declared)} patches, revision {lock['revision'][:12]}"
 
 
-def step_intent(repo):
-    result = subprocess.run([sys.executable, "scripts/gen_intent_table.py", "--verify"],
-                            cwd=repo, capture_output=True, text=True)
-    return result.returncode == 0, (result.stdout + result.stderr).strip().splitlines()[-1]
+def step_intent(repo, monster_cpp=None):
+    """Regenerate the table from the locked source and compare with the shipped one.
+
+    A clone has no third_party/ (it is not tracked), so the locked source is
+    taken from the offline snapshot when one is available.
+    """
+    cmd = [sys.executable, "scripts/gen_intent_table.py", "--verify"]
+    if monster_cpp is not None:
+        cmd += ["--monster-cpp", str(monster_cpp)]
+    result = subprocess.run(cmd, cwd=repo, capture_output=True, text=True)
+    tail = (result.stdout + result.stderr).strip().splitlines()
+    return result.returncode == 0, tail[-1] if tail else ""
 
 
 def step_audit():
@@ -110,10 +118,20 @@ def main():
     args = parser.parse_args()
     repo = Path(args.repo).resolve()
 
+    monster_cpp = None
+    if args.sources:
+        import tarfile, tempfile
+        scratch = Path(tempfile.mkdtemp(prefix="stsai-review-src-"))
+        with tarfile.open(Path(args.sources)) as tar:
+            tar.extractall(scratch)
+        candidate = scratch / "native_sources/sts_lightspeed/src/combat/MonsterSpecific.cpp"
+        if candidate.is_file():
+            monster_cpp = candidate
+
     results = {}
     results["manifest"] = step_manifest()
     results["provenance"] = step_provenance(repo)
-    results["intent"] = step_intent(repo)
+    results["intent"] = step_intent(repo, monster_cpp)
     results["audit"] = step_audit()
     results["counterfactual"] = step_counterfactual()
     if not args.skip_tests:
