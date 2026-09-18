@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "purpose": "bootstrap routing snapshot only; owner-selected immutable PR/plan takes precedence",
+  "mainline_version": 3,
+  "mode": "fresh_reviewer_chat__fresh_executor_session__github_repo_text_only",
+  "main_runtime_code_at_bootstrap": "e2e58d61c9bf9fde6ff18448ce44880549c99464",
+  "implementation_merged_to_main": false,
+  "control_source_before_v3": "d2e1f0f1449e880af21912b17687d9527dfc49f6",
+  "last_implementation": {
+    "task": "S2R-REPRO-001",
+    "historical_plan_commit": "4462a7c048beebd1caed82a7c0ba1fc80d0cb16b",
+    "pr": 3,
+    "head": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+    "delivery": "DELIVERED_BLOCKED",
+    "review_accepted": false,
+    "session_id": "not recorded under historical v1 protocol"
+  },
+  "active_task": {
+    "task_id": "GITHUB-HANDOFF-001",
+    "status": "READY",
+    "next_role": "NEW_LOCAL_AGENT",
+    "plan_path": "NEXT_ACTIONS.md",
+    "plan_locator": "same immutable commit as this file; owner passes the resolved full SHA",
+    "code_base_commit": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+    "target_branch": "agent/s2r-repro",
+    "source_review": "handoffs/BOOTSTRAP-GITHUB-ONLY/REVIEW.md"
+  },
+  "automation": {
+    "event_task_registered": false,
+    "starts_new_sessions": false
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "scope": "control documents and static routing only",
+  "base": "e2e58d61c9bf9fde6ff18448ce44880549c99464",
+  "prior_control": "d2e1f0f1449e880af21912b17687d9527dfc49f6",
+  "latest_implementation": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+  "review_status": "NOT_A_FULL_IMPLEMENTATION_REVIEW",
+  "validation": "PASS",
+  "active_markdown_count": 16,
+  "relative_links_promoted_to_fixed_development_refs": [
+    [
+      "docs/03_RUNBOOK.md",
+      "../review/README.md",
+      "https://github.com/Eien-Natsu/stsai-combat/blob/e0fc584d19afe58ac10b65c93c7bcc75a2630f05/review/README.md"
+    ],
+    [
+      "docs/04_NATIVE.md",
+      "../engine_lock.json",
+      "https://github.com/Eien-Natsu/stsai-combat/blob/e0fc584d19afe58ac10b65c93c7bcc75a2630f05/engine_lock.json"
+    ],
+    [
+      "docs/04_NATIVE.md",
+      "../native/native_sources_manifest.json",
+      "https://github.com/Eien-Natsu/stsai-combat/blob/e0fc584d19afe58ac10b65c93c7bcc75a2630f05/native/native_sources_manifest.json"
+    ]
+  ],
+  "unchanged_original_file_count": 65,
+  "removed_obsolete_entrypoints": [
+    "HANDOFF_PROMPT_zh.md",
+    "STSAI_交接说明.md",
+    "docs/00_ACCEPTANCE.md",
+    "docs/05_ROADMAP.md",
+    "docs/REPORT_TEMPLATE.md"
+  ],
+  "code_tests_native_ci_dependency_changes": [],
+  "project_experiments_run": 0,
+  "new_sessions_started": 0,
+  "docs_sha256": {
+    "PROJECT_MAINLINE.md": "9a539103f36efe9a3cd3b8dafabfc09f607228b7aabb30660eaa85397140bc4a",
+    "NEXT_ACTIONS.md": "10e223b9455985c14bcf6f3a207fdf12f2ecc2168cd037dd6722a5c1f02ca39c",
+    "AGENTS.md": "a70827bcd9d7575df60e02e773add4e3abaaafa5696b93d456c51af8cdef9e19",
+    "README.md": "a59803593cc9710ea0cbef74bf15d26b30703601e62067af1eeae1350a7e056b",
+    "docs/01_ARCHITECTURE.md": "e282a1b100f4683ba62b0a708945e8a1715f8203c4f452fef9cff09226f016af",
+    "docs/02_FAIRNESS.md": "87183cde3bcbc33a54970af3802df762ed427f0f38c57ba18ef50768d7298640",
+    "docs/03_RUNBOOK.md": "e93cf95c883dcf43642ca48c7f842984b7467387d637b63a91d322a99802f80d",
+    "docs/04_NATIVE.md": "ad40a8cf16446df92bf3f085917df61428f9991da5344d23ec6d113b81094d3a",
+    ".github/agent_handoff_template.md": "12d5dca3c67d8f74ac7e391109fb38449c81d6f8386e1e741bfef5025c4492ab",
+    ".github/evidence_index_template.md": "7a76c056583ec202b1fa68244a03a6d77e6ceaa7e6fdbaa505596b230c9b3a67",
+    ".github/next_actions_template.md": "a3ac97e8dd2abdfa1ebdfd5e243018cf2aea5da6360d123901968832842f2198",
+    ".github/pull_request_template.md": "efb3d4af5a3c5d6ec95ffcbfad2dabafe51224b1204915e63a578d67a758ac1a",
+    ".github/review_handoff_template.md": "758e53a6f673624541e6317385c1662bec20c43de048bb5c48335f03d41a7806",
+    "handoffs/README.md": "8a1638ed7cfcc8a19e844dc4b6e7470ed49f503fdd7bedbdb65ef362d6d0904b",
+    "handoffs/BOOTSTRAP-GITHUB-ONLY/REVIEW.md": "ad5ec084fb26d4aae59a4575eb9d8558c99f4fec634ffac78d9979b922fa363b",
+    "handoffs/S2R-REPRO-001/INDEX.md": "ef229266b68dd8431e52584ebd4b19ad0a598b9b7f981ea83570e8b55c5c61c3"
+  },
+  "published_state": "local checked; final remote validation recorded in PR after commit",
+  "local_link_count": 20,
+  "secret_pattern_check": "PASS for newly authored documents; not a claim of comprehensive security certification"
+}
