@@ -1,0 +1,856 @@
+{
+  "purpose": "The initial scenarios this round collected, re-derived and checked against the S1 materialisation.",
+  "master_seed": 20260916,
+  "splits": {
+    "train": {
+      "count": 96,
+      "items": [
+        {
+          "index": 0,
+          "episode_seed": 215225240327779380,
+          "family": "starter",
+          "scenario_sha256": "3c95ed843eb86704d8ea0474dca46152d46b7f20999d99d70dc1e9cf0b7b5264",
+          "s1_meta_sha256": "53ed5a5b449b726499ee2554fc04609a6221304dd6d4a9f1bb1f012e27302a15"
+        },
+        {
+          "index": 1,
+          "episode_seed": 309608923964964204,
+          "family": "swarm",
+          "scenario_sha256": "5c02828f8f53bf58ff3a699df4a65f60c76de8083215b90ec84c0f7d4a0c62cb",
+          "s1_meta_sha256": "a7b1c0ee8e7eda491bb8be82e366d2f794e5cb4eeb55a4c32bdc0cba3eb5f1b0"
+        },
+        {
+          "index": 2,
+          "episode_seed": 16486032420358024,
+          "family": "elite",
+          "scenario_sha256": "a6cc7f98a9888cff401bd1e828b9b2254763be234f95691f3a6f2177620608af",
+          "s1_meta_sha256": "d73c5ee3feb18b019c3af83500a00a8ef2f93cbceac722ca84537a9b953ff18c"
+        },
+        {
+          "index": 3,
+          "episode_seed": 449726793306879708,
+          "family": "mixed",
+          "scenario_sha256": "317f8cc0079dff1b51e5a25954ccee13fa1cf2e598a4e403c027d6a25d36291c",
+          "s1_meta_sha256": "2f8020394aea021437dc4ea14cbafe29a04e4a47bf58fd9229ee8ba8a7417092"
+        },
+        {
+          "index": 4,
+          "episode_seed": 203826035388037327,
+          "family": "starter",
+          "scenario_sha256": "ff523654fea7c1af2bfbc1482c33fab284425e2b01f9b72e7afa93162959e936",
+          "s1_meta_sha256": "7d13e60b8318a59e453e810cce4a1e5db9ad2142b8dfd146635f001bc067c255"
+        },
+        {
+          "index": 5,
+          "episode_seed": 469059209099535469,
+          "family": "swarm",
+          "scenario_sha256": "575817c7ae7d8070bdc65c31726ed821ebc8705d44375f8b8e16f704bbe1e7ed",
+          "s1_meta_sha256": "c08390266d5bd97efd4171a80cd506e09a3b559377ababa8c92ed641aeb48f10"
+        },
+        {
+          "index": 6,
+          "episode_seed": 591128044897519425,
+          "family": "elite",
+          "scenario_sha256": "4eb97ffda2a8ceeaeb9ee8137544d56f2afda64fbaac29ccee880d8bc8555eae",
+          "s1_meta_sha256": "60a925ea32ed822f4bd413d423df85dfb2edfb4604c9f87422867597de47d3b9"
+        },
+        {
+          "index": 7,
+          "episode_seed": 275750284820627352,
+          "family": "mixed",
+          "scenario_sha256": "eb242caab7be2a51fef9eb29a81c72123854af1daecd703d09fa543f5d8653c4",
+          "s1_meta_sha256": "887bc84e5a08d1497c64e8cbcb601f02cc712357a2f8c3380bb88a0b5f23417d"
+        },
+        {
+          "index": 8,
+          "episode_seed": 288676983878357407,
+          "family": "starter",
+          "scenario_sha256": "e2ea0cea3c892497f41e5dd313c522c1e329ccef91a9880963fdf080e5c95a02",
+          "s1_meta_sha256": "dacaacad1bc4049a833258eedece5f3721c35bd3b2dc01788e15d0b47ee65ded"
+        },
+        {
+          "index": 9,
+          "episode_seed": 706550767546794127,
+          "family": "swarm",
+          "scenario_sha256": "03d7ca504ee235fe048809b59fd13dee9f38ed34d32b31a1d202ffc633bd54a6",
+          "s1_meta_sha256": "841b6022a4bed62679be6c640dd0b21f6775cff87d1aa902e4edb02733928ef3"
+        },
+        {
+          "index": 10,
+          "episode_seed": 354195923644184302,
+          "family": "elite",
+          "scenario_sha256": "f18fdde21750a1d099486057ef5914c03e249d224f9de2d54c6d52bc9bbfd65b",
+          "s1_meta_sha256": "873d1a38e26e0cdd02e39c09d7276e80f83d2f770bed6be0ca62a4308f9e4cc9"
+        },
+        {
+          "index": 11,
+          "episode_seed": 508515170713386207,
+          "family": "mixed",
+          "scenario_sha256": "2b76b44a8673cd5dfc4c3121780aee87bb8301b87a3409070a47271194403c24",
+          "s1_meta_sha256": "fdd74dc88c69b2ce5bbb2a369229f39cf074647cf3423d909f8791d17ec64c28"
+        },
+        {
+          "index": 12,
+          "episode_seed": 1035900627414745319,
+          "family": "starter",
+          "scenario_sha256": "eb0ca1c05851b5a3dd05ca8cee7c3ff71c1a2af26471b541eb4f238d7c988d7f",
+          "s1_meta_sha256": "86bf9b3ae3509511008dd8c454ea1157fc69421c1e1bfcb387fbf3cfcc3d000d"
+        },
+        {
+          "index": 13,
+          "episode_seed": 857627111221131710,
+          "family": "swarm",
+          "scenario_sha256": "6f6e2fa80451fb9f507a923274be872b8f3c9bc88095ba390a06f9290d829c3f",
+          "s1_meta_sha256": "c13547d1ffca3cc33fb3fc59416f8ca2e0f9cebcbc6a9055658ab46f0d6b34fa"
+        },
+        {
+          "index": 14,
+          "episode_seed": 401656669793692274,
+          "family": "elite",
+          "scenario_sha256": "c7c0edce1fbf6d31351fc6f17c0b845813bc0074f36c00d12930d7f76073454b",
+          "s1_meta_sha256": "d812918cea15868b60cce9e5ded803f4e9d33be43f49eb0b364bcf5f8fa91b0f"
+        },
+        {
+          "index": 15,
+          "episode_seed": 325469710438625293,
+          "family": "mixed",
+          "scenario_sha256": "93ddb873c03327bae629cf10b4ad5db3f8b5da66c95fd11dcda7a93677abce5d",
+          "s1_meta_sha256": "d6ae62c5613de7aefc34f21224b66a32ec69a75ad5b1d04f2820d41f5d45798c"
+        },
+        {
+          "index": 16,
+          "episode_seed": 873284561042246454,
+          "family": "starter",
+          "scenario_sha256": "e9f31c9e79e132fd2544530ac0aa5e3349c9bb8de3a4295e9af4fa65039f423c",
+          "s1_meta_sha256": "3626b93207dcf8a71e425ed0ddbf01e93e4dbeaadad1c35d45dce14c37430885"
+        },
+        {
+          "index": 17,
+          "episode_seed": 360758819918243166,
+          "family": "swarm",
+          "scenario_sha256": "1d43dbba0a2efcee75eb719d5bed0da1a9889527a09a9f430b5313ba4b5addbd",
+          "s1_meta_sha256": "7873673870fc4429293423416bf30cdd6825a15e6de6b47ef6181117a6889620"
+        },
+        {
+          "index": 18,
+          "episode_seed": 685015167813687281,
+          "family": "elite",
+          "scenario_sha256": "b24b82360585d80a67423b6d428c79edc8d0da6d0ccf95f9e5286fc8f746a757",
+          "s1_meta_sha256": "02b9470ec9616fe56e911c9cae445d60b346f26e9b5ce28e42a450b130b3969e"
+        },
+        {
+          "index": 19,
+          "episode_seed": 197516043129880828,
+          "family": "mixed",
+          "scenario_sha256": "3945bca6a3915efc0db12cd9aa7a88bcf7a6f60f61b8f5f641322f80b50ffa63",
+          "s1_meta_sha256": "f5b1b19127f99054415e8fe5905734cca08e992fa7475d12ae3aba10c9c56f50"
+        },
+        {
+          "index": 20,
+          "episode_seed": 839231755938432752,
+          "family": "starter",
+          "scenario_sha256": "1f7b8857f05503627e9f7c36410a323c3125f70087861ed7d28fb467b4c93bbd",
+          "s1_meta_sha256": "23e372c76298a045e2f519f577fd69d49c0856467b3543632b016beac7b6b9a5"
+        },
+        {
+          "index": 21,
+          "episode_seed": 631471665154756588,
+          "family": "swarm",
+          "scenario_sha256": "fdbbb8fccac9fe1a85029b995dc6f9500e1a61a5075bea30adb98a37c481cd63",
+          "s1_meta_sha256": "b8b867d31ed34a14b36fdc220135d7e20d6502bcc43456dc336884f05057b723"
+        },
+        {
+          "index": 22,
+          "episode_seed": 36504762838623733,
+          "family": "elite",
+          "scenario_sha256": "bddaa73c4cad399ad161242a0bd20391d445d5743e18a5b408ff1f7700beb650",
+          "s1_meta_sha256": "6b6ef42bef0f47b4f33a2e9972f6237e1d3387c507b3424327a8bebd38814200"
+        },
+        {
+          "index": 23,
+          "episode_seed": 129424574201108926,
+          "family": "mixed",
+          "scenario_sha256": "345031ffe33aeb3e00da7f466b704bf4d465f0572a8d92262c0b78dee0e927c9",
+          "s1_meta_sha256": "f53abc1e2149e6402200d055bf644384396348ddb5f74117d29f7387fbe38e75"
+        },
+        {
+          "index": 24,
+          "episode_seed": 367613199818882589,
+          "family": "starter",
+          "scenario_sha256": "cb552e11ffb0b0d65ccbda5b537e552e63f97b7d2f281276bf4a777d9abdd951",
+          "s1_meta_sha256": "f4988a22abd3190c1fb8851201496aba433006c24ffc15aa8c6f4e5a557c17a8"
+        },
+        {
+          "index": 25,
+          "episode_seed": 259666032056115481,
+          "family": "swarm",
+          "scenario_sha256": "e91b55e4d6a7921bdb868fa5af53267d268efd25eb3acb9a81e54eb5caa08527",
+          "s1_meta_sha256": "f37ff05aa99a356caa83df53e58ce9a091fb4bf144de66f9f7abd56fba0f94f4"
+        },
+        {
+          "index": 26,
+          "episode_seed": 754854865812268205,
+          "family": "elite",
+          "scenario_sha256": "d34a6c9dd9f284cbee1a79f1c7ef0f6170c381978b79ee4abe9db4bb657c0fa1",
+          "s1_meta_sha256": "4e4d28f6a364f1ec295a0384c3dd9c15e1a04ae87bb2bc40fe7880b7facc70cd"
+        },
+        {
+          "index": 27,
+          "episode_seed": 429301776126489897,
+          "family": "mixed",
+          "scenario_sha256": "cc6e88e603313c991dc95eadfae1ab769b7cf650f1ac34f7ca7c2c9081ce55d0",
+          "s1_meta_sha256": "a7a1a827e4df1a22786108860e518d79d2b3c739319dc5cf111070a06bdc68a5"
+        },
+        {
+          "index": 28,
+          "episode_seed": 184937906885168654,
+          "family": "starter",
+          "scenario_sha256": "0eee779e6bf4a6e3664e5be4b9fa1bde7c55ef307661a4a7ace75b363d725922",
+          "s1_meta_sha256": "9c705ed849e10c5ad7e8da2baf9b5b764669df684bba1d65d656221b8cd39ae1"
+        },
+        {
+          "index": 29,
+          "episode_seed": 1017468157191829503,
+          "family": "swarm",
+          "scenario_sha256": "fcaa6c1d7f979dc978d633c241c78ecaab74af83d2119f37389be939ccf58769",
+          "s1_meta_sha256": "90e249a8d607f08cefbc093508a6369f417a881b834420831fe9b3b67407b436"
+        },
+        {
+          "index": 30,
+          "episode_seed": 173496601236084896,
+          "family": "elite",
+          "scenario_sha256": "c1026f20b54b79dc5fa15ab605b49c360fcfc408cff1d47944a978b7121aaf03",
+          "s1_meta_sha256": "17a85813e31f7f538b419217b675a6502b46fb1537663da49860dd8b7fbba777"
+        },
+        {
+          "index": 31,
+          "episode_seed": 249975678653135767,
+          "family": "mixed",
+          "scenario_sha256": "45716267776347a4c1c002500267574dee3b095c50cbcafaa61e0599a4f78df5",
+          "s1_meta_sha256": "71d8c2ce6c68efd42eca76f8213baf76df66e6076ba416431ef0e9baa7c740cf"
+        },
+        {
+          "index": 32,
+          "episode_seed": 1109811288843220741,
+          "family": "starter",
+          "scenario_sha256": "4fce0b2554a5b4af91057210bcd1b76f1e59ada9b173270a8449f4fe0306f81f",
+          "s1_meta_sha256": "b56d485e20336986ecd3d5a4fa39db17fde18881d76522c5123592d19e1ada11"
+        },
+        {
+          "index": 33,
+          "episode_seed": 44261033190740471,
+          "family": "swarm",
+          "scenario_sha256": "31340be05d4097333c238388bc86969e9afa3056e3dc0d6cc63647a3f433bd18",
+          "s1_meta_sha256": "d1e8725cf73861e29a923d2fbaa6314052557338e851ed62a55f6bd53fee7dbe"
+        },
+        {
+          "index": 34,
+          "episode_seed": 759917962340114118,
+          "family": "elite",
+          "scenario_sha256": "3dbec3fc4314813b7ef3b720c7caa00336bf3ece0afb1c54a0dcaa36c98d47e6",
+          "s1_meta_sha256": "fdcf5eb7fd94e7c3bc62cb568f53c93fc8e5741c39332d08f6dc085fc45d528e"
+        },
+        {
+          "index": 35,
+          "episode_seed": 153966977217495947,
+          "family": "mixed",
+          "scenario_sha256": "9f0586bafcf1a612cee024021f4029583ce1941ea665fb1d4e00b9c7fb900a4b",
+          "s1_meta_sha256": "72825bf9f6def8f145833d95b72afd9bc3c998f7d0de19b7ad4d3ec2725b1ce1"
+        },
+        {
+          "index": 36,
+          "episode_seed": 717596353485317345,
+          "family": "starter",
+          "scenario_sha256": "adf5b0e066ad8c4723566d988296affeb8251c93c340a5bba187199edb39fa76",
+          "s1_meta_sha256": "d5f47af1fdfaedb24dacca4c397015acb68349277723ff0948b8c00dbb4d311f"
+        },
+        {
+          "index": 37,
+          "episode_seed": 467236084042841034,
+          "family": "swarm",
+          "scenario_sha256": "9f097ebccda9529276434a74b6c293dd26d90469e43d577c99c3522f33d76106",
+          "s1_meta_sha256": "94d731a241304442a436546438dd1fa176c00fc1dc56455f9e79230b4a5670dc"
+        },
+        {
+          "index": 38,
+          "episode_seed": 565577345250459659,
+          "family": "elite",
+          "scenario_sha256": "42469034b45fe68ba429b0bdc5d56f4a891d711eab20a7d51c8c37b568565cad",
+          "s1_meta_sha256": "54a86e8457b153a78b48776a10e944011a0eee35796b4b5d1d4d751a34ca24a0"
+        },
+        {
+          "index": 39,
+          "episode_seed": 944492298312430325,
+          "family": "mixed",
+          "scenario_sha256": "3e4d6d18528b84229a57a9cd8b6870d07a21df9a54fc0af05805624f815cc457",
+          "s1_meta_sha256": "f8f59f97c30641ab22cb4589cce939406ca3631edae94845d7704c9d34566f40"
+        },
+        {
+          "index": 40,
+          "episode_seed": 840359353655689395,
+          "family": "starter",
+          "scenario_sha256": "da6d23f5df8831d8b8e5baf04387889b1f83db7a2cf00820086a62a8ecaae21c",
+          "s1_meta_sha256": "24a1d1f137ee018cf535b904d78718989af2c77053561349a663deec14e88734"
+        },
+        {
+          "index": 41,
+          "episode_seed": 611451093214250971,
+          "family": "swarm",
+          "scenario_sha256": "251abdc89738619fca4fd61a37fc56c153dcd8d6a1d444484f752f984edf3784",
+          "s1_meta_sha256": "35f4280705918ec9140f5e25f394accedb7ef6413e1db8774b83fb68e6c12850"
+        },
+        {
+          "index": 42,
+          "episode_seed": 815198346752307879,
+          "family": "elite",
+          "scenario_sha256": "e6eb455fc65032e306505e9b010aa84c3bc123bb6f3accff91e5f46964f34d4c",
+          "s1_meta_sha256": "d8e38655a83053a4fecf62f430baab9c6833642e4bbcdf6fc5a515ec29131c40"
+        },
+        {
+          "index": 43,
+          "episode_seed": 1150425324443444521,
+          "family": "mixed",
+          "scenario_sha256": "c33eddae6874ac9737b4c26ebacdd4b239855a6f13e40fb031d12fb2513924d6",
+          "s1_meta_sha256": "a38dc022aade0b40f86c89c2d10208a26a0e39c5350faf705dcd9f1b3eb122aa"
+        },
+        {
+          "index": 44,
+          "episode_seed": 32578273074317595,
+          "family": "starter",
+          "scenario_sha256": "4fef50ea5fb976477f9475a28f36c36877563b87a60afd30550b5b9b3b9229e5",
+          "s1_meta_sha256": "65cb1c34e613220bab6192b5a2577c41cd6dd9a7bb02b611bf05033251789c07"
+        },
+        {
+          "index": 45,
+          "episode_seed": 858347246625900991,
+          "family": "swarm",
+          "scenario_sha256": "f7857a796c4985a77fa2730dea126e0e29b9624e794ec0ee5531e0f6e9440bff",
+          "s1_meta_sha256": "1999451f34d94d8596a63927e34e5875ca77ad9d4e145cc75e82b913faa6b605"
+        },
+        {
+          "index": 46,
+          "episode_seed": 231719923220031903,
+          "family": "elite",
+          "scenario_sha256": "a2eb322ea5e65db20a958012e7c45775896df250df03f8e5ba6c7b99be524b94",
+          "s1_meta_sha256": "ad3c33e09183e175f3f49db15adb2ed4ff7c06b4fae3619d50d32984dd9bf3a4"
+        },
+        {
+          "index": 47,
+          "episode_seed": 424574948502568014,
+          "family": "mixed",
+          "scenario_sha256": "a43ca4052937886ec2a7c0f567ac92cd830dd9af9bfb80215ba4873da5200a28",
+          "s1_meta_sha256": "b372ff8dd4611766507238a5f52747f411fd2819be96d0e7508ff39dbcce20ca"
+        },
+        {
+          "index": 48,
+          "episode_seed": 764134530678025185,
+          "family": "starter",
+          "scenario_sha256": "0d5d287dd450c9ab16939f8537db658620a24d45921b7f8023e52bc0c00fc13d",
+          "s1_meta_sha256": "72674fddf58e3a748e989d9a3292c746bde6ffbb97e9160cb56c39d659a293c3"
+        },
+        {
+          "index": 49,
+          "episode_seed": 303458463518745569,
+          "family": "swarm",
+          "scenario_sha256": "d9e1af269e73672cdff6f3dcf77701e9b6939ad5fd117b3c252edec8a59ff8cd",
+          "s1_meta_sha256": "3c9ad7fc28266d5e38708bd3fc2acbc1c31142d53abfb2287be25865582f168a"
+        },
+        {
+          "index": 50,
+          "episode_seed": 907142132759430703,
+          "family": "elite",
+          "scenario_sha256": "35d6707029ff5651cc167d50442ffa540aa21d24f08c759a13e8e818a2490e16",
+          "s1_meta_sha256": "f4bef145fffa007e8de41b32d4df4c4e4d63d6794c2264dd0df18ab8dfdab656"
+        },
+        {
+          "index": 51,
+          "episode_seed": 68862291487356011,
+          "family": "mixed",
+          "scenario_sha256": "c2e900343a39212550543bed1d4f364cbdaaf94803ef157f080bee34be87083f",
+          "s1_meta_sha256": "b90308d1e949a0416791dc67f66e1c41e35185a062468af6b4eb3988dd6a94b4"
+        },
+        {
+          "index": 52,
+          "episode_seed": 1115928420051687887,
+          "family": "starter",
+          "scenario_sha256": "c47ba2d2693a4a732cae81fcb25d3d1123dd50757687865d246f5a72780814b9",
+          "s1_meta_sha256": "1e1600fa704e4415aa2b91c672482d00a70241aa9b1fd61b9ef8561e2f3cca3a"
+        },
+        {
+          "index": 53,
+          "episode_seed": 421542880182744890,
+          "family": "swarm",
+          "scenario_sha256": "9e2a43a81fd6e057784fc5c47d20fbff3f19a949f5264ac8ce65b9b287825df4",
+          "s1_meta_sha256": "ec1b4815d6c68d45682937e299a4457466f482a5b332fa979212adb7186554c1"
+        },
+        {
+          "index": 54,
+          "episode_seed": 32743809164976256,
+          "family": "elite",
+          "scenario_sha256": "93bca46831b2f1c02633d71a1ed60605285088d14771d4465d589c034ec34e20",
+          "s1_meta_sha256": "c6b27cf27e3b0485739f6cd5526e4c3e00e4f94c8d1b1ab1a5259307667401ef"
+        },
+        {
+          "index": 55,
+          "episode_seed": 739685188490944119,
+          "family": "mixed",
+          "scenario_sha256": "e36e0a156311f11455f5a09694fa48cd2445b4af2a607d64e3a303666fbc07c0",
+          "s1_meta_sha256": "1e47b54dc8091996c87da3410ec1a4c1e4018652454a36f9f0eef0c4c5503afa"
+        },
+        {
+          "index": 56,
+          "episode_seed": 703331023022134387,
+          "family": "starter",
+          "scenario_sha256": "e2929b963b95c1ce5112a0ab9986766c386c16cb6d4754b711397286bf75352d",
+          "s1_meta_sha256": "138a192970f44ab73a7361d1e5490f0ec843e75b98e5297b6cc6c88764a5322e"
+        },
+        {
+          "index": 57,
+          "episode_seed": 55459016527963225,
+          "family": "swarm",
+          "scenario_sha256": "950012ce3fbec541de9599fead9a0ff025a5d6988bb65a5299bc4002e3dea567",
+          "s1_meta_sha256": "8aaef5d4b25fe77a7bee15746cd25faf947f018c0eba9630af333bbac6815699"
+        },
+        {
+          "index": 58,
+          "episode_seed": 332398179995037251,
+          "family": "elite",
+          "scenario_sha256": "53dab557779997265ad807b6a1ba785c1bc24796e8eb520430ecc7864bdbebe8",
+          "s1_meta_sha256": "f851d0f4c0cee8187344f7099406f217e26a3155985115cf365dc2d240df1554"
+        },
+        {
+          "index": 59,
+          "episode_seed": 1017809255254452751,
+          "family": "mixed",
+          "scenario_sha256": "d8d2e86c8101f85546336613713370eb1e28b196b21e17e452cc1fd185f0abe5",
+          "s1_meta_sha256": "cf4b611cc4f13b5ae9b5289725a4cbe75b185f119629f7a1e2a665118f442ace"
+        },
+        {
+          "index": 60,
+          "episode_seed": 73068170563079423,
+          "family": "starter",
+          "scenario_sha256": "c9324267f07cbf2b3698cb2611b7b0cf4733704fe49af4b11a0b114cd26b43fc",
+          "s1_meta_sha256": "1173839d245cc5fd51ede26854c929f5b9d6f43db9bc2097b6ca62d7976dc6f5"
+        },
+        {
+          "index": 61,
+          "episode_seed": 697055440418020617,
+          "family": "swarm",
+          "scenario_sha256": "635165f8025c7d14e6627c42c0f40a04e5abbfb91f21189118c33665420861d5",
+          "s1_meta_sha256": "773138ee4f7b8b291409b1f2e35ef554b811094a97b555a2556d3998513bb82e"
+        },
+        {
+          "index": 62,
+          "episode_seed": 82416753542769309,
+          "family": "elite",
+          "scenario_sha256": "3177ee308e3fecdbc1ad587748cc5478093c175ed12cf0ec9899395f8b7d0f93",
+          "s1_meta_sha256": "0c35754ab2e38dc1f730aa097691e300de3b5da38d33749555dc62fc5d170e2f"
+        },
+        {
+          "index": 63,
+          "episode_seed": 967456085958594352,
+          "family": "mixed",
+          "scenario_sha256": "2575bc40c44f02012f889640fc3934667f16071153cdd2577f9baff2dbd2e6fb",
+          "s1_meta_sha256": "006d7ecbf6777bed1756e7a3bd454adae716574300175131fb55cb8d9736073a"
+        },
+        {
+          "index": 64,
+          "episode_seed": 538347895776097980,
+          "family": "starter",
+          "scenario_sha256": "cbf7bc4ace37b283dfde1aba93ccc7581b7b9f1997e95c8a4af1a5ed731c5860",
+          "s1_meta_sha256": "a7fb513c2110b9f746b976a895809dfc17029eb2a8ab94ef551a3a5c9b281ad4"
+        },
+        {
+          "index": 65,
+          "episode_seed": 977792256561978811,
+          "family": "swarm",
+          "scenario_sha256": "ed383f2bb3b74be45bf8aeb35a8f6437915e3891f1ffe8b911c4266a72854ff6",
+          "s1_meta_sha256": "f8c809efec5c3b952e9ed520a92bad5cb67ced34559d9da08f109fbb2f2b0f77"
+        },
+        {
+          "index": 66,
+          "episode_seed": 349363911758694821,
+          "family": "elite",
+          "scenario_sha256": "0de81c3f6e86cb2c59db3c08d24be49dad3433e1b0a1552f435acbb82d09e91b",
+          "s1_meta_sha256": "d3eecbc3dacd0365f625bfafaa4a46411b9b9187b0f2a5b422867e0984917a5b"
+        },
+        {
+          "index": 67,
+          "episode_seed": 230209106976383289,
+          "family": "mixed",
+          "scenario_sha256": "61b78d5acd832de4ba0dbe3e5e783ca475d968d0078002fcfd9cf16b6fc3f0c9",
+          "s1_meta_sha256": "894b6e8c31f170eeab1e0adabf88f45a53bbbc5f4be7b311bf7d05d872d5249a"
+        },
+        {
+          "index": 68,
+          "episode_seed": 768794753418381332,
+          "family": "starter",
+          "scenario_sha256": "56337d0b8e47b442b9a5cae1ba07da24301f9c7ff506f4fb39aa51a54169c7cf",
+          "s1_meta_sha256": "3b82d80b081d756b130a4011c8e07ee4de89261614a0dc1921eada259e432fa4"
+        },
+        {
+          "index": 69,
+          "episode_seed": 42733465207626083,
+          "family": "swarm",
+          "scenario_sha256": "9704d7ad96ba5e20fcd4c2cf7730c5eac35f36792f2ba52b85f6f8230fa20c92",
+          "s1_meta_sha256": "5d02d74fc3707fd5267176a34dc1483948cd65c015f0f7c6fa66a85ec4c2d3c4"
+        },
+        {
+          "index": 70,
+          "episode_seed": 731574095565734511,
+          "family": "elite",
+          "scenario_sha256": "b76a7830053d1e3d6cbab333da361e0155627ba1e5bfc2ec2bc71becd9ade99a",
+          "s1_meta_sha256": "6a984ca60563c5b5d236435bf7143579ddeb2320b56b48c7e17b8235e528b198"
+        },
+        {
+          "index": 71,
+          "episode_seed": 45052593391505648,
+          "family": "mixed",
+          "scenario_sha256": "375624f0343ebdf13e1d83731cdf7804ce0fcd1405bbcf0756b3a29bd07fdad2",
+          "s1_meta_sha256": "f7e0a358c3ac980e8eda941cde37f57bec00d289f513f6d47427c1054a08151f"
+        },
+        {
+          "index": 72,
+          "episode_seed": 151555059167568770,
+          "family": "starter",
+          "scenario_sha256": "20c113d4b1fca0ed345251aa565e293c6f47728d39427b71351522d6a3dd8fc2",
+          "s1_meta_sha256": "4d8908cf5de42e1ecb35d0ea1bf06b0d0c8398a5ce23c38dc9e8e57d9b0845cf"
+        },
+        {
+          "index": 73,
+          "episode_seed": 469070386882989837,
+          "family": "swarm",
+          "scenario_sha256": "d034ec95a79adf4312630010106f22da97748efa21d6012b9bd2b3063bbcd49f",
+          "s1_meta_sha256": "29721f2e4a8a02e6fb937980a6544f91b287f22229f83f29806afbcecf0c565a"
+        },
+        {
+          "index": 74,
+          "episode_seed": 50401336909367292,
+          "family": "elite",
+          "scenario_sha256": "187a5c0c3e8b28a0dfefb04f16518afbdf788b709d36f5bba59daa69feb7a538",
+          "s1_meta_sha256": "8aced1e62a2972778d69037af9934e5aed2375e185333a8e53bfa9d40aa5a3dd"
+        },
+        {
+          "index": 75,
+          "episode_seed": 792592696595706506,
+          "family": "mixed",
+          "scenario_sha256": "2100e6c9276d78bcb1c863ed8df560a518a304d17d98ca7c9fa71aee05cf0e34",
+          "s1_meta_sha256": "51ff4e5fee1ce77e9b5bf6746c21ac2cd3ea5dd9b5cac554aae55846036e2a0c"
+        },
+        {
+          "index": 76,
+          "episode_seed": 178139276112107813,
+          "family": "starter",
+          "scenario_sha256": "90eb94673050793448b83740bcfa27a65e91abcef6967069b5d29dfb33076056",
+          "s1_meta_sha256": "5303bae0e6680e1431bc4c6a89119e7a976aaf7d4c22fd583227fa4660eadbbc"
+        },
+        {
+          "index": 77,
+          "episode_seed": 949993183262221871,
+          "family": "swarm",
+          "scenario_sha256": "4adaac8613e573f154ded82c6002431eea6694715f49a5ac26d468cacd4366eb",
+          "s1_meta_sha256": "58d622333d8565262ef015df86e033e435e84796e956402b258bf73d8e50ca30"
+        },
+        {
+          "index": 78,
+          "episode_seed": 110551195022202022,
+          "family": "elite",
+          "scenario_sha256": "35a9ef43fd0e9dc87e8ac5a9c153f29d9efce9f2908679b6c91991abdff490e7",
+          "s1_meta_sha256": "285959ef5c7caad0549773f360a4a9f484ad5cf8e860f42686262e07d3c27f64"
+        },
+        {
+          "index": 79,
+          "episode_seed": 148920901682379367,
+          "family": "mixed",
+          "scenario_sha256": "b242fdd9d9731622e38b5207139b61de0d89ac5371da6108de48dabde2bc104b",
+          "s1_meta_sha256": "5862636bda38a0d3d287854cb3055b386d321a5fb54bf15721af3422665dafed"
+        },
+        {
+          "index": 80,
+          "episode_seed": 389036536029863248,
+          "family": "starter",
+          "scenario_sha256": "6c79042c1616b2b57762ddaa78e1561dfd6705e116f114488bbdbfbd304739c2",
+          "s1_meta_sha256": "0d561688b01e7093f0c01e2f59a58f3750b939793c01f3223604212d670b7a9b"
+        },
+        {
+          "index": 81,
+          "episode_seed": 117845444220945200,
+          "family": "swarm",
+          "scenario_sha256": "daa7f89208b17d8b103954e9adeb765c537e09e622a9de990532aa10c3ef1cdc",
+          "s1_meta_sha256": "4e22b90386d924ff696d77fb616c869fc3d1c2f22ea447e9268dc4433bed4585"
+        },
+        {
+          "index": 82,
+          "episode_seed": 534778541711081277,
+          "family": "elite",
+          "scenario_sha256": "8c6bd6c15d348ec4c3f412f195c571bdc573f161c7954725cf76545f56b4b18f",
+          "s1_meta_sha256": "6ce604188d5347ed85baa550ab1dfb9baf7786445531852f0197ee4876690675"
+        },
+        {
+          "index": 83,
+          "episode_seed": 633504595847327051,
+          "family": "mixed",
+          "scenario_sha256": "f4547f7d9629c63d36388766aa1d23269e904e17a71046a333d0e32a95473c5a",
+          "s1_meta_sha256": "76b31c43f4122b479e8fc4c3a3144fe8dd2c7cf34b42bf103d29ca1f0bc65f95"
+        },
+        {
+          "index": 84,
+          "episode_seed": 333575277952029130,
+          "family": "starter",
+          "scenario_sha256": "f2e5603f3f9d5257c5b823aaab34d1e8bd00ce0e6c6fafe89b99b55122d965ea",
+          "s1_meta_sha256": "8a92f2a3571bcb46ac5464c16609362739111625c7b53082abfed862611b5d14"
+        },
+        {
+          "index": 85,
+          "episode_seed": 1085542168577307518,
+          "family": "swarm",
+          "scenario_sha256": "4730e79b0ea3b708be0914276cd83bdf498872b50cd78603cf9e1c83548d6dc1",
+          "s1_meta_sha256": "95cd796b137b22712dfc4aae7481b0ae6d36566384c97c9ca3e6216560d0d1ec"
+        },
+        {
+          "index": 86,
+          "episode_seed": 935669707083772815,
+          "family": "elite",
+          "scenario_sha256": "e9490fd40979a56630f0dd224b35a8dbd30467f7073441495a1219f4fcbba093",
+          "s1_meta_sha256": "d97dcd237102a496012793bf263cdfaef2b02af0e4477e9728e82944b2f45e65"
+        },
+        {
+          "index": 87,
+          "episode_seed": 1074505032934703746,
+          "family": "mixed",
+          "scenario_sha256": "7deb3457883a7051cf3335a5ebaecc4c67fc9b11288d9749e817ab1033c121b5",
+          "s1_meta_sha256": "b1f0e24c96e1b0637ac3ac792736b10d5c14b5848492109807b8caf951f82ff9"
+        },
+        {
+          "index": 88,
+          "episode_seed": 262250367290932206,
+          "family": "starter",
+          "scenario_sha256": "7e0f48debf59f281a23271a6c638032c48add1a9b4b86227c5a737aca5170f91",
+          "s1_meta_sha256": "7f0c6b2568952a78ea74c0accd9bb695708cf5de0b02b6315b59da54a3b4c843"
+        },
+        {
+          "index": 89,
+          "episode_seed": 462073911470976050,
+          "family": "swarm",
+          "scenario_sha256": "3a1bc10e127d2e91cf5a67d4730b8660f83d2e8bfc43184bcf27f95c7d76b469",
+          "s1_meta_sha256": "18b00b30f1b9a043467f889e554d1a88465f26bc0728bbf3023cf2a15c15b260"
+        },
+        {
+          "index": 90,
+          "episode_seed": 534142891705909516,
+          "family": "elite",
+          "scenario_sha256": "f1136c28bc665493dfdfadadff3ecd126476f195e1217dc66d315f9603118b7b",
+          "s1_meta_sha256": "9e3fc37069d93246d6c8319970d16dab282f15ae97d7bc12c8b4315eea3a294d"
+        },
+        {
+          "index": 91,
+          "episode_seed": 458022206871770244,
+          "family": "mixed",
+          "scenario_sha256": "c5a406a90dae09788ddd0e3b229ad234bb511e7ed519a147bddd01f905d50dd9",
+          "s1_meta_sha256": "55cda4646b400a46d184140814a38ad0ccd500573fc55b29db7c2a876b1c9229"
+        },
+        {
+          "index": 92,
+          "episode_seed": 445258565068708757,
+          "family": "starter",
+          "scenario_sha256": "7fd5e736d6e95a0e22dc9a89a63e28980dcc4c1f5e1678287e434133a3d95c97",
+          "s1_meta_sha256": "9566b3bffcefbdf4033750721ebcac52dfa9d017021766b7df566cab94ad5955"
+        },
+        {
+          "index": 93,
+          "episode_seed": 81522704332622355,
+          "family": "swarm",
+          "scenario_sha256": "3c7b3a610b5cdebf15ceba22f1a0cc8f26533d501cb954608e05a41d295bbbcc",
+          "s1_meta_sha256": "ae3583d7927aeaa140dff59966f88818c7e4d8bfe4f0c1afae738e7290604a59"
+        },
+        {
+          "index": 94,
+          "episode_seed": 192599012101746736,
+          "family": "elite",
+          "scenario_sha256": "50f8693ed3b40b887459d7e835704bac7f9537a2ed0d14e39b08cdfdaed5c2d1",
+          "s1_meta_sha256": "e5ebef25e085139bd2c9c153030bc96a02196d981475c73b3b074e3c93f30057"
+        },
+        {
+          "index": 95,
+          "episode_seed": 963349975257190154,
+          "family": "mixed",
+          "scenario_sha256": "4f912bfb5b93c5fb51cd34189436602023068edcd41b070b7a26db5c181eca34",
+          "s1_meta_sha256": "22a5d09f4909a4ac3202fddcdac5aee8ccffabc22569ccda5146466b00f1ed0e"
+        }
+      ]
+    },
+    "val": {
+      "count": 24,
+      "items": [
+        {
+          "index": 0,
+          "episode_seed": 985017620115975495,
+          "family": "starter",
+          "scenario_sha256": "1aef39860ddd8c99dfbb2478c66784555c2e20f4234c0ea8a26b701f1694b4ff",
+          "s1_meta_sha256": "e0caeac7febbeb75a98d887b7bdd5dd1028e7fba2a6ed3f2db4b3a5f715b9f34"
+        },
+        {
+          "index": 1,
+          "episode_seed": 679581977554081127,
+          "family": "swarm",
+          "scenario_sha256": "65917dd9d5888b6028e1e6e6b78b8857d471a6b2ad7a3aa2040fb927cb0a18e9",
+          "s1_meta_sha256": "7d2ffd91bdb5742ab323958ec53c9be6d90df41d33c15eacb888c127b00b2098"
+        },
+        {
+          "index": 2,
+          "episode_seed": 276749439712483820,
+          "family": "elite",
+          "scenario_sha256": "12c87a3f4400dbd28889057121dd5a04e72f5782002cdf3541caed518216a7b7",
+          "s1_meta_sha256": "2e2095df613d9b865f484e15b08055516e5584e42cf1e86eaaa4d9e71e97c10c"
+        },
+        {
+          "index": 3,
+          "episode_seed": 906423935853767955,
+          "family": "mixed",
+          "scenario_sha256": "cf5f391ae03853cccb2f5fd0455f8eba0345d3d6bcb178844edbcea1839182f8",
+          "s1_meta_sha256": "69605fb3ee122770052047715d477026cc126c3b65db46384000028dd7aa2d54"
+        },
+        {
+          "index": 4,
+          "episode_seed": 848169597744935964,
+          "family": "starter",
+          "scenario_sha256": "f9b4806b0bf4558f3b1663faf89ab358149b1349d6de4df573059ba72be90e74",
+          "s1_meta_sha256": "50910756a0ffc989ed5f8c47f246731991d6c1827ca4773514afc2ce81360518"
+        },
+        {
+          "index": 5,
+          "episode_seed": 814617039853527583,
+          "family": "swarm",
+          "scenario_sha256": "f3842d97dd98952860236287163bd130b9f16e7e348a1034b3ffc91023f97564",
+          "s1_meta_sha256": "b9d3a8e8a71aab80a83a91caae4245d3e561a2a856d77ca48dce8ee735f13f8d"
+        },
+        {
+          "index": 6,
+          "episode_seed": 414267699800003194,
+          "family": "elite",
+          "scenario_sha256": "fbdde8ca375ac07257672764d751075a45dd44705b6fcfeef32fba76f711a873",
+          "s1_meta_sha256": "aa77c253cef3e071ac085471e1baa52acc5dda2835a267a5568d2a32773d39b0"
+        },
+        {
+          "index": 7,
+          "episode_seed": 1042557032705892327,
+          "family": "mixed",
+          "scenario_sha256": "c308a2162490683cf6c6e37f6d0ba5239438f432472f04421512c0323a3b5a2b",
+          "s1_meta_sha256": "8add36cd4a79d9ad9f8d7bca118ae0100b1f596f43551f96c18168d7472d1ec0"
+        },
+        {
+          "index": 8,
+          "episode_seed": 714438240910193137,
+          "family": "starter",
+          "scenario_sha256": "e3e9e337c09e5848e80aa2988b08499f719ea99319c5fae2f006d277b3babfab",
+          "s1_meta_sha256": "3bf9481af4f99eb9f010817698fc49a93ab8025f927aef35d49a9f316571f14a"
+        },
+        {
+          "index": 9,
+          "episode_seed": 543245077249473869,
+          "family": "swarm",
+          "scenario_sha256": "fd25936d5602f3d282b4df16cf372bea45a686045bdafab8c74ebc44dbf5a2d6",
+          "s1_meta_sha256": "2df48131b3f72a288a516e59506145d5207c32100189f4b25cc066022befcd3a"
+        },
+        {
+          "index": 10,
+          "episode_seed": 408512225821957292,
+          "family": "elite",
+          "scenario_sha256": "a705c93ac90e6bf57ae8e6b73dff216f506d7eeb8dd612bf1bf9bc0612af07b5",
+          "s1_meta_sha256": "4d0998ff2d7a24fbb6a93c7ae537fe51bc0aa8d24c9416fe76db885082b0064a"
+        },
+        {
+          "index": 11,
+          "episode_seed": 1034866744114475559,
+          "family": "mixed",
+          "scenario_sha256": "927fe467b3b99dc0596eff1586a668d3c50e9ee1aa8e2f1203a180560ba6ecdc",
+          "s1_meta_sha256": "4b06febec329a559ccf3fe919b1d3cf35acd542f5f8df2b9ed61e41c33d76afd"
+        },
+        {
+          "index": 12,
+          "episode_seed": 1007759950028361153,
+          "family": "starter",
+          "scenario_sha256": "c6c6943dc46da16a03457c3e3d1a6580c0686bcc2909e745a3cb9aee17d5f933",
+          "s1_meta_sha256": "ee4ad196499db6038372d7f025c6488fa6199c600f758508d404c47ea630aa17"
+        },
+        {
+          "index": 13,
+          "episode_seed": 252344901956776915,
+          "family": "swarm",
+          "scenario_sha256": "395c00ca00f53dfbf00d44f204802b6a1e3f6aa29580dc579545ae454106ecc9",
+          "s1_meta_sha256": "2356204936d91cf7dd311beb623b7e58a42b0d35c06a41f04ecfb3292960ef53"
+        },
+        {
+          "index": 14,
+          "episode_seed": 929490618602039311,
+          "family": "elite",
+          "scenario_sha256": "858b2ba77b2655edf7fd83acb40757af4830e78af4075c48228784592e3726e3",
+          "s1_meta_sha256": "c236ac173efff653ffab1a82b523afba2d9f70ac9278484c28ea3c23828d72d4"
+        },
+        {
+          "index": 15,
+          "episode_seed": 330917565894528381,
+          "family": "mixed",
+          "scenario_sha256": "986bf6de89a1c70bbb0a276896d6794289e00b1e603da1f3a09818f819a7136a",
+          "s1_meta_sha256": "978893969b53f16ed27270db190068b7852ff2cd1a07c8a3f9d160c013b1ead3"
+        },
+        {
+          "index": 16,
+          "episode_seed": 627749163037027174,
+          "family": "starter",
+          "scenario_sha256": "3eda87661632c39c1d955660066a9153b3cb28290fe14c08ea24e2166fd5c81b",
+          "s1_meta_sha256": "01cf722a927fed90fa9d0af1ed88bc887a05ee0f425cd0b9f64ea28faa14a77b"
+        },
+        {
+          "index": 17,
+          "episode_seed": 874719452604555918,
+          "family": "swarm",
+          "scenario_sha256": "99667962a87e89e24e5403ad1ec893a119ee93e18b56287e7651758897abe53e",
+          "s1_meta_sha256": "d6cc240a7b90cf3525f2621ae688b8b48e675d5afd419c1463e1919eefc4fbc2"
+        },
+        {
+          "index": 18,
+          "episode_seed": 1078684762538672437,
+          "family": "elite",
+          "scenario_sha256": "9f599a6626f5e2c4c89aac52e73d5f9ab57f2cce82cd28f7ecd5cb9cd18bdae4",
+          "s1_meta_sha256": "48877e253bc7decae1a93686a8d967eb7e12343193d4464eacd688583c4fe534"
+        },
+        {
+          "index": 19,
+          "episode_seed": 466762480269529992,
+          "family": "mixed",
+          "scenario_sha256": "c8f45ceb0355f7c1e3b203abb5ab6d33d82cef10a8cb05f9ed07b8e65f455561",
+          "s1_meta_sha256": "8c7bfec71be330abd0f7d253626a18d03ee23a18cecfb7d4ab1738d8fb582e7b"
+        },
+        {
+          "index": 20,
+          "episode_seed": 712688991921402264,
+          "family": "starter",
+          "scenario_sha256": "86f612ccad5583e1f48830b10674ff6f0303e247a3b360d71a610f1b4c16a655",
+          "s1_meta_sha256": "aa9fae4fa6f3ae453aea4f1382498528c4e41ccdd106a07fecf07b1f605b7f17"
+        },
+        {
+          "index": 21,
+          "episode_seed": 115777725218531890,
+          "family": "swarm",
+          "scenario_sha256": "0588ac8bec11f21385d502ff4b425a8f2b5a574e0a3905e3f742c6edc26cb36d",
+          "s1_meta_sha256": "52dc2c7ae52755e89af2f1a65f76ac8b0b8be269744a67f2384dc2cd5c5c2887"
+        },
+        {
+          "index": 22,
+          "episode_seed": 97276459716102287,
+          "family": "elite",
+          "scenario_sha256": "138dca7929d988e90efa832488e32e4497aecc6252424bcff1e1984a48a55318",
+          "s1_meta_sha256": "605ed97005b83dff97c495ca723780a279a60dc41e3dd46247af471188a9827e"
+        },
+        {
+          "index": 23,
+          "episode_seed": 889525890274943164,
+          "family": "mixed",
+          "scenario_sha256": "d65ebcad12c6f950b19654d16abaf3ebdd3b84ec2a5617a60717b053e1062d1e",
+          "s1_meta_sha256": "f07100d82e52b31dc21261a43cdc589e59a5d5be285b475e1a1ecbf4d627f8c0"
+        }
+      ]
+    }
+  }
+}

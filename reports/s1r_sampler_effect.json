@@ -1,0 +1,329 @@
+{
+  "purpose": "Whether the fixed sampler changes the teacher's decisions.",
+  "split": "train",
+  "search": {
+    "simulations": 64,
+    "max_depth": 64,
+    "rollout_limit": 128,
+    "c_puct": 1.5,
+    "rollout_epsilon": 0.12,
+    "potion_cost": 0.02,
+    "use_leaf_value": false
+  },
+  "roots": [
+    {
+      "episode_index": 1,
+      "scenario_sha256": "5c02828f8f53bf58ff3a699df4a65f60c76de8083215b90ec84c0f7d4a0c62cb",
+      "steps": [
+        {
+          "step": 0,
+          "same_action": true,
+          "same_policy": false
+        },
+        {
+          "step": 1,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 2,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 3,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 4,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 5,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 6,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 7,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 8,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 9,
+          "same_action": true,
+          "same_policy": true
+        }
+      ],
+      "all_steps_same": true
+    },
+    {
+      "episode_index": 17,
+      "scenario_sha256": "1d43dbba0a2efcee75eb719d5bed0da1a9889527a09a9f430b5313ba4b5addbd",
+      "steps": [
+        {
+          "step": 0,
+          "same_action": false,
+          "same_policy": true
+        }
+      ],
+      "all_steps_same": false
+    },
+    {
+      "episode_index": 29,
+      "scenario_sha256": "fcaa6c1d7f979dc978d633c241c78ecaab74af83d2119f37389be939ccf58769",
+      "steps": [
+        {
+          "step": 0,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 1,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 2,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 3,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 4,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 5,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 6,
+          "same_action": true,
+          "same_policy": true
+        }
+      ],
+      "all_steps_same": true
+    },
+    {
+      "episode_index": 41,
+      "scenario_sha256": "251abdc89738619fca4fd61a37fc56c153dcd8d6a1d444484f752f984edf3784",
+      "steps": [
+        {
+          "step": 0,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 1,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 2,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 3,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 4,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 5,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 6,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 7,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 8,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 9,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 10,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 11,
+          "same_action": true,
+          "same_policy": true
+        }
+      ],
+      "all_steps_same": true
+    },
+    {
+      "episode_index": 57,
+      "scenario_sha256": "950012ce3fbec541de9599fead9a0ff025a5d6988bb65a5299bc4002e3dea567",
+      "steps": [
+        {
+          "step": 0,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 1,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 2,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 3,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 4,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 5,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 6,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 7,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 8,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 9,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 10,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 11,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 12,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 13,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 14,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 15,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 16,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 17,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 18,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 19,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 20,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 21,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 22,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 23,
+          "same_action": true,
+          "same_policy": true
+        },
+        {
+          "step": 24,
+          "same_action": true,
+          "same_policy": true
+        }
+      ],
+      "all_steps_same": true
+    }
+  ],
+  "steps_compared": 55,
+  "steps_where_the_teacher_changed": 1,
+  "roots_with_any_change": 1,
+  "conclusion": "the fixed sampler changes the teacher's chosen action on at least one probed root"
+}
