@@ -32,3 +32,16 @@
 `reports/target_status.md` 逐项写：关卡、执行命令、实际输出路径、通过／失败／未执行、当前覆盖、阻碍及具体修复。GPU 报告需给出设备名、显存峰值、模型参数量；训练报告包含数据数量、seed namespace、搜索预算、checkpoint SHA256；评测包含每组赢／输／截断、存活 HP、utility、p50/p95 延迟和区间。
 
 最终回复必须清楚区分：已经能做、尚不能做、实测强度、如何启动、下一项阻塞。没有游戏联调日志，不写“已接入游戏”。没有强度基准，不写“超人类”。
+
+## 实施 agent 与 ChatGPT reviewer 的 PR 协作
+
+协作流程见 [.github/agent-review-protocol.md](.github/agent-review-protocol.md)，启用状态见 [.github/chatgpt-review-task.md](.github/chatgpt-review-task.md)。这两份文件补充而不降低以上边界、A–F 阶段与 G0–G5 验收要求。
+
+- 本文件前面的实施步骤面向 implementation agent；被授权担任 reviewer 时，只审查与规划，不因此自动启动训练或接管实施。
+- 每轮交接使用独立分支的 PR、完整 handoff、准确 HEAD SHA 和验证证据。最后添加 `agent-ready-for-review`；普通 push 不表示交接完成。
+- ready 标签在事件订阅未启用前只是状态。当前可由所有者在 Chat 明确发起审查；不得声称标签会自动唤醒当前聊天。
+- reviewer 在独立工作副本审查固定版本，将 Review、Verification、Next Agent Plan、Completion Criteria 和快照写回同一 PR；实施者核对轮次后才继续。
+- Chat 可经授权的 Remote Desktop Commander 调用本机 Git/gh；凭据留在本机，不读取/输出私钥或 token，不更改系统设置。
+- clone、静态审查、实际执行测试、观察 CI 是不同证据。没有执行的 native、CUDA、原游戏差分必须写未验证，CPU smoke 不能替代它们。
+- 交接后冻结该轮代码；不自动合并、启用 auto-merge、直接修改 main、force-push 或启动无限迭代。协议变更由所有者经 PR 确认。
+- 文档不是 webhook。只有事件注册、送达、审查、计划写回和状态更新均经真实验收，才能宣布自动闭环启用；不擅自换成轮询、Codex 或付费 API reviewer。
