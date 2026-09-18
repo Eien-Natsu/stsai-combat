@@ -72,10 +72,25 @@ def check_checkpoint_semantics(checkpoint, path, data_fingerprint=None):
         if stored != current:
             raise ValueError(f"{path}: {key}={stored} but this build uses {current}; "
                              "the inputs or the objective no longer mean the same thing")
+    from .util import SAMPLER_NOT_APPLICABLE
     stored_sampler = checkpoint.get("sampler_revision")
-    if stored_sampler is not None and stored_sampler != SAMPLER_REVISION:
-        raise ValueError(f"{path}: sampler_revision={stored_sampler} but this build uses "
-                         f"{SAMPLER_REVISION}")
+    backend = checkpoint.get("backend")
+    if backend == "lightspeed_pilot":
+        # The sampler IS the belief model for this backend, so it must be declared.
+        # Missing or None means a checkpoint written before the field existed, and
+        # that is not the same as the current sampler.
+        if stored_sampler is None:
+            raise ValueError(f"{path}: native checkpoints must record sampler_revision; a missing "
+                             "value is the pre-field revision, not the current one")
+        if stored_sampler != SAMPLER_REVISION:
+            raise ValueError(f"{path}: sampler_revision={stored_sampler} but this build uses "
+                             f"{SAMPLER_REVISION}")
+    else:
+        # A backend without a sampler states that explicitly rather than leaving
+        # the field out, so absence is never a pass.
+        if stored_sampler != SAMPLER_NOT_APPLICABLE:
+            raise ValueError(f"{path}: backend {backend!r} must record sampler_revision="
+                             f"{SAMPLER_NOT_APPLICABLE!r}, found {stored_sampler!r}")
     if data_fingerprint is not None and checkpoint.get("data_fingerprint") != data_fingerprint:
         raise ValueError(f"{path}: data changed; this checkpoint was trained on a different set")
 

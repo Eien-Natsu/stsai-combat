@@ -113,6 +113,12 @@ def loss_numerators(output,labels):
     if outcome_logits.shape != outcome_target.shape:
         raise ValueError(f"outcome logits {tuple(outcome_logits.shape)} do not match the target "
                          f"{tuple(outcome_target.shape)}")
+    # Every head must describe the SAME batch. Matching shapes within a head is
+    # not enough: policy B=4 against outcome B=1 broadcasts one outcome error
+    # across four rows, which is the same class of mistake as the (B,1) mask.
+    if outcome_logits.shape[0] != policy_logits.shape[0]:
+        raise ValueError(f"outcome batch {outcome_logits.shape[0]} does not match the policy batch "
+                         f"{policy_logits.shape[0]}")
     batch=policy_logits.shape[0]
     for name,tensor in (("decision",decision),("value_mask",mask),("value",value_target),
                         ("value_prediction",value_pred)):
@@ -147,9 +153,11 @@ def losses(output,labels):
 def _move(batch,device):
     return {k:(v.to(device,non_blocking=True) if torch.is_tensor(v) else v) for k,v in batch.items()}
 
-def _sampler_revision():
+def _sampler_revision(backend):
+    """What this checkpoint's sampler semantics are, declared for every backend."""
     from .native import SAMPLER_REVISION
-    return SAMPLER_REVISION
+    from .util import SAMPLER_NOT_APPLICABLE
+    return SAMPLER_REVISION if backend == "lightspeed_pilot" else SAMPLER_NOT_APPLICABLE
 
 def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
@@ -157,7 +165,7 @@ def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     from .util import SCHEMA_VERSION
     payload={"format_version":1,"model_config":asdict(model.config),"model_state":model.state_dict(),
              "encoding_revision":ENCODING_REVISION,"observation_schema":SCHEMA_VERSION,
-             "loss_revision":LOSS_REVISION,"sampler_revision":_sampler_revision(),
+             "loss_revision":LOSS_REVISION,"sampler_revision":_sampler_revision(backend),
              "optimizer_state":optimizer.state_dict(),"step":step,"epoch":epoch,"best_val":best,
              "backend":backend,"train_config":config,"data_fingerprint":data_fingerprint,
              "torch_rng":torch.get_rng_state(),"python_rng":random.getstate()}

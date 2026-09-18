@@ -19,6 +19,10 @@ SCHEMA_VERSION = 4
 # run.json and in every checkpoint, and checked at EVERY load path.
 LOSS_REVISION = 2
 
+# Checkpoints from a backend that has no belief sampler record this marker, so a
+# missing sampler_revision is never read as agreement with the current build.
+SAMPLER_NOT_APPLICABLE = "not_applicable"
+
 def canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
 

@@ -40,6 +40,7 @@ FIELDS = [
      "future_read": "MonsterSpecific.cpp:745 (GREEN_LOUSE_BITE), :1006 (RED_LOUSE_BITE)",
      "visibility": "the displayed attack damage, once an attack intent is shown",
      "category": "RESAMPLED",
+     "evidence_type": "SOURCE_ARGUMENT plus a constructed counterfactual",
      "grounds": LOUSE_GROUNDS,
      "approximation": "uniform prior over the spawn range, narrowed by public observations; "
                       "not the original game's correlated posterior",
@@ -50,6 +51,7 @@ FIELDS = [
      "future_read": "MonsterSpecific.cpp:774 (charges) and the charge state drives its move",
      "visibility": "the charging intent is displayed on every turn it charges",
      "category": "PUBLIC_DETERMINED",
+     "evidence_type": "SOURCE_ARGUMENT (no counterfactual test)",
      "grounds": "the counter only advances on turns whose intent the player sees, so "
                 "counting them recovers it",
      "test": "tests/test_native_coverage.py covers both of its moves"},
@@ -59,6 +61,7 @@ FIELDS = [
      "future_read": "MonsterSpecific.cpp:2780 in getMoveForRoll",
      "visibility": "Entangle applies Entangled to the player, so its use is public",
      "category": "PUBLIC_DETERMINED",
+     "evidence_type": "SOURCE_ARGUMENT (no counterfactual test)",
      "grounds": "a boolean about whether a publicly visible debuff has already happened",
      "test": "tests/test_native_coverage.py covers all three of its moves"},
 
@@ -67,6 +70,7 @@ FIELDS = [
      "future_read": "its multi-strike move",
      "visibility": "as the louse, but unreachable here",
      "category": "UNSUPPORTED",
+     "evidence_type": "SOURCE_ARGUMENT (read site recorded; no reachable path here)",
      "grounds": "Act 3 monster, not in the 17 supported encounters; the adapter refuses the "
                 "encounter before this can arise, and widening the list requires applying the "
                 "same candidate treatment",
@@ -78,6 +82,7 @@ FIELDS = [
      "future_read": "MonsterSpecific.cpp:2855-2881, :2981, :3090, :3189, :3245, :2069, :2257",
      "visibility": "not audited",
      "category": "UNSUPPORTED",
+     "evidence_type": "NOT_VERIFIED (no reachable path here; the sites are only listed)",
      "grounds": "none of these is reachable in the 17 supported encounters; the read sites are "
                 "recorded so widening the encounter list cannot forget them",
      "test": "no reachable path"},
@@ -87,10 +92,13 @@ FIELDS = [
      "future_read": "getMoveForRoll via lastMove / lastTwoMoves",
      "visibility": "the intent class plus the displayed damage and hit count",
      "category": "PUBLIC_DETERMINED",
-     "grounds": "across 3584 reachable states and 93 distinct public signatures no two held "
-                "moves shared a signature. The class alone does not separate Looter Mug from "
-                "Lunge; the damage number does. The scan is the coverage evidence; the "
-                "argument is that the adapter exports exactly those three fields and no more.",
+     "grounds": "the class plus the displayed damage and hit count separated every held move in "
+                "a finite sample of reachable states (3584 states, 93 signatures). The class "
+                "alone does not separate Looter Mug from Lunge; the damage number does.",
+     "evidence_type": "FINITE_SAMPLE_COVERAGE plus a source argument",
+     "not_a_proof": "a coverage regression over sampled states, not a proof over all reachable "
+                    "states, and it cannot detect a determined move whose hidden parameters are "
+                    "still unknown (that is the louse case, listed separately)",
      "test": "tests/test_native_fairness.py::test_the_held_move_is_determined_by_public_information"},
 
     {"monster": "all supported", "field": "moveHistory[1] and the executed history",
@@ -98,6 +106,7 @@ FIELDS = [
      "future_read": "the adapter, via the engine's execution events",
      "visibility": "the move is watched resolving, and its class is exported",
      "category": "PUBLIC_DETERMINED",
+     "evidence_type": "CONSTRUCTED_COUNTERFACTUAL plus a source argument",
      "grounds": "taken from the engine's own execution events, not inferred from a turn counter",
      "test": "tests/test_native_fairness.py lifecycle suite"},
 
@@ -107,6 +116,7 @@ FIELDS = [
      "future_read": "every rule that rolls",
      "visibility": "never visible",
      "category": "RESAMPLED",
+     "evidence_type": "MODEL_ASSUMPTION",
      "grounds": "all six streams are reconstructed from the sampler seed",
      "approximation": "independent streams, not the original game's correlated seeded streams",
      "test": "tests/test_native_fairness.py::test_every_distinct_hidden_state_shares_one_belief"},
@@ -116,6 +126,7 @@ FIELDS = [
      "future_read": "every draw",
      "visibility": "only the multiset is public",
      "category": "RESAMPLED",
+     "evidence_type": "CONSTRUCTED_COUNTERFACTUAL plus a model assumption",
      "grounds": "sorted by the cross-backend canonical key then shuffled with the sampler rng, "
                 "so the sampled order never depends on the real one",
      "approximation": "a uniformly random order over the public multiset",
@@ -126,6 +137,7 @@ FIELDS = [
      "future_read": "debug only",
      "visibility": "never visible",
      "category": "RESAMPLED",
+     "evidence_type": "MODEL_ASSUMPTION",
      "grounds": "zeroed in the copy; never an agent input",
      "approximation": "no seed is modelled at all, which is strictly less information than the "
                       "player has",
@@ -136,6 +148,7 @@ FIELDS = [
      "future_read": "rules and the model alike",
      "visibility": "all exported in the observation",
      "category": "PUBLIC_DETERMINED",
+     "evidence_type": "SOURCE_ARGUMENT (exported verbatim, checked on every observation)",
      "grounds": "copied verbatim and fully exported",
      "test": "validate_public on every observation"},
 
@@ -144,6 +157,7 @@ FIELDS = [
      "future_read": "the adapter's previous_intent and slot reset",
      "visibility": "only executed actions and spawns, both of which the player watches",
      "category": "PUBLIC_DETERMINED",
+     "evidence_type": "CONSTRUCTED_COUNTERFACTUAL plus a source argument",
      "grounds": "records only what actually happened; no rule reads it",
      "test": "tests/test_native_fairness.py lifecycle suite"},
 ]
@@ -195,10 +209,12 @@ def main():
         },
         "coverage_scan": {
             **scan,
-            "role": "COVERAGE STATISTIC ONLY. It never decides a category: absence of a "
+            "role": "COVERAGE REGRESSION ONLY. It never decides a category: absence of a "
                     "counterexample is not an argument that public information determines a "
                     "field, and it cannot detect a determined move whose hidden parameters "
-                    "are still unknown.",
+                    "are still unknown. Each field below states separately whether it rests on a source "
+                    "argument, a model assumption, a constructed counterfactual or an actual "
+                    "game run; none is an original-game verification.",
         },
         "fields": FIELDS,
         "by_category": by_category,
@@ -210,6 +226,11 @@ def main():
                     "the cases that were checked"},
             {"item": "the coverage scan itself",
              "why": "sampled states, not a proof over all reachable states"},
+            {"item": "original-game UI parity for the intent mapping",
+             "why": "no legal copy of the game on this host; rows are ENGINE_DERIVED_ONLY or "
+                    "UI_SOURCE_VERIFIED, never ORIGINAL_GAME_VERIFIED"},
+            {"item": "the exact original-game posterior over hidden parameters",
+             "why": "the sampler is a declared approximation over an independent RNG model"},
         ],
         "explicitly_not_used_as_proof": [
             "a random collision scan", "the absence of a move_id key in the observation"],

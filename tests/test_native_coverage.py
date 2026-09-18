@@ -484,16 +484,25 @@ def test_every_supported_move_has_an_audited_public_intent():
 
 
 def test_the_field_audit_does_not_decide_categories_by_scan():
-    """A collision scan is coverage, never a pass criterion."""
+    """Zero collisions over sampled states is a coverage regression, not a proof.
+
+    The report says so in the same words the audit does, and every field states
+    which kind of evidence it rests on, so a source argument is never read as a
+    measurement.
+    """
     import json as _json
     audit = _json.loads((ROOT / "sampler/field_audit.json").read_text(encoding="utf-8"))
-    assert "COVERAGE STATISTIC ONLY" in audit["coverage_scan"]["role"]
+    assert "COVERAGE REGRESSION ONLY" in audit["coverage_scan"]["role"]
     assert audit["incomplete_evidence"], "the audit must keep an incomplete-evidence bucket"
     required = {"monster", "field", "init_write", "future_read", "visibility",
-                "category", "grounds", "test"}
+                "category", "grounds", "test", "evidence_type"}
     for field in audit["fields"]:
         assert required <= set(field), f"field entry is missing {required - set(field)}: {field}"
         assert field["category"] in ("PUBLIC_DETERMINED", "RESAMPLED", "UNSUPPORTED")
+        # SOURCE_ARGUMENT / MODEL_ASSUMPTION / CONSTRUCTED_COUNTERFACTUAL / GAME_RUN
+        assert field["evidence_type"].split(" plus ")[0].split(" (")[0] in (
+            "SOURCE_ARGUMENT", "MODEL_ASSUMPTION", "CONSTRUCTED_COUNTERFACTUAL",
+            "FINITE_SAMPLE_COVERAGE", "GAME_RUN", "NOT_VERIFIED"), field["evidence_type"]
         if field["category"] == "RESAMPLED":
             assert field.get("approximation"), "a resampled field must name its approximation"
     determined = [f for f in audit["fields"] if f["category"] == "PUBLIC_DETERMINED"]

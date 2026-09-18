@@ -189,30 +189,7 @@ def test_a_pinned_base_is_not_re_randomised():
             "a publicly known base must survive sampling rather than be redrawn"
 
 
-def test_ambiguity_is_kept_when_several_candidates_fit():
-    """SOURCE_ARGUMENT_ONLY for the arithmetic: strength or rounding can hide it.
-
-    With the monster at high strength the shown number no longer separates every
-    candidate, so the public range must stay wider than one value.
-    """
-    roots = louse_roots()
-    assert roots
-    index, episode_seed, slot, monster, true_base = roots[0]
-    scenario, _, _ = make_scenario("lightspeed_pilot", "val", index)
-    env = build(episode_seed, scenario["deck"])
-    obs = env.observe()
-    widened = False
-    for _ in range(12):
-        if obs["terminal"]:
-            break
-        obs = env.step(end_turn(obs))
-        enemy = obs["enemies"][slot]
-        if enemy["intent"] == "ATTACK":
-            if enemy["attack_base_low"] < enemy["attack_base_high"]:
-                widened = True
-            break
-    # In this fixture strength stays 0 for a while, so the base is usually pinned.
-    # Either outcome is legitimate; what must never happen is a range outside the
-    # spawn prior or an interval that excludes the true value.
-    assert PUBLIC_PRIOR[0] <= obs["enemies"][slot]["attack_base_low"] <= obs["enemies"][slot]["attack_base_high"] <= PUBLIC_PRIOR[1]
-    assert not widened or obs["enemies"][slot]["attack_base_low"] < obs["enemies"][slot]["attack_base_high"]
+# The weak ambiguity test that used to live here passed even when the interval
+# never widened, so it proved nothing about the branch. It is superseded by
+# tests/test_ambiguity_regression.py, which drives a real zeroed display to -9
+# strength and checks the whole declared prior stays reachable.
