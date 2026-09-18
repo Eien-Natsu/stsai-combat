@@ -4,10 +4,26 @@ S1R 轮：先修复四个已定位缺陷（G1 输入、G2 来源、G3 执行、G
 四项门槛全部实跑通过后再做**一组**同规模单种子采集、训练与开发评测。
 结论先读 `SUMMARY.md`，边界读 `reports/known_limitations.md`。
 
-- 基线：`bf26b0f4713e0bd4ac9858034ca94693840c5040`；HEAD 见 `git_and_provenance.json`
-- 门槛判定：`gate_receipts.json`，`training_authorised=true`
+- 基线：`bf26b0f4713e0bd4ac9858034ca94693840c5040`；包内 HEAD 见 `git_and_provenance.json`
+- 门槛判定：`gate_receipts.json`，`training_authorised=true`。该文件里记录的 `head` 是**跑门槛时的提交**，
+  早于训练与打包提交；顺序在此明确：门槛通过 → 采集/训练/评测 → 打包。
 - 本轮实际执行次数：采集 1 次（96+24 初始场景）、native 训练 1 次（500 updates）、
   开发评测 1 次（256 场景 × 3 策略）
+
+## 怎么复现
+
+```bash
+unzip stsai_s1r_review_<sha>.zip -d pkg
+git clone pkg/repo.bundle repo
+sha256sum -c pkg/MANIFEST.sha256   # 需在 pkg 内执行
+python pkg/review/run_review.py --repo repo \
+    --sources pkg/native_sources.tar.gz --package pkg \
+    --model pkg/model/policy_weights.pt
+```
+
+需要本机有 cmake 与 C++17 编译器；缺任一项时必需步骤报 NOT_RUN 且退出码非零。
+脚本按第 3 节的顺序执行：校验附件 → 离线构建（PRE_PATCH 快照 + 补丁序列）→ 真实 import →
+意图表再生成 → 全量 pytest（要求 native 零 skip）→ 反事实重放 → 模型 smoke。
 
 ## 文件
 
