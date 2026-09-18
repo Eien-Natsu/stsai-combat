@@ -39,6 +39,37 @@ def load_latency(path):
     return out
 
 
+def environment():
+    """What the evaluation actually ran on, so the latency column is readable."""
+    import os
+    import platform
+    try:
+        import torch
+        torch_threads = torch.get_num_threads()
+        torch_version = torch.__version__
+        cuda_available = torch.cuda.is_available()
+    except Exception as exc:  # recorded rather than omitted
+        torch_threads, torch_version, cuda_available = None, f"unavailable: {exc}", None
+    model = ""
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("model name"):
+                model = line.split(":", 1)[1].strip()
+                break
+    except OSError:
+        pass
+    return {
+        "host": platform.platform(), "cpu_model": model, "logical_cpus": os.cpu_count(),
+        "torch_version": torch_version, "torch_threads_default": torch_threads,
+        "thread_env": {name: os.environ.get(name) for name in
+                       ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS")},
+        "device_for_this_report": "cpu fp32, batch one, no explicit thread pinning",
+        "gpu": "present and used for training only" if cuda_available else "not used",
+        "note": "recomputed at aggregation time in the same environment the evaluation ran in; "
+                "the evaluation did not set thread counts explicitly",
+    }
+
+
 def paired(by_agent, a, b):
     """Paired utility difference, resampling scenarios, complete pairs only."""
     keys = [k for k, v in by_agent.items()
@@ -93,6 +124,7 @@ def main():
         }
 
     report = {
+        "environment": environment(),
         "scope": ("unverified simulator pilot, single training seed, development scenarios already "
                   "seen; not original-game strength and not a final test"),
         "scenarios": len(by_agent), "agents": agents,

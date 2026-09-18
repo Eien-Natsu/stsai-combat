@@ -1,0 +1,105 @@
+{
+  "environment": {
+    "host": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "cpu_model": "AMD Ryzen 5 9500F 6-Core Processor",
+    "logical_cpus": 12,
+    "torch_version": "2.9.1+cu128",
+    "torch_threads_default": 6,
+    "thread_env": {
+      "OMP_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null
+    },
+    "device_for_this_report": "cpu fp32, batch one, no explicit thread pinning",
+    "gpu": "present and used for training only",
+    "note": "recomputed at aggregation time in the same environment the evaluation ran in; the evaluation did not set thread counts explicitly"
+  },
+  "scope": "unverified simulator pilot, single training seed, development scenarios already seen; not original-game strength and not a final test",
+  "scenarios": 256,
+  "agents": [
+    "M128-R0-s17-S1R",
+    "heuristic",
+    "search"
+  ],
+  "paired": {
+    "M128-R0-s17-S1R_minus_heuristic": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": 0.017949218750000006,
+      "bootstrap95": [
+        -0.007627197265625,
+        0.044902587890624984
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 64,
+      "b_better": 88,
+      "tie": 104,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    },
+    "M128-R0-s17-S1R_minus_search": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": -0.042568359375,
+      "bootstrap95": [
+        -0.06345751953125,
+        -0.024384765625000002
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 36,
+      "b_better": 118,
+      "tie": 102,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    },
+    "search_minus_heuristic": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": 0.060517578125,
+      "bootstrap95": [
+        0.034111083984375005,
+        0.089004150390625
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 78,
+      "b_better": 23,
+      "tie": 155,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    }
+  },
+  "latency": {
+    "M128-R0-s17-S1R": {
+      "decisions_timed": 3616,
+      "forced_decisions": 940,
+      "pooled_p50_ms_all_decisions": 1.2476984993554652,
+      "pooled_p95_ms_all_decisions": 2.241038491774816,
+      "pooled_p50_ms_excluding_forced": 1.2762645055772737,
+      "pooled_p95_ms_excluding_forced": 2.3186454927781597,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    },
+    "heuristic": {
+      "decisions_timed": 3791,
+      "forced_decisions": 996,
+      "pooled_p50_ms_all_decisions": 0.023895991034805775,
+      "pooled_p95_ms_all_decisions": 0.0572520075365901,
+      "pooled_p50_ms_excluding_forced": 0.029757997253909707,
+      "pooled_p95_ms_excluding_forced": 0.05954900407232344,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    },
+    "search": {
+      "decisions_timed": 3703,
+      "forced_decisions": 959,
+      "pooled_p50_ms_all_decisions": 155.8758699975442,
+      "pooled_p95_ms_all_decisions": 1023.5616407036996,
+      "pooled_p50_ms_excluding_forced": 202.41857951623388,
+      "pooled_p95_ms_excluding_forced": 1216.5179886069377,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    }
+  },
+  "latency_definitions": {
+    "pooled": "percentiles computed over every decision across all episodes",
+    "median_of_episode_percentiles": "computed per episode then medianed; a different quantity"
+  },
+  "historical_note": "the fb9bf6e results are kept as-is. Interface, counting rule and data trajectories all changed together, so no difference here can be attributed to any single factor."
+}
