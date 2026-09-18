@@ -157,20 +157,29 @@ def test_current_semantics_still_load_and_train(tmp_path):
 # --- 4.3 the tail count reflects the rows actually cached ---------------------
 
 def test_dropped_tail_rows_counts_the_short_window(tmp_path):
-    """9 training shards of 16 rows each give a 14-row final window, not 16."""
-    train_dir = build_collection(tmp_path / "train3", "train", episodes=12, steps=8)
+    """The discarded tail is measured, not inferred from disk.
+
+    12 episodes x 7 steps gives 84 rows against a 64-row window (16 x 4), so one
+    window is used and 20 rows are left over. The old rule would have reported
+    4 x 16 = 64 discarded, and would have logged 64 as the window size even when
+    the window was short.
+    """
+    train_dir = build_collection(tmp_path / "train3", "train", episodes=12, steps=7)
     val_dir = build_collection(tmp_path / "val3", "val", episodes=3, steps=6)
-    rows = sum(1 for shard in (train_dir).glob("*.jsonl.gz")
-               for _ in __import__("gzip").open(shard, "rt"))
+    import gzip
+    rows = sum(1 for shard in train_dir.glob("*.jsonl.gz") for _ in gzip.open(shard, "rt"))
     out = tmp_path / "tail"
     summary = train([str(train_dir)], [str(val_dir)], str(out), backend=BACKEND, device="cpu",
-                    config={"seed": 17, "batch_size": 16, "accumulation_steps": 2,
+                    config={"seed": 17, "batch_size": 16, "accumulation_steps": 4,
                             "max_updates": 100, "epochs": 1, "eval_every": 10 ** 6,
                             "save_every": 10 ** 6, "validation_batches": 10 ** 6, "amp": False,
                             "cpu_threads": 1,
                             "model": {"d_model": 16, "layers": 1, "heads": 2, "dropout": 0.0}})
-    logged = [json.loads(line) for line in (out / "metrics.jsonl").read_text().splitlines() if line.strip()]
-    consumed = 32 * len(logged)
-    assert summary["dropped_tail_rows"] == rows - consumed, \
-        f"{rows} rows read, {consumed} used, tail must be the difference"
-    assert consumed <= rows
+    logged = [json.loads(line) for line in (out / "metrics.jsonl").read_text().splitlines()
+              if line.strip()]
+    used = sum(entry["effective_batch_samples"] for entry in logged)
+    assert summary["dropped_tail_rows"] > 0, "the fixture must leave a short tail to measure"
+    assert rows == used + summary["dropped_tail_rows"], \
+        f"{rows} read, {used} used, {summary['dropped_tail_rows']} reported as dropped"
+    for entry in logged:
+        assert entry["effective_batch_samples"] <= 64

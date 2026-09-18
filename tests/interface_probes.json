@@ -1,0 +1,26 @@
+{
+  "purpose": "Boundary contracts probed by calling the shipped code.",
+  "results": {
+    "shape_B1_rejected": true,
+    "shape_B1_message": "decision must be rank 1 with batch length 4, got (4, 1)",
+    "mismatch_rejected": true,
+    "mismatch_message": "policy logits (4, 3) do not match the target (4, 5)",
+    "losses_requires_grad": true,
+    "grad_reaches_logits": true,
+    "checkpoint_empty": "rejected: empty.pt: encoding_revision=1 but this build uses 4; the inp",
+    "checkpoint_old": "rejected: old.pt: encoding_revision=1 but this build uses 4; the input",
+    "checkpoint_current": "accepted",
+    "tail_rows": {
+      "rows_read": 84,
+      "updates": 1,
+      "window_sizes": [
+        64
+      ],
+      "rows_used": 64,
+      "dropped_reported": 20,
+      "identity_holds": true,
+      "old_rule_would_report": 64,
+      "note": "the old rule counted pending x nominal batch size for the discarded window"
+    }
+  }
+}

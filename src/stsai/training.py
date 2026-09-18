@@ -321,6 +321,7 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
                 # denominators are known before any gradient is produced.
                 window.append((batch,labels)); pending+=1; seen+=len(labels["value"])
                 if pending<cfg["accumulation_steps"]: continue
+                window_samples=sum(len(l["value"]) for _,l in window)
                 denominators={"D":sum(float(l["decision"].sum()) for _,l in window),
                               "M":sum(float(l["value_mask"].sum()) for _,l in window)}
                 totals={"policy_num":0.,"outcome_num":0.,"value_num":0.}
@@ -343,7 +344,9 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
                        "elapsed_seconds":time.perf_counter()-started,
                        "effective_batch_decision_states":denominators["D"],
                        "effective_batch_masked_states":denominators["M"],
-                       "effective_batch_samples":cfg["batch_size"]*cfg["accumulation_steps"],
+                       # the rows actually in this window, not batch_size x accumulation:
+                       # the final window of an epoch is usually short
+                       "effective_batch_samples":window_samples,
                        # the actual numerators and denominators of this update
                        "policy_numerator":totals["policy_num"],"outcome_numerator":totals["outcome_num"],
                        "value_numerator":totals["value_num"]}

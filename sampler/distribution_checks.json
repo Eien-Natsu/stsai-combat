@@ -1,0 +1,61 @@
+{
+  "purpose": "Coupling and divergence checks for the hidden-base counterfactual.",
+  "promise": "canonical coupling: the same public history and sampler seed must give the same public trace, because the draw pile is sorted before shuffling and every RNG is rebuilt from the seed",
+  "cases": [
+    {
+      "scenario_index": 0,
+      "slot": 0,
+      "monster": "GREEN_LOUSE",
+      "same_public_root": true,
+      "fixed_sampler_all_seeds_match": true,
+      "prefix_sampler_diverges_on_some_seed": true,
+      "seeds": [
+        0,
+        1,
+        7,
+        4242,
+        1099511627779
+      ],
+      "valid_counterfactual": true
+    },
+    {
+      "scenario_index": 4,
+      "slot": 0,
+      "monster": "RED_LOUSE",
+      "same_public_root": true,
+      "fixed_sampler_all_seeds_match": true,
+      "prefix_sampler_diverges_on_some_seed": true,
+      "seeds": [
+        0,
+        1,
+        7,
+        4242,
+        1099511627779
+      ],
+      "valid_counterfactual": true
+    },
+    {
+      "scenario_index": 6,
+      "slot": 0,
+      "monster": "GREEN_LOUSE",
+      "same_public_root": true,
+      "fixed_sampler_all_seeds_match": true,
+      "prefix_sampler_diverges_on_some_seed": true,
+      "seeds": [
+        0,
+        1,
+        7,
+        4242,
+        1099511627779
+      ],
+      "valid_counterfactual": true
+    }
+  ],
+  "summary": {
+    "pairs_examined": 3,
+    "valid_counterfactuals": 3,
+    "all_fixed_samplers_agree": true,
+    "all_controls_diverge": true
+  },
+  "scope": "the counterfactual is constructed with the test-only setter, which places each root at a value its own spawn range allows. It is not a claim that two specific original-game seeds produce these roots."
+}

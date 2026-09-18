@@ -1,0 +1,47 @@
+{
+  "purpose": "Behaviours the previous revision exhibited, re-run where possible.",
+  "controls": [
+    {
+      "item": "policy term broadcast",
+      "old": "(B,)*(B,1) summed over B*B entries; 2.5 instead of 3.0 on the reviewer's example",
+      "now": "rejected with a rank error on the production path",
+      "evidence_level": "OLD_VERSION_NEGATIVE_CONTROL_RUN",
+      "test": "tests/test_entry_contracts.py::test_loss_numerators_rejects_a_broadcasting_decision_mask"
+    },
+    {
+      "item": "old checkpoint accepted outside inference",
+      "old": "train(init_checkpoint=) and train(resume=) loaded schema-1 checkpoints",
+      "now": "all three entry points share one semantics check",
+      "evidence_level": "OLD_VERSION_NEGATIVE_CONTROL_RUN",
+      "test": "tests/test_entry_contracts.py::test_warm_start_and_resume_reject_the_same_stale_semantics"
+    },
+    {
+      "item": "louse hidden base",
+      "old": "sample() copied miscInfo, so two roots with the same public history diverged",
+      "now": "one draw from the public candidate set; the pre-fix sampler is kept as a hook and still diverges",
+      "evidence_level": "OLD_VERSION_NEGATIVE_CONTROL_RUN",
+      "test": "tests/test_louse_hidden_base.py::test_negative_control_the_prefix_sampler_exposes_the_dependency"
+    },
+    {
+      "item": "execution history from the turn counter",
+      "old": "at a decided battle a surviving enemy was assumed to have acted",
+      "now": "engine events; the held move of an enemy that never acted is not published",
+      "evidence_level": "OLD_VERSION_NEGATIVE_CONTROL_RUN",
+      "test": "tests/test_native_fairness.py::test_negative_control_the_prefix_rule_would_invent_an_action"
+    },
+    {
+      "item": "audit pass by scan",
+      "old": "public_determined = not collisions and checked > 2000",
+      "now": "declarative per-field categories; the scan is coverage only",
+      "evidence_level": "SOURCE_ARGUMENT_ONLY",
+      "test": "tests/test_native_coverage.py::test_the_field_audit_does_not_decide_categories_by_scan"
+    },
+    {
+      "item": "tail row count",
+      "old": "pending x nominal batch size reported 144 for the S1 run",
+      "now": "the rows actually cached; 126, matching the reviewer's 16126-16000",
+      "evidence_level": "SOURCE_ARGUMENT_ONLY",
+      "test": "tests/test_entry_contracts.py::test_dropped_tail_rows_counts_the_short_window"
+    }
+  ]
+}

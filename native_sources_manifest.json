@@ -1,0 +1,1072 @@
+{
+  "purpose": "Minimum redistributable sources to build native/bridge.cpp with no network.",
+  "archive": "native_sources.tar.gz",
+  "archive_sha256": "8637d50d5f3530d8678d15a1bd7605ab43420d308079bfc25f4b503ea41cc645",
+  "build_command": "python review/offline_native_build.py --repo <checkout> --sources <extracted>",
+  "engine": {
+    "url": "https://github.com/gamerpuppy/sts_lightspeed.git",
+    "base_revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+      }
+    ],
+    "json_submodule": "0b345b20c888f7dc8888485768e4bf9a6be29de0"
+  },
+  "patch_state": "POST_PATCH: this snapshot already contains the local fixes. The patches in engine_lock.json must NOT be applied again on top of it.",
+  "build_dependencies": {
+    "cmake": ">=3.20",
+    "compiler": "C++17",
+    "python": "3.11-3.13",
+    "pybind11": "2.13.6 (headers included)",
+    "nlohmann/json": "single-header (included)"
+  },
+  "licenses": {
+    "sts_lightspeed": "MIT",
+    "nlohmann/json": "MIT",
+    "pybind11": "BSD-3-Clause"
+  },
+  "not_included": [
+    "any .git directory",
+    "CUDA or GPU libraries",
+    "build outputs",
+    "the game jar or assets",
+    "any virtualenv"
+  ],
+  "file_count": 128,
+  "files": [
+    {
+      "path": "sts_lightspeed/src/combat/Actions.cpp",
+      "sha256": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+      "bytes": 37737,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/BattleContext.cpp",
+      "sha256": "85f6f37e062c846c6ec5e424d07d613ff2661468edf0b1e37c9aaea33261df89",
+      "bytes": 94795,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardInstance.cpp",
+      "sha256": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+      "bytes": 10056,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardManager.cpp",
+      "sha256": "127dad6b7d9d6318f64907256b508a1ee82ae8d87d747e2cf1fcb9ac6526ad9d",
+      "bytes": 17601,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardQueue.cpp",
+      "sha256": "466a83b9397c035a6de206b445b1d2177e4b2faa276bc32eb5321a2b6a3bb443",
+      "bytes": 1470,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/Monster.cpp",
+      "sha256": "cfa97c81a64c3adb29dc41030829bf60da38a3ee4f290ebbba389d18f0ff1f32",
+      "bytes": 18456,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterGroup.cpp",
+      "sha256": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
+      "bytes": 20081,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterMoveDamage.cpp",
+      "sha256": "10dda80b953c876e259fb6985d37b65767491fa848320fd2462796e21a508dc1",
+      "bytes": 10231,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterSpecific.cpp",
+      "sha256": "2fc8b7fe574eac8ef40fa16621994307ac3c2e3ad49dc08b079b15d750e8d73c",
+      "bytes": 114423,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/Player.cpp",
+      "sha256": "cb7b8abba9db74164da71d29b91cf8fc1160fc815d6292906cfff5c9a2c689c7",
+      "bytes": 25134,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Card.cpp",
+      "sha256": "e026c59f7bb583d935a3d06bdccd7241510f2dc176687606ca981e582603dbf0",
+      "bytes": 2005,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/CombatReward.cpp",
+      "sha256": "c59360fbe6d089b17a531a366c9b11a73eef71db6e280679274c1ac8a32a3a86",
+      "bytes": 2869,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Deck.cpp",
+      "sha256": "50bcbe3c218577db69b076d8659f69a18c0c7f702004a0e9894d9307b5b2b3e1",
+      "bytes": 9262,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Game.cpp",
+      "sha256": "d34ae840b784dbb6691ad8f1752b21a9f8356565c2575f34f0c7a25a2bf546d8",
+      "bytes": 11366,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/GameContext.cpp",
+      "sha256": "f19e4d592f61e72e13777460b205181ba654a10f0639b5f218e8f3b6d5f76d5e",
+      "bytes": 114431,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Map.cpp",
+      "sha256": "4d3b7483c714153499e8be8c1af377d96e074f604c9daee381bd39293d7dfe51",
+      "bytes": 20646,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Neow.cpp",
+      "sha256": "ce1dc05380e50f58c48da4ee8f42a568b33f9a9ffa2fa449a8068ef33b3e8be7",
+      "bytes": 4068,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/SaveFile.cpp",
+      "sha256": "bc53026e72154ae406cc730e0556b57a0bc6e0b4389989bb21afc339489af291",
+      "bytes": 8045,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Shop.cpp",
+      "sha256": "fe0f25a7dc8ee129f665b8ab752c70334f6319925b2746fd464b5b065d7b834b",
+      "bytes": 8829,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/BattleSimulator.cpp",
+      "sha256": "da25126d2595c11139060bad478f8c6b516bc2f35cdbf462475c1320aa769f10",
+      "bytes": 21018,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/ConsoleSimulator.cpp",
+      "sha256": "341bfca832153bb3deaf3fa09bac4373a681026476510c3df5ce7b4e3566f628",
+      "bytes": 37026,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/PrintHelpers.cpp",
+      "sha256": "9c89229a38b504936d6e5474758e7f24b0db24ceb29d2a7ca726ae3bcd7262f7",
+      "bytes": 7247,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/SimHelpers.cpp",
+      "sha256": "65ee69ce79960f4d14b81c4e23e60f2e909118ef28dcbac93e4b25a79e2df4af",
+      "bytes": 3141,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/Action.cpp",
+      "sha256": "ba06a6052b6300ff359582ca1e21b80311327eee51b3997f5ec682f60e5e6b08",
+      "bytes": 17598,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/BattleScumSearcher2.cpp",
+      "sha256": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+      "bytes": 18443,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/ExpertKnowledge.cpp",
+      "sha256": "9dbe4de71ddcdb6634f742dedc9ea55dca0d1410fcc344a668c3d032296f2c91",
+      "bytes": 10767,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/GameAction.cpp",
+      "sha256": "3614c02b8a9f634432d6c7605f6690ad2edde011c93b0aa615e33ef8cf8898d8",
+      "bytes": 25534,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/ScumSearchAgent2.cpp",
+      "sha256": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+      "bytes": 12656,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/SimpleAgent.cpp",
+      "sha256": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87",
+      "bytes": 38024,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/ActionQueue.h",
+      "sha256": "37a5ea6492d7e896b015f1bd892b4fcc9688751714ac5758aca915666e48aebc",
+      "bytes": 2952,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/Actions.h",
+      "sha256": "e92c3b9c37c8ccd9d729573be89101114053f49661ad9d36312ef4b848a6fd6e",
+      "bytes": 7518,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/BattleContext.h",
+      "sha256": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
+      "bytes": 10474,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/CardInstance.h",
+      "sha256": "90776260ab936437951b526f52fc68417887fffb1ec632c88cc9f397f742c7a2",
+      "bytes": 2704,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/CardManager.h",
+      "sha256": "6f693f58a9b2b21bb0b40266fcd74ffc9d2891fb8636ea878d4e57af82ab943e",
+      "bytes": 3727,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/CardQueue.h",
+      "sha256": "431a4c6ab4cd73c4dbda45aa9a1303e9550f9e2eee48248ba538f2d4ea0f1cf0",
+      "bytes": 1713,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/CardSelectInfo.h",
+      "sha256": "82f7bde7ede6412cbccbb7f1aa4f7b4a493a1cc5c076162e350d390f4c9a3cda",
+      "bytes": 1749,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/InputState.h",
+      "sha256": "efc860b95db906e36189897b30f5daa44e1e6b1384ad04379bae5dcbddf53ea1",
+      "bytes": 1381,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/Monster.h",
+      "sha256": "36b055c855d0808faf8f6c820cb8eed1027ba1f6dda5fb9dd31a807641a231f5",
+      "bytes": 17405,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/MonsterGroup.h",
+      "sha256": "82f39fd5374eacec4727873e68ee2bdf47096249a783146c0aba206f871886e4",
+      "bytes": 1875,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/combat/Player.h",
+      "sha256": "a1b39b1f4d8e04858480fabf68620a0bf3f7f75343b5a5dfcecaee50a7c599e9",
+      "bytes": 12812,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/CardPools.h",
+      "sha256": "bae67383f9b6239263a67b0db7ae34f14aaf27ac812be8874f865b7ed10f7073",
+      "bytes": 41131,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Cards.h",
+      "sha256": "a963ece62d7e95708f82385d3618519b7c9e338c96f086dfa123530c3ae7506e",
+      "bytes": 62039,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/CharacterClasses.h",
+      "sha256": "5f75e1d2072009e36df3c1af48047a2dce7ea417a84a7497b87fffaece759c82",
+      "bytes": 689,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Events.h",
+      "sha256": "286a6556f2ef7261f682bcf59752f3fb9dea6dc3b3b24a952295d2db65e69e38",
+      "bytes": 6960,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Misc.h",
+      "sha256": "73df1c7991db8970ab0be6b83525723890006c008a4ceca2f88a1db1950fa04f",
+      "bytes": 1082,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/MonsterEncounters.h",
+      "sha256": "10fd2aaa1c1023c8c5164b257b8559575c99ef1f6f2dce86042c3aae5462f8cb",
+      "bytes": 7417,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/MonsterIds.h",
+      "sha256": "3ade9312c0a3e0d907d2967462ca160009c5f15b4eccff5ab14bbe4a545f569b",
+      "bytes": 6450,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/MonsterMoves.h",
+      "sha256": "729e01caaa629401a2fb41f338c3f34446bf43538116477c7a255a132808f2a4",
+      "bytes": 17672,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/MonsterStatusEffects.h",
+      "sha256": "2e9a3dc1962e5baec112edd8c770dabc6802e9e074f047cdf894cd8a0fd7e947",
+      "bytes": 3723,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/PlayerStatusEffects.h",
+      "sha256": "51244c63979bad9d6f84aac099aec6dda2f6c3ac7d0134859235edf8940a2963",
+      "bytes": 4460,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Potions.h",
+      "sha256": "998ce625b620c1922222e5b1b7fdc904003d3cb8b765b783f8d9a1688dc7b134",
+      "bytes": 11520,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/RelicPools.h",
+      "sha256": "7a709ee1634065813d62c78fc0676e0551a8ffd6a00748d90161034996ab5929",
+      "bytes": 16598,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Relics.h",
+      "sha256": "639044d25f699a83de7e8e3c7a88e9519ce8de35977b29e96805184f9f8924c7",
+      "bytes": 16577,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/Rooms.h",
+      "sha256": "e683f282b6f5312275f294a327a554e4b79015f1ee7a306536773eb60a525601",
+      "bytes": 1128,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/constants/SaveFileMappings.h",
+      "sha256": "412fb5816e77d438fde21d693242830b7b8e2193aeb1a51d0bd26a65618a44dc",
+      "bytes": 37472,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/data_structure/fixed_list.h",
+      "sha256": "fd3a3bd43905a27d954d70787d3e8b4e8d9a1250ed8564c5fbe4fc18d0e9d4d1",
+      "bytes": 2857,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Card.h",
+      "sha256": "c1a24ce71429f66630dba7653573de399bb5c0b334ce91456034ce68e8c8337a",
+      "bytes": 1295,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Deck.h",
+      "sha256": "7c7240b9467ded944b1f86f0266f86ba7bbffaf97c185437b416dfcf2f177f7e",
+      "bytes": 2250,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Game.h",
+      "sha256": "34ff7d64c1358a74e9c70255f2d0306a071c4b433157d9e9a40799b37e31a2da",
+      "bytes": 2431,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/GameContext.h",
+      "sha256": "b78fd16448b96370fd78740a14baa00b4f6811c820dc544dd5c38cba01f73133",
+      "bytes": 9961,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Map.h",
+      "sha256": "fd07968296a225f46881802da57b94d22547d9635e2a7f19b7341ecf3905bcac",
+      "bytes": 1406,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Neow.h",
+      "sha256": "d255477d460b59612e7a1e54ee1b686c5c5aeb0335851c8ff883cd8297f5ed57",
+      "bytes": 2914,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Random.h",
+      "sha256": "aad8ec018e54798c7d305a909554e516cca0990d5a14e2d22392c2a7a973f2e5",
+      "bytes": 5701,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/RelicContainer.h",
+      "sha256": "a864dec105e1577c4e6f522c8933b8c08f6be0c47b126c237844d067976616d2",
+      "bytes": 944,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Rewards.h",
+      "sha256": "5f1e629a2925546be4ed1352828604b2d67a403e945b2f10e60791b253e748c0",
+      "bytes": 1483,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/SaveFile.h",
+      "sha256": "d27d3121125d9a4264bef5a1aed23949291cb7791ab2c684532525210cbc2bc3",
+      "bytes": 4326,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/game/Shop.h",
+      "sha256": "3c68fdcebce5b024d107ecf2921e93872910a45d749ae87297d6e9994831793d",
+      "bytes": 1921,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/BattleSimulator.h",
+      "sha256": "4dd1a07706900ed3ab2181cbfb5b276df499117e3c348262b6d9798ada826842",
+      "bytes": 1808,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/ConsoleSimulator.h",
+      "sha256": "333d873b42890d8ebca4c3a2b3fa9ec95adf55c040b7cc0c47491e99327141ca",
+      "bytes": 2607,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/PrintHelpers.h",
+      "sha256": "8f969932008eee1d221565ef0365d470cc2bbfb96bb96a7c5bf90340270d6dbe",
+      "bytes": 1627,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/RandomAgent.h",
+      "sha256": "e4cb7c57cda6de35b2b832f00ea03976e3639e7776643538bb8fd882709e4d71",
+      "bytes": 844,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/SimHelpers.h",
+      "sha256": "67c54535005e4caa1f8d1294eba7828ac965a60b7ac34db2fc757b17a3b5e16d",
+      "bytes": 1316,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/Action.h",
+      "sha256": "2bc71c44693a45b79acc6f0a712b24147cafe4c69a886d6624d120815a7de5b0",
+      "bytes": 1674,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/BattleScumSearcher2.h",
+      "sha256": "08990c81d8f238bbdea63486fde7c9dfe94f0c68a5e3da003c4123e92a1f23b2",
+      "bytes": 2511,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/ExpertKnowledge.h",
+      "sha256": "d263bbf81b404cb0a1e57870c18250da1e85f377d0a7ffcfa8b1c6d5a24e5702",
+      "bytes": 458,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/GameAction.h",
+      "sha256": "15118481500a2599b3944981bf314e02dd17abeb94c22040066eaddb38cee424",
+      "bytes": 1520,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/ScumSearchAgent2.h",
+      "sha256": "5ba6a131717c97c2195c2e714e4af6d560e69f849bfbd5dc9442e5656f963af0",
+      "bytes": 1587,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sim/search/SimpleAgent.h",
+      "sha256": "813e13341a898bea2084411039b349ae1644bfea17f6cb79c37830a6af10fc5e",
+      "bytes": 1446,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/include/sts_common.h",
+      "sha256": "9b5cfb49b16d299d2d6df5d94818d84621c44716d6ab282b8de98d75431e9ff6",
+      "bytes": 348,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/LICENSE.md",
+      "sha256": "accfd22486a9cc31c17760450036171962a2085dd94eaa905c5777509f05ca2a",
+      "bytes": 1067,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "POST_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/json/single_include/nlohmann/json.hpp",
+      "sha256": "10fd207ad0b4ad823a6fec69a4764d564a24692e617b893dd6d789c8273d47d6",
+      "bytes": 978895,
+      "origin": "nlohmann/json",
+      "license": "MIT",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "sts_lightspeed/json/include/nlohmann/json.hpp",
+      "sha256": "fc8803bd7499e7e5f95b1bb63fca41176980da411745673757cd5e9aa143262c",
+      "bytes": 332090,
+      "origin": "nlohmann/json",
+      "license": "MIT",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "sts_lightspeed/json/LICENSE.MIT",
+      "sha256": "c983d69523377819db3c377b390d5644f5ec53bec9b7c4a0f1ed893bb743d045",
+      "bytes": 1076,
+      "origin": "nlohmann/json",
+      "license": "MIT",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/attr.h",
+      "sha256": "40f8c7ec17e12fc405c071e4ac36a4f2034e2cc95bd62b403b97e86e37682e9f",
+      "bytes": 24334,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/buffer_info.h",
+      "sha256": "fc57108aca9da6985f59729e08636fdc6ab98afcb5cfea85dddd4da1eb5e6a89",
+      "bytes": 7778,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/cast.h",
+      "sha256": "f202786389dcf37772ab5d82b94ee2adc02f015d47a0464456bd14c9f78b40d0",
+      "bytes": 71696,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/chrono.h",
+      "sha256": "036de769e968aa7fb534a5400013ac26d1d4f55cfc95fbeb0080ae2e4fbba813",
+      "bytes": 8458,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/common.h",
+      "sha256": "01383d06dd69c05f2a9cdb88d3ce9fa6b3380944ddad9764fe0d875c4d527fa0",
+      "bytes": 120,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/complex.h",
+      "sha256": "01a0d9fab1262b8b456ae7be2bd3f9cb74f1c6769017a27067fe8b03391d2d02",
+      "bytes": 2096,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/class.h",
+      "sha256": "0639372bac40320c313cd4ca7e293b482e58db8c202acf0ecf9563bc5772d240",
+      "bytes": 29026,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/common.h",
+      "sha256": "bb114c558296f3b60f6d4cfc328ef4c6856ba4ad83d4dce1292c250e9c2b271a",
+      "bytes": 54708,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/cpp_conduit.h",
+      "sha256": "05bc79ef6f17cefc822f681f5bb906eaf80396d4b9f95e60b6435014f15ebd78",
+      "bytes": 2589,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/descr.h",
+      "sha256": "0fade9207b05de5b8efe0e750a36c953c5a5f553a285c8845d0857bdf460f919",
+      "bytes": 6035,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/exception_translation.h",
+      "sha256": "7ccd49d7dcf4d00b83968cc7b74b2ba4226bfb5b965b8923fdf2dd4890db758f",
+      "bytes": 2600,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/init.h",
+      "sha256": "49bd5490f79c0b997dc63e676982dd50ceea2112d5a5eeb5e07f45aefca0f318",
+      "bytes": 17983,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/internals.h",
+      "sha256": "c6cf88ec9749002c71ee025fd761c12e32f4d3b8d15dc01f7cf0ec774a13aeae",
+      "bytes": 31985,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/type_caster_base.h",
+      "sha256": "99d819f85224c5d49284c3cf7baf445f18ef7757900c30555fcdf907b5ea08da",
+      "bytes": 48938,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/typeid.h",
+      "sha256": "8f0e69afd9bbdaf903b25a13f2fc65f708f5ed52467047570f2ce2065b7cf49b",
+      "bytes": 1625,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/detail/value_and_holder.h",
+      "sha256": "87035896ac63521954aa2870323afab372e184a9598932da59112d42b80e0244",
+      "bytes": 2814,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/eigen/common.h",
+      "sha256": "7487aa98aec8cd6e4ae24da56ab3e703503ceb7ac3a77f14f586cd230888c989",
+      "bytes": 378,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/eigen/matrix.h",
+      "sha256": "56309fc7c33601c0f79bc4c751b204622749c880a568dc3d8cc6ddfc5cdfa35b",
+      "bytes": 32142,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/eigen/tensor.h",
+      "sha256": "72c137fcdf72cbef64d125903c9b80c66bfc269ffe945aeb3dd54ec8c57cfa07",
+      "bytes": 18384,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/eigen.h",
+      "sha256": "f87992035920c0243e18752decf1ed4c473ebf1ab0f71011a45f0f1d6262a76f",
+      "bytes": 316,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/embed.h",
+      "sha256": "17725088e5a72c64ae67436e1320561611f255d7330fc0ffebb92b894e107ec6",
+      "bytes": 13362,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/eval.h",
+      "sha256": "eeb7be3b6128af5c83d10fca805907223283d7b7a3cc823af3b62cce5f7f29f1",
+      "bytes": 4731,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/functional.h",
+      "sha256": "88ec98b8d99b23e2b7ce073520c0f07b888710e3b717cbf065b552bdb831150e",
+      "bytes": 5267,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/gil.h",
+      "sha256": "86c263eb3d625ea968e5cedf3c2804bcaffe79e0e82999bb3ca3f03cd09d555a",
+      "bytes": 7702,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/gil_safe_call_once.h",
+      "sha256": "28a732f5681cfcc258f94e56a4265e372cd6ee85660be77ac979207a9859ef3b",
+      "bytes": 3993,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/iostream.h",
+      "sha256": "2b9acf5e8098377db9af53e9b5c2422213e182d46d4c942332bedbbd420ec319",
+      "bytes": 8862,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/numpy.h",
+      "sha256": "c511217f27144c238f17c085f945917682d7d01db757a61646206a7914449598",
+      "bytes": 84442,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/operators.h",
+      "sha256": "db6e11a005dcbf595ae0d358f6b437683fc0782f12f592b1dc754ad4ef01e0c5",
+      "bytes": 9103,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/options.h",
+      "sha256": "a97be69e3fbef5f652a79e8d61e7e70775b9575ee9a47958d52ae0a370cd069c",
+      "bytes": 2734,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/pybind11.h",
+      "sha256": "85bcd71d1081216eddc2dc1a2a35ca3c2d0d9753061d9e7e0631ac3251372ee5",
+      "bytes": 129898,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/pytypes.h",
+      "sha256": "045f31e12e5fb00cd67fe77da6ef3752caa3c11468d2b6a01cfcbdb033a952f9",
+      "bytes": 99894,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/stl/filesystem.h",
+      "sha256": "95c6110b0340f177f87b81516de621dfa480c108f12a0c935d776b82e47880ce",
+      "bytes": 4559,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/stl.h",
+      "sha256": "68c8b53820b0d996fe2112d2940b50109247b56b112622d3f5d283307493d487",
+      "bytes": 15532,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/stl_bind.h",
+      "sha256": "079b7c13403865d826dac17427c43f508d94e6ea84050f53b0909e96c278ab41",
+      "bytes": 28495,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/type_caster_pyobject_ptr.h",
+      "sha256": "1fba4a0584ef52589b88940470a99e024ca0490c280a4b88cae90d483995abe5",
+      "bytes": 1929,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/include/pybind11/typing.h",
+      "sha256": "3c88d914d37363f2acae41d03e583456ddb88e54e2ea44e174e95d1098dc86d6",
+      "bytes": 7000,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/FindPythonLibsNew.cmake",
+      "sha256": "fd9573815a7a19048412ff9bda2b9abaa4e0a22d64da31e2349969976e4c37ee",
+      "bytes": 12187,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11Common.cmake",
+      "sha256": "96f249e75f1c37b4a3283823a57c345d4d1e296df9f30125a0870a0b208d3c1d",
+      "bytes": 16164,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11Config.cmake",
+      "sha256": "23de8a5ffcc866f2c76de7479275418f660a84cb7f4233392e109bcd5353bc3f",
+      "bytes": 7959,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11ConfigVersion.cmake",
+      "sha256": "bc3b0b48183bf8da29f00afdc117b4c4a806515e0b473584e17134904e41e9f1",
+      "bytes": 1403,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11GuessPythonExtSuffix.cmake",
+      "sha256": "5af84ad84faf5a2f40ad8d162595c42b8904147a4342397e6aef7ade1a87d2bd",
+      "bytes": 3321,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11NewTools.cmake",
+      "sha256": "cc62cd8cbdbc8338bcb6fc2269bb9d2ecc9eee277fb19239a2861f88106596f3",
+      "bytes": 12169,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11Targets.cmake",
+      "sha256": "b488cfb48a5f6f99bd3ceb6ee3ce1c8c680dc967391386db2b31122eb70e2c0d",
+      "bytes": 4271,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/cmake/pybind11/pybind11Tools.cmake",
+      "sha256": "e4ae846a1a12ef021a408863ac34b8a788d3a58af46ff32ba275ca79ef330807",
+      "bytes": 8565,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/share/pkgconfig/pybind11.pc",
+      "sha256": "335ed1d8d6e95baa3bba3c62a0c3f933a5a0546ae627fd6fbbff84f87feb6deb",
+      "bytes": 171,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    }
+  ]
+}
