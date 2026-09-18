@@ -54,22 +54,37 @@ def resolve_device(device: str) -> torch.device:
         raise RuntimeError("CUDA was requested but is unavailable; CPU fallback is NOT automatic")
     return torch.device(device)
 
+def check_checkpoint_semantics(checkpoint, path, data_fingerprint=None):
+    """Reject a checkpoint whose input semantics differ from this build.
+
+    Used by every entry point that can consume a checkpoint - inference, warm
+    start and resume - so none of them can accept an old model silently. A
+    MISSING field means the revision that predates the field, never the current
+    one; relabelling metadata alone is not a conversion.
+    """
+    from .encoding import ENCODING_REVISION
+    from .native import SAMPLER_REVISION
+    from .util import LOSS_REVISION, SCHEMA_VERSION
+    for key, current, legacy in (("encoding_revision", ENCODING_REVISION, 1),
+                                 ("observation_schema", SCHEMA_VERSION, 1),
+                                 ("loss_revision", LOSS_REVISION, 1)):
+        stored = checkpoint.get(key, legacy)
+        if stored != current:
+            raise ValueError(f"{path}: {key}={stored} but this build uses {current}; "
+                             "the inputs or the objective no longer mean the same thing")
+    stored_sampler = checkpoint.get("sampler_revision")
+    if stored_sampler is not None and stored_sampler != SAMPLER_REVISION:
+        raise ValueError(f"{path}: sampler_revision={stored_sampler} but this build uses "
+                         f"{SAMPLER_REVISION}")
+    if data_fingerprint is not None and checkpoint.get("data_fingerprint") != data_fingerprint:
+        raise ValueError(f"{path}: data changed; this checkpoint was trained on a different set")
+
+
 def load_checkpoint(path, device="cpu"):
     # Only load trusted locally generated checkpoints, even with weights_only.
     checkpoint = torch.load(path, map_location="cpu", weights_only=True)
     if checkpoint.get("format_version") != 1: raise ValueError("Unknown checkpoint format")
-    from .encoding import ENCODING_REVISION
-    from .util import SCHEMA_VERSION
-    # An old model must never be silently loaded under new input semantics.
-    # A checkpoint predating these fields was written by revision 1, so absence
-    # means 1 rather than "unknown, allow it".
-    for key, current, legacy in (("encoding_revision", ENCODING_REVISION, 1),
-                                 ("observation_schema", SCHEMA_VERSION, 1)):
-        stored = checkpoint.get(key, legacy)
-        if stored != current:
-            raise ValueError(
-                f"Checkpoint was trained on {key}={stored} but this build uses {current}; "
-                "its inputs no longer mean the same thing. Retrain, or convert explicitly.")
+    check_checkpoint_semantics(checkpoint, path)
     model = CombatNet(ModelConfig(**checkpoint["model_config"]))
     model.load_state_dict(checkpoint["model_state"])
     model.to(resolve_device(device)); model.eval()

@@ -1,0 +1,176 @@
+"""Contracts at the boundaries the review found unguarded.
+
+Four small gaps, all reachable without training anything: the production loss
+function accepted a (B,1) mask, only the inference entry point checked checkpoint
+semantics, the discarded-tail counter used a nominal batch size, and `losses()`
+returned a detached float from something named like a loss. Each test below
+fails against the pre-fix behaviour and passes against the current one.
+"""
+import json
+import sys
+from pathlib import Path
+
+import pytest
+import torch
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tests"))
+
+from stsai.model import check_checkpoint_semantics, load_checkpoint
+from stsai.training import collate_samples, loss_numerators, losses, train
+from stsai.util import LOSS_REVISION, SCHEMA_VERSION
+from test_training_loss import BACKEND, build_collection
+
+
+def synthetic_batch(batch=4, actions=3):
+    torch.manual_seed(0)
+    labels = {"policy": torch.softmax(torch.randn(batch, actions), -1),
+              "decision": torch.tensor([1, 0, 1, 1][:batch], dtype=torch.bool),
+              "outcome": torch.softmax(torch.randn(batch, 11), -1),
+              "value": torch.rand(batch), "value_mask": torch.ones(batch)}
+    # leaves, so the loss graph is real and backward() is meaningful
+    output = {"policy_logits": torch.randn(batch, actions, requires_grad=True),
+              "outcome_logits": torch.randn(batch, 11, requires_grad=True),
+              "value": torch.rand(batch, requires_grad=True)}
+    return output, labels
+
+
+# --- 4.1 the production loss path checks shapes ------------------------------
+
+def test_loss_numerators_rejects_a_broadcasting_decision_mask():
+    """The review's counterexample: (B,1) decision used to be accepted."""
+    output, labels = synthetic_batch()
+    labels["decision"] = labels["decision"].unsqueeze(-1)
+    with pytest.raises(ValueError, match="rank 1"):
+        loss_numerators(output, labels)
+
+
+def test_loss_numerators_rejects_length_and_rank_mismatches():
+    output, labels = synthetic_batch()
+    for broken, match in (({"decision": torch.ones(3, dtype=torch.bool)}, "rank 1"),
+                          ({"value_mask": torch.ones(4, 1)}, "rank 1"),
+                          ({"value": torch.rand(9)}, "rank 1")):
+        bad = dict(labels); bad.update(broken)
+        with pytest.raises(ValueError, match=match):
+            loss_numerators(output, bad)
+    bad_output = dict(output); bad_output["policy_logits"] = torch.randn(4, 5)
+    with pytest.raises(ValueError, match="do not match the target"):
+        loss_numerators(bad_output, labels)
+    bad_output = dict(output); bad_output["outcome_logits"] = torch.randn(4, 7)
+    with pytest.raises(ValueError, match="do not match the target"):
+        loss_numerators(bad_output, labels)
+    bad_output = dict(output); bad_output["policy_logits"] = torch.randn(4)
+    with pytest.raises(ValueError, match="rank 2"):
+        loss_numerators(bad_output, labels)
+
+
+def test_the_accepting_batch_still_works():
+    output, labels = synthetic_batch()
+    numerators, counts = loss_numerators(output, labels)
+    assert float(counts["D"]) == 3.0
+    assert torch.isfinite(numerators["policy_num"])
+
+
+# --- 4.4 losses() is a loss ---------------------------------------------------
+
+def test_losses_returns_a_differentiable_tensor():
+    output, labels = synthetic_batch()
+    loss, parts = losses(output, labels)
+    assert isinstance(loss, torch.Tensor) and loss.requires_grad, \
+        "a function named losses() must return something backwardable"
+    loss.backward()
+    assert output["policy_logits"].grad is not None, "gradient did not reach the logits"
+    assert torch.isfinite(output["policy_logits"].grad).all()
+    for name, value in parts.items():
+        assert not isinstance(value, float), f"{name} was detached to a float"
+
+
+# --- 4.2 every checkpoint entry point checks semantics -----------------------
+
+def _stale_checkpoint(tmp):
+    """A checkpoint carrying the semantics of an older build."""
+    torch.manual_seed(0)
+    from stsai.model import CombatNet, ModelConfig
+    model = CombatNet(ModelConfig(d_model=16, layers=1, heads=2, dropout=0.0))
+    path = tmp / "stale.pt"
+    torch.save({"format_version": 1, "model_config": {"d_model": 16, "layers": 1, "heads": 2,
+                                                      "dropout": 0.0},
+                "model_state": model.state_dict(), "optimizer_state": {},
+                "step": 0, "epoch": 0, "best_val": 0.0, "backend": BACKEND,
+                "train_config": {}, "data_fingerprint": "x",
+                "encoding_revision": 1, "observation_schema": 1, "loss_revision": 1}, path)
+    return path
+
+
+def test_load_checkpoint_rejects_stale_semantics(tmp_path):
+    with pytest.raises(ValueError, match="no longer mean the same thing"):
+        load_checkpoint(_stale_checkpoint(tmp_path))
+
+
+def test_warm_start_and_resume_reject_the_same_stale_semantics(tmp_path):
+    """The gap the review found: only inference was guarded."""
+    train_dir = build_collection(tmp_path / "train", "train")
+    val_dir = build_collection(tmp_path / "val", "val", episodes=3, steps=6)
+    stale = _stale_checkpoint(tmp_path)
+    config = {"seed": 17, "batch_size": 16, "accumulation_steps": 2, "max_updates": 1,
+              "epochs": 2, "eval_every": 10 ** 6, "save_every": 10 ** 6,
+              "validation_batches": 10 ** 6, "amp": False, "cpu_threads": 1,
+              "model": {"d_model": 16, "layers": 1, "heads": 2, "dropout": 0.0}}
+    with pytest.raises(ValueError, match="no longer mean the same thing"):
+        train([str(train_dir)], [str(val_dir)], str(tmp_path / "warm"), backend=BACKEND,
+              device="cpu", config=config, init_checkpoint=str(stale))
+    with pytest.raises(ValueError, match="no longer mean the same thing"):
+        train([str(train_dir)], [str(val_dir)], str(tmp_path / "resume"), backend=BACKEND,
+              device="cpu", config=config, resume=str(stale))
+
+
+def test_a_missing_revision_is_treated_as_the_old_one_not_the_current_one():
+    with pytest.raises(ValueError, match="no longer mean the same thing"):
+        check_checkpoint_semantics({}, "bare.pt")
+    check_checkpoint_semantics({"encoding_revision": 4, "observation_schema": SCHEMA_VERSION,
+                                "loss_revision": LOSS_REVISION}, "current.pt")
+
+
+def test_current_semantics_still_load_and_train(tmp_path):
+    train_dir = build_collection(tmp_path / "train2", "train")
+    val_dir = build_collection(tmp_path / "val2", "val", episodes=3, steps=6)
+    out = tmp_path / "ok"
+    summary = train([str(train_dir)], [str(val_dir)], str(out), backend=BACKEND, device="cpu",
+                    config={"seed": 17, "batch_size": 16, "accumulation_steps": 2,
+                            "max_updates": 1, "epochs": 2, "eval_every": 10 ** 6,
+                            "save_every": 10 ** 6, "validation_batches": 10 ** 6, "amp": False,
+                            "cpu_threads": 1,
+                            "model": {"d_model": 16, "layers": 1, "heads": 2, "dropout": 0.0}})
+    assert summary["loss_revision"] == LOSS_REVISION
+    load_checkpoint(out / "last.pt")            # current semantics still load
+    resumed = train([str(train_dir)], [str(val_dir)], str(out), backend=BACKEND, device="cpu",
+                    config={"seed": 17, "batch_size": 16, "accumulation_steps": 2,
+                            "max_updates": 2, "epochs": 2, "eval_every": 10 ** 6,
+                            "save_every": 10 ** 6, "validation_batches": 10 ** 6, "amp": False,
+                            "cpu_threads": 1,
+                            "model": {"d_model": 16, "layers": 1, "heads": 2, "dropout": 0.0}},
+                    resume=str(out / "last.pt"))
+    assert resumed["steps"] == 2
+
+
+# --- 4.3 the tail count reflects the rows actually cached ---------------------
+
+def test_dropped_tail_rows_counts_the_short_window(tmp_path):
+    """9 training shards of 16 rows each give a 14-row final window, not 16."""
+    train_dir = build_collection(tmp_path / "train3", "train", episodes=12, steps=8)
+    val_dir = build_collection(tmp_path / "val3", "val", episodes=3, steps=6)
+    rows = sum(1 for shard in (train_dir).glob("*.jsonl.gz")
+               for _ in __import__("gzip").open(shard, "rt"))
+    out = tmp_path / "tail"
+    summary = train([str(train_dir)], [str(val_dir)], str(out), backend=BACKEND, device="cpu",
+                    config={"seed": 17, "batch_size": 16, "accumulation_steps": 2,
+                            "max_updates": 100, "epochs": 1, "eval_every": 10 ** 6,
+                            "save_every": 10 ** 6, "validation_batches": 10 ** 6, "amp": False,
+                            "cpu_threads": 1,
+                            "model": {"d_model": 16, "layers": 1, "heads": 2, "dropout": 0.0}})
+    logged = [json.loads(line) for line in (out / "metrics.jsonl").read_text().splitlines() if line.strip()]
+    consumed = 32 * len(logged)
+    assert summary["dropped_tail_rows"] == rows - consumed, \
+        f"{rows} rows read, {consumed} used, tail must be the difference"
+    assert consumed <= rows

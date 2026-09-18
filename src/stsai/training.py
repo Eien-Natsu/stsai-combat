@@ -9,8 +9,8 @@ from dataclasses import asdict
 import torch
 from torch.utils.data import IterableDataset, DataLoader
 from .encoding import encode, collate_encoded
-from .model import CombatNet, ModelConfig, resolve_device
-from .util import append_json, atomic_json, load_json, digest
+from .model import CombatNet, ModelConfig, check_checkpoint_semantics, resolve_device
+from .util import LOSS_REVISION, append_json, atomic_json, load_json, digest
 
 class ReplayDataset(IterableDataset):
     def __init__(self, directories, backend, split, seed=0, shuffle_buffer=512):
@@ -70,11 +70,6 @@ def collate_samples(samples):
             "decision":torch.tensor([int(batch["action_mask"][i].sum())>1 for i in range(len(samples))])}
     return batch,labels
 
-# Bump when the objective or its normalisation changes meaning. Recorded in
-# run.json and in every checkpoint so a later reader can tell which counting
-# rule produced a weight.
-LOSS_REVISION = 2
-
 def policy_term(elementwise,decision):
     """Mean cross-entropy over states that actually have a choice.
 
@@ -101,8 +96,30 @@ def loss_numerators(output,labels):
     Averaging per-microbatch means instead would silently weight microbatches
     with fewer decision states more heavily per decision state.
     """
-    elementwise=-(labels["policy"]*output["policy_logits"].log_softmax(-1)).sum(-1)
+    # Shape contract for the REAL production path. policy_term() guards itself,
+    # but train/validate call this function directly, so the check must live here
+    # too: a (B,1) decision would otherwise broadcast back into a (B,B) grid.
+    policy_logits=output["policy_logits"]; policy_target=labels["policy"]
+    outcome_logits=output["outcome_logits"]; outcome_target=labels["outcome"]
     decision=labels["decision"]; mask=labels["value_mask"]
+    value_pred=output["value"]; value_target=labels["value"]
+    for name,tensor in (("policy_logits",policy_logits),("policy",policy_target),
+                        ("outcome_logits",outcome_logits),("outcome",outcome_target)):
+        if tensor.ndim != 2:
+            raise ValueError(f"{name} must be rank 2 (batch, classes), got ndim {tensor.ndim}")
+    if policy_logits.shape != policy_target.shape:
+        raise ValueError(f"policy logits {tuple(policy_logits.shape)} do not match the target "
+                         f"{tuple(policy_target.shape)}")
+    if outcome_logits.shape != outcome_target.shape:
+        raise ValueError(f"outcome logits {tuple(outcome_logits.shape)} do not match the target "
+                         f"{tuple(outcome_target.shape)}")
+    batch=policy_logits.shape[0]
+    for name,tensor in (("decision",decision),("value_mask",mask),("value",value_target),
+                        ("value_prediction",value_pred)):
+        if tensor.ndim != 1 or tensor.shape[0] != batch:
+            raise ValueError(f"{name} must be rank 1 with batch length {batch}, got "
+                             f"{tuple(tensor.shape)}")
+    elementwise=-(policy_target*policy_logits.log_softmax(-1)).sum(-1)
     if elementwise.ndim != 1: raise ValueError("policy logits must reduce to a per-sample vector")
     policy_num=(elementwise*decision).sum()
     outcome_num=(-(labels["outcome"]*output["outcome_logits"].log_softmax(-1)).sum(-1)*mask).sum()
@@ -124,12 +141,15 @@ def combine_numerators(totals,denominators):
 def losses(output,labels):
     """Single-batch convenience wrapper; the trainer uses loss_numerators."""
     totals,counts=loss_numerators(output,labels)
-    parts=combine_numerators({k:float(v.detach()) for k,v in totals.items()},
-                             {k:float(v.detach()) for k,v in counts.items()})
+    parts=combine_numerators(totals,counts)
     return parts["loss"], {**parts,"decision_fraction":labels["decision"].float().mean()}
 
 def _move(batch,device):
     return {k:(v.to(device,non_blocking=True) if torch.is_tensor(v) else v) for k,v in batch.items()}
+
+def _sampler_revision():
+    from .native import SAMPLER_REVISION
+    return SAMPLER_REVISION
 
 def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     path=Path(path); path.parent.mkdir(parents=True,exist_ok=True)
@@ -137,7 +157,7 @@ def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     from .util import SCHEMA_VERSION
     payload={"format_version":1,"model_config":asdict(model.config),"model_state":model.state_dict(),
              "encoding_revision":ENCODING_REVISION,"observation_schema":SCHEMA_VERSION,
-             "loss_revision":LOSS_REVISION,
+             "loss_revision":LOSS_REVISION,"sampler_revision":_sampler_revision(),
              "optimizer_state":optimizer.state_dict(),"step":step,"epoch":epoch,"best_val":best,
              "backend":backend,"train_config":config,"data_fingerprint":data_fingerprint,
              "torch_rng":torch.get_rng_state(),"python_rng":random.getstate()}
@@ -257,14 +277,18 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
     model=CombatNet(ModelConfig(**cfg["model"])).to(dev)
     if init_checkpoint:
         ck=torch.load(init_checkpoint,map_location="cpu",weights_only=True)
+        if ck.get("format_version")!=1: raise ValueError("Unknown checkpoint format")
+        check_checkpoint_semantics(ck,init_checkpoint)
         if ck["backend"]!=backend or ck["model_config"]!=asdict(model.config): raise ValueError("Warm-start architecture/backend mismatch")
         model.load_state_dict(ck["model_state"])
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg["learning_rate"],weight_decay=cfg["weight_decay"])
     step=0; start_epoch=0; best=float("inf"); best_record=None; dropped_tail_rows=0
     if resume:
         ck=torch.load(resume,map_location="cpu",weights_only=True)
+        if ck.get("format_version") != 1: raise ValueError("Unknown checkpoint format")
+        # resume pins the data set too, so objective and sampler are checked with it
+        check_checkpoint_semantics(ck,resume,data_fingerprint=fingerprint)
         if ck["backend"] != backend or ck["model_config"] != asdict(model.config): raise ValueError("Resume architecture/backend mismatch")
-        if ck["data_fingerprint"] != fingerprint: raise ValueError("Resume data changed; start a new training run")
         model.load_state_dict(ck["model_state"]); optimizer.load_state_dict(ck["optimizer_state"])
         for state in optimizer.state.values():
             for key,value in state.items():
@@ -342,7 +366,10 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
             # A trailing partial window is discarded, as before, rather than
             # scaled up to a full one. The discarded row count is recorded so the
             # budget is auditable instead of implicit.
-            dropped_tail_rows+=pending*cfg["batch_size"]
+            # Count the rows actually cached, not pending x nominal batch size: the
+            # last window of an epoch is usually short, so the nominal figure
+            # over-reports how much data was discarded.
+            dropped_tail_rows+=sum(len(l["value"]) for _,l in window)
             optimizer.zero_grad(set_to_none=True)
         if step==0: raise ValueError("No optimizer updates; reduce batch_size/accumulation_steps or collect more data")
         val=validate(model,vloader,dev,cfg["validation_batches"])

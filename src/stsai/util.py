@@ -15,6 +15,10 @@ from typing import Any
 # construction (the louse), so a schema-3 reader would miss it.
 SCHEMA_VERSION = 4
 
+# Bump when the objective or its normalisation changes meaning. Recorded in
+# run.json and in every checkpoint, and checked at EVERY load path.
+LOSS_REVISION = 2
+
 def canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
 
