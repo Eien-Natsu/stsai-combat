@@ -418,6 +418,50 @@ P6 正式测试（未生成/未解封 manifest）、hybrid 未晋级、墙钟预
 数据扩容与学生状态重标**均未启动**（本轮没有证据支持启动，且不应同时改变数据量与分布）、
 未盲增优化步数。`game_differential_verified` 保持 `false`。
 
+## S1 轮（输入语义与训练归一化）
+
+交付包 `stsai_s1_review_feb8a46.zip`（8.40 MB / 31 文件）。详细见包内 SUMMARY.md。
+基线 `79f42fc`，本轮 3 个 commit：`f689ce4`（有效 batch 计数）、`dbb4204`（公开意图）、
+`feb8a46`（同规模重建 + 一个新基线）。
+
+### S1-A 计数规则
+
+一个 optimizer update 内的所有微批次合起来是有效 batch：
+`L_policy = Σ d_i·CE_i / Σ d_i`，outcome/value 同理，总数由三项聚合重构。
+复核对数 `[1,0,3,5]`/`[1,0,1,1]` 分两批：旧规则 **2.5**，新规则 **3.0**。
+partition 不变性由真实 trainer 验证（32×1 / 16×2 / 8×4 参数相同），
+把循环改回旧规则该测试**会失败**（已验证）。验证聚合全量累加后归一，
+批大小 1/2/3/7 结果一致（旧实现 2.5→3.0）。新增 `LOSS_REVISION = 2`。
+尾部不足窗口仍丢弃（本轮 144 行）并记录。
+
+### S1-B 公开意图
+
+`intent` 从两类扩到 **10 个公开类别**：50 招式 / 22 怪物，7 行 wiki 核对、43 行由上游效果
+推导（CSV 内附行号与 URL）。**0 行原游戏核对**，`game_differential_verified` 保持 false。
+表由 `native/intent_table.def` 单一来源生成，测试重跑生成器比对防漂移。
+`previous_move`（身份）改为 `previous_intent`（类别）。schema 2→3、encoding 2→3。
+
+**采样审计**：`moveHistory[0]` 为 PUBLIC_DETERMINED —— **3584 个可达状态、93 个公开签名、0 碰撞**，
+即意图类别 + 显示伤害足以确定持有的招式（Looter Mug/Lunge 同类不同伤害）。
+RNG 六路与抽牌堆顺序为 RESAMPLED；不可达怪物的 latent 字段为 UNSUPPORTED。
+
+### S1-C/D/E
+
+- 数据同规模重建：96/24 初始场景不变（可逐字节复现），
+  **轨迹完全一致**（action/policy/outcome 逐行相同）而 **observation 全部不同** —— 隔离出的正是输入语义。
+- 只训练 `M128-R0-s17-S1` 一个 run：selected step 400（kl_dev 0.10678）、last step 500，
+  policy_loss 1.4275，`CE = KL + H` 恒等式成立。
+- 256 场开发评测（完整配对 256/256，0 截断，20,000 次 bootstrap seed 20260918）：
+  student − heuristic **+0.01479 [−0.01033, +0.04104]**（跨 0），
+  student − search **−0.04570 [−0.06955, −0.02432]**（排除 0），
+  search − heuristic +0.06049。pooled 决策 p50 1.245 ms 对 151.881 ms。
+
+### 未做 / 阻塞
+
+未训练 192、未跑多种子、未加数据、未 DAgger、未改 teacher 预算或 utility、未解封 final test。
+G3 原游戏差分仍未执行（本机无合法游戏）。跨 continuation 的 Brier 只作诊断（模型 0.21150 对
+常数基线 0.12986）。
+
 ## 阻碍
 
 1. **没有合法原版游戏**（G3 阻塞）。需要合法安装游戏本体 + ModTheSpire + BaseMod +
