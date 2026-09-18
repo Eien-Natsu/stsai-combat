@@ -1,0 +1,84 @@
+diff --git a/src/combat/Actions.cpp b/src/combat/Actions.cpp
+index 93db96f..2206cc4 100644
+--- a/src/combat/Actions.cpp
++++ b/src/combat/Actions.cpp
+@@ -2,6 +2,7 @@
+ // Created by gamerpuppy on 7/4/2021.
+ //
+ 
++#include <algorithm>
+ #include "combat/Actions.h"
+ #include "combat/BattleContext.h"
+ #include "game/Game.h"
+diff --git a/src/combat/BattleContext.cpp b/src/combat/BattleContext.cpp
+index 3336125..2f1d251 100644
+--- a/src/combat/BattleContext.cpp
++++ b/src/combat/BattleContext.cpp
+@@ -2,6 +2,7 @@
+ // Created by gamerpuppy on 7/4/2021.
+ //
+ 
++#include <algorithm>
+ #include "combat/BattleContext.h"
+ #include "game/GameContext.h"
+ #include "game/Game.h"
+diff --git a/src/combat/CardInstance.cpp b/src/combat/CardInstance.cpp
+index 2bd9c9d..7520e78 100644
+--- a/src/combat/CardInstance.cpp
++++ b/src/combat/CardInstance.cpp
+@@ -2,6 +2,7 @@
+ // Created by gamerpuppy on 7/4/2021.
+ //
+ 
++#include <algorithm>
+ #include "combat/CardInstance.h"
+ 
+ #include "combat/BattleContext.h"
+diff --git a/src/combat/MonsterSpecific.cpp b/src/combat/MonsterSpecific.cpp
+index 9c251ab..af07fc6 100644
+--- a/src/combat/MonsterSpecific.cpp
++++ b/src/combat/MonsterSpecific.cpp
+@@ -2,6 +2,7 @@
+ // Created by gamerpuppy on 8/21/2021.
+ //
+ 
++#include <algorithm>
+ #include "combat/Monster.h"
+ #include "game/Random.h"
+ #include "combat/BattleContext.h"
+diff --git a/src/sim/search/BattleScumSearcher2.cpp b/src/sim/search/BattleScumSearcher2.cpp
+index 79eccf9..7872b76 100644
+--- a/src/sim/search/BattleScumSearcher2.cpp
++++ b/src/sim/search/BattleScumSearcher2.cpp
+@@ -2,6 +2,7 @@
+ // Created by keega on 9/18/2021.
+ //
+ 
++#include <algorithm>
+ #include "sim/search/BattleScumSearcher2.h"
+ #include "sim/search/ExpertKnowledge.h"
+ 
+diff --git a/src/sim/search/ScumSearchAgent2.cpp b/src/sim/search/ScumSearchAgent2.cpp
+index 53aa5d2..59d73d4 100644
+--- a/src/sim/search/ScumSearchAgent2.cpp
++++ b/src/sim/search/ScumSearchAgent2.cpp
+@@ -2,6 +2,7 @@
+ // Created by keega on 9/19/2021.
+ //
+ 
++#include <algorithm>
+ #include "sim/search/ScumSearchAgent2.h"
+ 
+ #include <sim/search/ExpertKnowledge.h>
+diff --git a/src/sim/search/SimpleAgent.cpp b/src/sim/search/SimpleAgent.cpp
+index 3c31b97..d2e91b9 100644
+--- a/src/sim/search/SimpleAgent.cpp
++++ b/src/sim/search/SimpleAgent.cpp
+@@ -2,6 +2,7 @@
+ // Created by keega on 9/27/2021.
+ //
+ 
++#include <algorithm>
+ #include <sim/search/SimpleAgent.h>
+ #include <game/Game.h>
+ #include "sim/PrintHelpers.h"

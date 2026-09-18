@@ -23,21 +23,6 @@ index 767bbcd..f2b69da 100644
          int monsterTurnIdx = 6;
  
          bool isBattleOver = false;
-diff --git a/src/combat/BattleContext.cpp b/src/combat/BattleContext.cpp
-index 965faef..3336125 100644
---- a/src/combat/BattleContext.cpp
-+++ b/src/combat/BattleContext.cpp
-@@ -1279,7 +1279,9 @@ void BattleContext::useSkillCard() {
-             break;
- 
-         case CardId::DISARM:
--            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, -2, false) );
-+            // Disarm+ removes 3 Strength; the base card removes 2. Upstream
-+            // ignored `up` here, so upgraded Disarm only ever removed 2.
-+            addToBot( Actions::DebuffEnemy<MS::STRENGTH>(t, up ? -3 : -2, false) );
-             break;
- 
-         case CardId::DISCOVERY:
 diff --git a/src/combat/MonsterGroup.cpp b/src/combat/MonsterGroup.cpp
 index 5252cdc..29221a6 100644
 --- a/src/combat/MonsterGroup.cpp
@@ -60,40 +45,10 @@ index 5252cdc..29221a6 100644
          }
      }
 diff --git a/src/combat/MonsterSpecific.cpp b/src/combat/MonsterSpecific.cpp
-index f6f6c4a..9c251ab 100644
+index 1bbab9e..9c251ab 100644
 --- a/src/combat/MonsterSpecific.cpp
 +++ b/src/combat/MonsterSpecific.cpp
-@@ -2410,18 +2410,21 @@ MMID Monster::getMoveForRoll(BattleContext &bc, int &monsterData, const int roll
-             }
- 
-             if (asc18) {
--                if (!lastTwoMoves(MMID::GREMLIN_NOB_SKULL_BASH)) {
-+                // At A18+ the random choice becomes the fixed cycle
-+                // Bellow, Skull Bash, Rush, Rush, Skull Bash, ... Upstream
-+                // guarded on lastTwoMoves(SKULL_BASH), which cannot be true
-+                // before a first Skull Bash is ever returned, so Skull Bash
-+                // was unreachable and the Nob only ever used Rush.
-+                if (lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {
-+                    return (MMID::GREMLIN_NOB_SKULL_BASH);
-+                }
-+                if (lastMove(MMID::GREMLIN_NOB_SKULL_BASH)) {
-                     return (MMID::GREMLIN_NOB_RUSH);
--                    break;
-                 }
--
--                if (lastTwoMoves(MMID(MMID::GREMLIN_NOB_RUSH))) {
-+                if (lastMove(MMID::GREMLIN_NOB_BELLOW)) {
-                     return (MMID::GREMLIN_NOB_SKULL_BASH);
--
--                } else {
--                    return (MMID::GREMLIN_NOB_RUSH);
-                 }
--                break;
-+                return (MMID::GREMLIN_NOB_RUSH);
-             }
- 
-             if (roll < 33 || lastTwoMoves(MMID::GREMLIN_NOB_RUSH)) {
-@@ -3347,6 +3350,8 @@ void Monster::largeSlimeSplit(BattleContext &bc, const MonsterId mediumSlimeType
+@@ -3350,6 +3350,8 @@ void Monster::largeSlimeSplit(BattleContext &bc, const MonsterId mediumSlimeType
      const auto idx1 = placeIdx;
      const auto idx2 = placeIdx + 1;
  

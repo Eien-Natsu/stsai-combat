@@ -1,0 +1,147 @@
+{
+  "purpose": "Cold-start application of the declared patch series to the locked revision.",
+  "upstream": "https://github.com/gamerpuppy/sts_lightspeed.git",
+  "base_revision": "7476a81954020087da31d41d16fddf475746ec2d",
+  "patch_order": [
+    "native/patches/0001-disarm-upgrade-strength.patch",
+    "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+    "native/patches/0003-combat-event-log.patch",
+    "native/patches/0004-add-missing-algorithm-include.patch"
+  ],
+  "scope": "The worktree is created from the pinned upstream checkout at the locked revision; `git rev-parse HEAD` inside it is recorded below. It is not a reconstructed or synthetic base.",
+  "steps": [
+    {
+      "patch": "native/patches/0001-disarm-upgrade-strength.patch",
+      "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+      "command": [
+        "git",
+        "apply",
+        "native/patches/0001-disarm-upgrade-strength.patch"
+      ],
+      "check_returncode": 0,
+      "check_stderr": "",
+      "returncode": 0,
+      "stderr": "",
+      "hashes_after": {
+        "include/combat/BattleContext.h": "321624e5cf3351ae695de8fd0b699282946d0ef8e5f76ededa94484bcc338634",
+        "src/combat/Actions.cpp": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+        "src/combat/BattleContext.cpp": "85f6f37e062c846c6ec5e424d07d613ff2661468edf0b1e37c9aaea33261df89",
+        "src/combat/CardInstance.cpp": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+        "src/combat/MonsterGroup.cpp": "f0464f249f33a232e46ce53a713ffd4f94b8db101d2231c2ff8d9540aac704b5",
+        "src/combat/MonsterSpecific.cpp": "dc91053589a0ad7fd46236efcf0728d0e504ebea1bbd3b8bc120a88026efd161",
+        "src/sim/search/BattleScumSearcher2.cpp": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+        "src/sim/search/ScumSearchAgent2.cpp": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+        "src/sim/search/SimpleAgent.cpp": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87"
+      }
+    },
+    {
+      "patch": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+      "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+      "command": [
+        "git",
+        "apply",
+        "native/patches/0002-gremlin-nob-asc18-pattern.patch"
+      ],
+      "check_returncode": 0,
+      "check_stderr": "",
+      "returncode": 0,
+      "stderr": "",
+      "hashes_after": {
+        "include/combat/BattleContext.h": "321624e5cf3351ae695de8fd0b699282946d0ef8e5f76ededa94484bcc338634",
+        "src/combat/Actions.cpp": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+        "src/combat/BattleContext.cpp": "85f6f37e062c846c6ec5e424d07d613ff2661468edf0b1e37c9aaea33261df89",
+        "src/combat/CardInstance.cpp": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+        "src/combat/MonsterGroup.cpp": "f0464f249f33a232e46ce53a713ffd4f94b8db101d2231c2ff8d9540aac704b5",
+        "src/combat/MonsterSpecific.cpp": "d894dfefea09dededaed577c1c24ce9baf8c2f8ba1ff66322574c0c6433e46dc",
+        "src/sim/search/BattleScumSearcher2.cpp": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+        "src/sim/search/ScumSearchAgent2.cpp": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+        "src/sim/search/SimpleAgent.cpp": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87"
+      }
+    },
+    {
+      "patch": "native/patches/0003-combat-event-log.patch",
+      "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+      "command": [
+        "git",
+        "apply",
+        "native/patches/0003-combat-event-log.patch"
+      ],
+      "check_returncode": 0,
+      "check_stderr": "",
+      "returncode": 0,
+      "stderr": "",
+      "hashes_after": {
+        "include/combat/BattleContext.h": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
+        "src/combat/Actions.cpp": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+        "src/combat/BattleContext.cpp": "85f6f37e062c846c6ec5e424d07d613ff2661468edf0b1e37c9aaea33261df89",
+        "src/combat/CardInstance.cpp": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+        "src/combat/MonsterGroup.cpp": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
+        "src/combat/MonsterSpecific.cpp": "2fc8b7fe574eac8ef40fa16621994307ac3c2e3ad49dc08b079b15d750e8d73c",
+        "src/sim/search/BattleScumSearcher2.cpp": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+        "src/sim/search/ScumSearchAgent2.cpp": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+        "src/sim/search/SimpleAgent.cpp": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87"
+      }
+    },
+    {
+      "patch": "native/patches/0004-add-missing-algorithm-include.patch",
+      "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796",
+      "command": [
+        "git",
+        "apply",
+        "native/patches/0004-add-missing-algorithm-include.patch"
+      ],
+      "check_returncode": 0,
+      "check_stderr": "",
+      "returncode": 0,
+      "stderr": "",
+      "hashes_after": {
+        "include/combat/BattleContext.h": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
+        "src/combat/Actions.cpp": "cec4c48d6583552fe0a1fa93734a8421d5c12fdf6a1bcf58aa93f7a99a8fe163",
+        "src/combat/BattleContext.cpp": "219b6c89562bd3cc2b839527856ffbb3098b3cecb7521c988b747073bc2831f8",
+        "src/combat/CardInstance.cpp": "7e23fb4fb460898a3cf6392ed05e647a5a22a88ef18380e496f27f166841d177",
+        "src/combat/MonsterGroup.cpp": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
+        "src/combat/MonsterSpecific.cpp": "9f2cc2389bdec0274167ce1002d5fc4f9e794bd11fa33056bc619166d9c04930",
+        "src/sim/search/BattleScumSearcher2.cpp": "1d8697d6ffdbbc02c027020eb8edd0ef828fe46c5946054b19e2a088462034a3",
+        "src/sim/search/ScumSearchAgent2.cpp": "7ad984800fc3405702503310c5e66a0164cbb08630a929fd040872858ccdad02",
+        "src/sim/search/SimpleAgent.cpp": "bd5e33281deb964f150223453d31e791dbc8133df8bffec94852327b6d43f020"
+      }
+    }
+  ],
+  "worktree_head": "7476a81954020087da31d41d16fddf475746ec2d",
+  "worktree_clean_at_start": true,
+  "files_before": {
+    "include/combat/BattleContext.h": "321624e5cf3351ae695de8fd0b699282946d0ef8e5f76ededa94484bcc338634",
+    "src/combat/Actions.cpp": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+    "src/combat/BattleContext.cpp": "0dcc8b06c23d361613fa10073e458d66043430d990a3c7d51c341e9ca76ff8cf",
+    "src/combat/CardInstance.cpp": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+    "src/combat/MonsterGroup.cpp": "f0464f249f33a232e46ce53a713ffd4f94b8db101d2231c2ff8d9540aac704b5",
+    "src/combat/MonsterSpecific.cpp": "dc91053589a0ad7fd46236efcf0728d0e504ebea1bbd3b8bc120a88026efd161",
+    "src/sim/search/BattleScumSearcher2.cpp": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+    "src/sim/search/ScumSearchAgent2.cpp": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+    "src/sim/search/SimpleAgent.cpp": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87"
+  },
+  "files_after_series": {
+    "include/combat/BattleContext.h": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
+    "src/combat/Actions.cpp": "cec4c48d6583552fe0a1fa93734a8421d5c12fdf6a1bcf58aa93f7a99a8fe163",
+    "src/combat/BattleContext.cpp": "219b6c89562bd3cc2b839527856ffbb3098b3cecb7521c988b747073bc2831f8",
+    "src/combat/CardInstance.cpp": "7e23fb4fb460898a3cf6392ed05e647a5a22a88ef18380e496f27f166841d177",
+    "src/combat/MonsterGroup.cpp": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
+    "src/combat/MonsterSpecific.cpp": "9f2cc2389bdec0274167ce1002d5fc4f9e794bd11fa33056bc619166d9c04930",
+    "src/sim/search/BattleScumSearcher2.cpp": "1d8697d6ffdbbc02c027020eb8edd0ef828fe46c5946054b19e2a088462034a3",
+    "src/sim/search/ScumSearchAgent2.cpp": "7ad984800fc3405702503310c5e66a0164cbb08630a929fd040872858ccdad02",
+    "src/sim/search/SimpleAgent.cpp": "bd5e33281deb964f150223453d31e791dbc8133df8bffec94852327b6d43f020"
+  },
+  "files_in_worktree_now": {
+    "include/combat/BattleContext.h": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
+    "src/combat/Actions.cpp": "cec4c48d6583552fe0a1fa93734a8421d5c12fdf6a1bcf58aa93f7a99a8fe163",
+    "src/combat/BattleContext.cpp": "219b6c89562bd3cc2b839527856ffbb3098b3cecb7521c988b747073bc2831f8",
+    "src/combat/CardInstance.cpp": "7e23fb4fb460898a3cf6392ed05e647a5a22a88ef18380e496f27f166841d177",
+    "src/combat/MonsterGroup.cpp": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
+    "src/combat/MonsterSpecific.cpp": "9f2cc2389bdec0274167ce1002d5fc4f9e794bd11fa33056bc619166d9c04930",
+    "src/sim/search/BattleScumSearcher2.cpp": "1d8697d6ffdbbc02c027020eb8edd0ef828fe46c5946054b19e2a088462034a3",
+    "src/sim/search/ScumSearchAgent2.cpp": "7ad984800fc3405702503310c5e66a0164cbb08630a929fd040872858ccdad02",
+    "src/sim/search/SimpleAgent.cpp": "bd5e33281deb964f150223453d31e791dbc8133df8bffec94852327b6d43f020"
+  },
+  "worktree_matches_series": true,
+  "result": "PASS: every patch applied in order and the built checkout matches the series output"
+}

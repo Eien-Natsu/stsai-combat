@@ -1,12 +1,13 @@
 {
   "purpose": "Minimum redistributable sources to build native/bridge.cpp with no network.",
   "archive": "native_sources.tar.gz",
-  "archive_sha256": "8637d50d5f3530d8678d15a1bd7605ab43420d308079bfc25f4b503ea41cc645",
-  "build_command": "python review/offline_native_build.py --repo <checkout> --sources <extracted>",
+  "archive_sha256": "01545d6b86487302d396a015b92a0b9e76b80cf095ce412031c7d53440f02c72",
+  "build_command": "python review/offline_native_build.py --repo <checkout> --sources <archive>",
   "engine": {
     "url": "https://github.com/gamerpuppy/sts_lightspeed.git",
     "base_revision": "7476a81954020087da31d41d16fddf475746ec2d",
-    "patches": [
+    "json_submodule": "0b345b20c888f7dc8888485768e4bf9a6be29de0",
+    "patch_order": [
       {
         "file": "native/patches/0001-disarm-upgrade-strength.patch",
         "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
@@ -17,12 +18,16 @@
       },
       {
         "file": "native/patches/0003-combat-event-log.patch",
-        "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+        "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+      },
+      {
+        "file": "native/patches/0004-add-missing-algorithm-include.patch",
+        "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
       }
     ],
-    "json_submodule": "0b345b20c888f7dc8888485768e4bf9a6be29de0"
+    "applied_by": "review/offline_native_build.py, before configuring CMake"
   },
-  "patch_state": "POST_PATCH: this snapshot already contains the local fixes. The patches in engine_lock.json must NOT be applied again on top of it.",
+  "patch_state": "PRE_PATCH: sts_lightspeed files are the locked revision's own copies. The patches in engine_lock.json must be applied, in the declared order, on top of them; the build script does this and fails if one does not apply. Vendored files (nlohmann/json, pybind11) are PRISTINE.",
   "build_dependencies": {
     "cmake": ">=3.20",
     "compiler": "C++17",
@@ -40,249 +45,18 @@
     "CUDA or GPU libraries",
     "build outputs",
     "the game jar or assets",
-    "any virtualenv"
+    "any virtualenv",
+    "compiled .so files"
   ],
-  "file_count": 128,
+  "file_count": 129,
   "files": [
-    {
-      "path": "sts_lightspeed/src/combat/Actions.cpp",
-      "sha256": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
-      "bytes": 37737,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/BattleContext.cpp",
-      "sha256": "85f6f37e062c846c6ec5e424d07d613ff2661468edf0b1e37c9aaea33261df89",
-      "bytes": 94795,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/CardInstance.cpp",
-      "sha256": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
-      "bytes": 10056,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/CardManager.cpp",
-      "sha256": "127dad6b7d9d6318f64907256b508a1ee82ae8d87d747e2cf1fcb9ac6526ad9d",
-      "bytes": 17601,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/CardQueue.cpp",
-      "sha256": "466a83b9397c035a6de206b445b1d2177e4b2faa276bc32eb5321a2b6a3bb443",
-      "bytes": 1470,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/Monster.cpp",
-      "sha256": "cfa97c81a64c3adb29dc41030829bf60da38a3ee4f290ebbba389d18f0ff1f32",
-      "bytes": 18456,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/MonsterGroup.cpp",
-      "sha256": "3370cd8fd906094acd8f7174b98511c990e49847a99b78037202748caeef3481",
-      "bytes": 20081,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/MonsterMoveDamage.cpp",
-      "sha256": "10dda80b953c876e259fb6985d37b65767491fa848320fd2462796e21a508dc1",
-      "bytes": 10231,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/MonsterSpecific.cpp",
-      "sha256": "2fc8b7fe574eac8ef40fa16621994307ac3c2e3ad49dc08b079b15d750e8d73c",
-      "bytes": 114423,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/combat/Player.cpp",
-      "sha256": "cb7b8abba9db74164da71d29b91cf8fc1160fc815d6292906cfff5c9a2c689c7",
-      "bytes": 25134,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Card.cpp",
-      "sha256": "e026c59f7bb583d935a3d06bdccd7241510f2dc176687606ca981e582603dbf0",
-      "bytes": 2005,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/CombatReward.cpp",
-      "sha256": "c59360fbe6d089b17a531a366c9b11a73eef71db6e280679274c1ac8a32a3a86",
-      "bytes": 2869,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Deck.cpp",
-      "sha256": "50bcbe3c218577db69b076d8659f69a18c0c7f702004a0e9894d9307b5b2b3e1",
-      "bytes": 9262,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Game.cpp",
-      "sha256": "d34ae840b784dbb6691ad8f1752b21a9f8356565c2575f34f0c7a25a2bf546d8",
-      "bytes": 11366,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/GameContext.cpp",
-      "sha256": "f19e4d592f61e72e13777460b205181ba654a10f0639b5f218e8f3b6d5f76d5e",
-      "bytes": 114431,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Map.cpp",
-      "sha256": "4d3b7483c714153499e8be8c1af377d96e074f604c9daee381bd39293d7dfe51",
-      "bytes": 20646,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Neow.cpp",
-      "sha256": "ce1dc05380e50f58c48da4ee8f42a568b33f9a9ffa2fa449a8068ef33b3e8be7",
-      "bytes": 4068,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/SaveFile.cpp",
-      "sha256": "bc53026e72154ae406cc730e0556b57a0bc6e0b4389989bb21afc339489af291",
-      "bytes": 8045,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/game/Shop.cpp",
-      "sha256": "fe0f25a7dc8ee129f665b8ab752c70334f6319925b2746fd464b5b065d7b834b",
-      "bytes": 8829,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/BattleSimulator.cpp",
-      "sha256": "da25126d2595c11139060bad478f8c6b516bc2f35cdbf462475c1320aa769f10",
-      "bytes": 21018,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/ConsoleSimulator.cpp",
-      "sha256": "341bfca832153bb3deaf3fa09bac4373a681026476510c3df5ce7b4e3566f628",
-      "bytes": 37026,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/PrintHelpers.cpp",
-      "sha256": "9c89229a38b504936d6e5474758e7f24b0db24ceb29d2a7ca726ae3bcd7262f7",
-      "bytes": 7247,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/SimHelpers.cpp",
-      "sha256": "65ee69ce79960f4d14b81c4e23e60f2e909118ef28dcbac93e4b25a79e2df4af",
-      "bytes": 3141,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/Action.cpp",
-      "sha256": "ba06a6052b6300ff359582ca1e21b80311327eee51b3997f5ec682f60e5e6b08",
-      "bytes": 17598,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/BattleScumSearcher2.cpp",
-      "sha256": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
-      "bytes": 18443,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/ExpertKnowledge.cpp",
-      "sha256": "9dbe4de71ddcdb6634f742dedc9ea55dca0d1410fcc344a668c3d032296f2c91",
-      "bytes": 10767,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/GameAction.cpp",
-      "sha256": "3614c02b8a9f634432d6c7605f6690ad2edde011c93b0aa615e33ef8cf8898d8",
-      "bytes": 25534,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/ScumSearchAgent2.cpp",
-      "sha256": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
-      "bytes": 12656,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
-    {
-      "path": "sts_lightspeed/src/sim/search/SimpleAgent.cpp",
-      "sha256": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87",
-      "bytes": 38024,
-      "origin": "sts_lightspeed",
-      "license": "MIT",
-      "patch_state": "POST_PATCH"
-    },
     {
       "path": "sts_lightspeed/include/combat/ActionQueue.h",
       "sha256": "37a5ea6492d7e896b015f1bd892b4fcc9688751714ac5758aca915666e48aebc",
       "bytes": 2952,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/Actions.h",
@@ -290,15 +64,15 @@
       "bytes": 7518,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/BattleContext.h",
-      "sha256": "dd3abb3805375becc285f1640c2c387087b689366e73db02f7fe8788502b1ec1",
-      "bytes": 10474,
+      "sha256": "321624e5cf3351ae695de8fd0b699282946d0ef8e5f76ededa94484bcc338634",
+      "bytes": 9640,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/CardInstance.h",
@@ -306,7 +80,7 @@
       "bytes": 2704,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/CardManager.h",
@@ -314,7 +88,7 @@
       "bytes": 3727,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/CardQueue.h",
@@ -322,7 +96,7 @@
       "bytes": 1713,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/CardSelectInfo.h",
@@ -330,7 +104,7 @@
       "bytes": 1749,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/InputState.h",
@@ -338,7 +112,7 @@
       "bytes": 1381,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/Monster.h",
@@ -346,7 +120,7 @@
       "bytes": 17405,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/MonsterGroup.h",
@@ -354,7 +128,7 @@
       "bytes": 1875,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/combat/Player.h",
@@ -362,7 +136,7 @@
       "bytes": 12812,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/CardPools.h",
@@ -370,7 +144,7 @@
       "bytes": 41131,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Cards.h",
@@ -378,7 +152,7 @@
       "bytes": 62039,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/CharacterClasses.h",
@@ -386,7 +160,7 @@
       "bytes": 689,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Events.h",
@@ -394,7 +168,7 @@
       "bytes": 6960,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Misc.h",
@@ -402,7 +176,7 @@
       "bytes": 1082,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/MonsterEncounters.h",
@@ -410,7 +184,7 @@
       "bytes": 7417,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/MonsterIds.h",
@@ -418,7 +192,7 @@
       "bytes": 6450,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/MonsterMoves.h",
@@ -426,7 +200,7 @@
       "bytes": 17672,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/MonsterStatusEffects.h",
@@ -434,7 +208,7 @@
       "bytes": 3723,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/PlayerStatusEffects.h",
@@ -442,7 +216,7 @@
       "bytes": 4460,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Potions.h",
@@ -450,7 +224,7 @@
       "bytes": 11520,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/RelicPools.h",
@@ -458,7 +232,7 @@
       "bytes": 16598,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Relics.h",
@@ -466,7 +240,7 @@
       "bytes": 16577,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/Rooms.h",
@@ -474,7 +248,7 @@
       "bytes": 1128,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/constants/SaveFileMappings.h",
@@ -482,7 +256,7 @@
       "bytes": 37472,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/data_structure/fixed_list.h",
@@ -490,7 +264,7 @@
       "bytes": 2857,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Card.h",
@@ -498,7 +272,7 @@
       "bytes": 1295,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Deck.h",
@@ -506,7 +280,7 @@
       "bytes": 2250,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Game.h",
@@ -514,7 +288,7 @@
       "bytes": 2431,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/GameContext.h",
@@ -522,7 +296,7 @@
       "bytes": 9961,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Map.h",
@@ -530,7 +304,7 @@
       "bytes": 1406,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Neow.h",
@@ -538,7 +312,7 @@
       "bytes": 2914,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Random.h",
@@ -546,7 +320,7 @@
       "bytes": 5701,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/RelicContainer.h",
@@ -554,7 +328,7 @@
       "bytes": 944,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Rewards.h",
@@ -562,7 +336,7 @@
       "bytes": 1483,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/SaveFile.h",
@@ -570,7 +344,7 @@
       "bytes": 4326,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/game/Shop.h",
@@ -578,7 +352,7 @@
       "bytes": 1921,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/BattleSimulator.h",
@@ -586,7 +360,7 @@
       "bytes": 1808,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/ConsoleSimulator.h",
@@ -594,7 +368,7 @@
       "bytes": 2607,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/PrintHelpers.h",
@@ -602,7 +376,7 @@
       "bytes": 1627,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/RandomAgent.h",
@@ -610,7 +384,7 @@
       "bytes": 844,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/SimHelpers.h",
@@ -618,7 +392,7 @@
       "bytes": 1316,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/Action.h",
@@ -626,7 +400,7 @@
       "bytes": 1674,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/BattleScumSearcher2.h",
@@ -634,7 +408,7 @@
       "bytes": 2511,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/ExpertKnowledge.h",
@@ -642,7 +416,7 @@
       "bytes": 458,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/GameAction.h",
@@ -650,7 +424,7 @@
       "bytes": 1520,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/ScumSearchAgent2.h",
@@ -658,7 +432,7 @@
       "bytes": 1587,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sim/search/SimpleAgent.h",
@@ -666,7 +440,7 @@
       "bytes": 1446,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/include/sts_common.h",
@@ -674,7 +448,239 @@
       "bytes": 348,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/Actions.cpp",
+      "sha256": "0cd49b95416ace90acfa899c94a12204d3f0104626736ea409028a66568f05b3",
+      "bytes": 37737,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/BattleContext.cpp",
+      "sha256": "0dcc8b06c23d361613fa10073e458d66043430d990a3c7d51c341e9ca76ff8cf",
+      "bytes": 94634,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardInstance.cpp",
+      "sha256": "125618b3ea788ddb916d8c273745ccf91d41dc12a62abf95ceb417454df3672d",
+      "bytes": 10056,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardManager.cpp",
+      "sha256": "127dad6b7d9d6318f64907256b508a1ee82ae8d87d747e2cf1fcb9ac6526ad9d",
+      "bytes": 17601,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/CardQueue.cpp",
+      "sha256": "466a83b9397c035a6de206b445b1d2177e4b2faa276bc32eb5321a2b6a3bb443",
+      "bytes": 1470,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/Monster.cpp",
+      "sha256": "cfa97c81a64c3adb29dc41030829bf60da38a3ee4f290ebbba389d18f0ff1f32",
+      "bytes": 18456,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterGroup.cpp",
+      "sha256": "f0464f249f33a232e46ce53a713ffd4f94b8db101d2231c2ff8d9540aac704b5",
+      "bytes": 19811,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterMoveDamage.cpp",
+      "sha256": "10dda80b953c876e259fb6985d37b65767491fa848320fd2462796e21a508dc1",
+      "bytes": 10231,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/MonsterSpecific.cpp",
+      "sha256": "dc91053589a0ad7fd46236efcf0728d0e504ebea1bbd3b8bc120a88026efd161",
+      "bytes": 113845,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/combat/Player.cpp",
+      "sha256": "cb7b8abba9db74164da71d29b91cf8fc1160fc815d6292906cfff5c9a2c689c7",
+      "bytes": 25134,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Card.cpp",
+      "sha256": "e026c59f7bb583d935a3d06bdccd7241510f2dc176687606ca981e582603dbf0",
+      "bytes": 2005,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/CombatReward.cpp",
+      "sha256": "c59360fbe6d089b17a531a366c9b11a73eef71db6e280679274c1ac8a32a3a86",
+      "bytes": 2869,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Deck.cpp",
+      "sha256": "50bcbe3c218577db69b076d8659f69a18c0c7f702004a0e9894d9307b5b2b3e1",
+      "bytes": 9262,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Game.cpp",
+      "sha256": "d34ae840b784dbb6691ad8f1752b21a9f8356565c2575f34f0c7a25a2bf546d8",
+      "bytes": 11366,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/GameContext.cpp",
+      "sha256": "f19e4d592f61e72e13777460b205181ba654a10f0639b5f218e8f3b6d5f76d5e",
+      "bytes": 114431,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Map.cpp",
+      "sha256": "4d3b7483c714153499e8be8c1af377d96e074f604c9daee381bd39293d7dfe51",
+      "bytes": 20646,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Neow.cpp",
+      "sha256": "ce1dc05380e50f58c48da4ee8f42a568b33f9a9ffa2fa449a8068ef33b3e8be7",
+      "bytes": 4068,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/SaveFile.cpp",
+      "sha256": "bc53026e72154ae406cc730e0556b57a0bc6e0b4389989bb21afc339489af291",
+      "bytes": 8045,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/game/Shop.cpp",
+      "sha256": "fe0f25a7dc8ee129f665b8ab752c70334f6319925b2746fd464b5b065d7b834b",
+      "bytes": 8829,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/BattleSimulator.cpp",
+      "sha256": "da25126d2595c11139060bad478f8c6b516bc2f35cdbf462475c1320aa769f10",
+      "bytes": 21018,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/ConsoleSimulator.cpp",
+      "sha256": "341bfca832153bb3deaf3fa09bac4373a681026476510c3df5ce7b4e3566f628",
+      "bytes": 37026,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/PrintHelpers.cpp",
+      "sha256": "9c89229a38b504936d6e5474758e7f24b0db24ceb29d2a7ca726ae3bcd7262f7",
+      "bytes": 7247,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/SimHelpers.cpp",
+      "sha256": "65ee69ce79960f4d14b81c4e23e60f2e909118ef28dcbac93e4b25a79e2df4af",
+      "bytes": 3141,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/Action.cpp",
+      "sha256": "ba06a6052b6300ff359582ca1e21b80311327eee51b3997f5ec682f60e5e6b08",
+      "bytes": 17598,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/BattleScumSearcher2.cpp",
+      "sha256": "d265e9a4f2e0e6d3196658a4ad976ea132c340b532f79800b5f16d40b4b71d1f",
+      "bytes": 18443,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/ExpertKnowledge.cpp",
+      "sha256": "9dbe4de71ddcdb6634f742dedc9ea55dca0d1410fcc344a668c3d032296f2c91",
+      "bytes": 10767,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/GameAction.cpp",
+      "sha256": "3614c02b8a9f634432d6c7605f6690ad2edde011c93b0aa615e33ef8cf8898d8",
+      "bytes": 25534,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/ScumSearchAgent2.cpp",
+      "sha256": "46218dd3f9823241ef424ef83b88a0263202140c40450ce5091615b1dda40265",
+      "bytes": 12656,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
+    },
+    {
+      "path": "sts_lightspeed/src/sim/search/SimpleAgent.cpp",
+      "sha256": "963b11291433d979972547ffcba7c953f5447543e5cd90604a12ca9312f97c87",
+      "bytes": 38024,
+      "origin": "sts_lightspeed",
+      "license": "MIT",
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/LICENSE.md",
@@ -682,7 +688,7 @@
       "bytes": 1067,
       "origin": "sts_lightspeed",
       "license": "MIT",
-      "patch_state": "POST_PATCH"
+      "patch_state": "PRE_PATCH"
     },
     {
       "path": "sts_lightspeed/json/single_include/nlohmann/json.hpp",
@@ -1064,6 +1070,14 @@
       "path": "pybind11/share/pkgconfig/pybind11.pc",
       "sha256": "335ed1d8d6e95baa3bba3c62a0c3f933a5a0546ae627fd6fbbff84f87feb6deb",
       "bytes": 171,
+      "origin": "pybind11",
+      "license": "BSD-3-Clause",
+      "patch_state": "PRISTINE"
+    },
+    {
+      "path": "pybind11/LICENSE.pybind11-2.13.6",
+      "sha256": "83965b843b98f670d3a85bd041ed4b372c8ec50d7b4a5995a83ac697ba675dcb",
+      "bytes": 1684,
       "origin": "pybind11",
       "license": "BSD-3-Clause",
       "patch_state": "PRISTINE"

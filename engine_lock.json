@@ -15,7 +15,11 @@
     },
     {
       "file": "native/patches/0003-combat-event-log.patch",
-      "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+      "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+    },
+    {
+      "file": "native/patches/0004-add-missing-algorithm-include.patch",
+      "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
     }
   ]
 }
