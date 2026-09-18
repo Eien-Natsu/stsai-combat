@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Apply the declared patch series to the locked revision and record what happened.
 
-    python scripts/patch_series_receipt.py [--out audit/patch_reconstruction.json]
+    python scripts/patch_series_receipt.py [--out evidence/patch_reconstruction.json]
 
 Starts from a detached worktree of the real upstream checkout at the locked
 revision - not from a reconstructed base and not from a synthetic repository -
@@ -41,7 +41,7 @@ def git(*args, cwd, check=True):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="audit/patch_reconstruction.json")
+    parser.add_argument("--out", default="evidence/patch_reconstruction.json")
     parser.add_argument("--upstream", default=str(ROOT / "third_party/sts_lightspeed"))
     args = parser.parse_args()
 

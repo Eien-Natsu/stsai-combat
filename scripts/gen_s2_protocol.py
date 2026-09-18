@@ -65,7 +65,7 @@ def main():
             "patches": [{"file": entry["file"], "sha256": entry["sha256"]}
                         for entry in lock["patches"]],
             "snapshot_archive_sha256": json.loads(
-                (ROOT / "native_sources_manifest.json").read_text())["archive_sha256"],
+                (ROOT / "native" / "native_sources_manifest.json").read_text())["archive_sha256"],
         },
         "versions": {"observation_schema": SCHEMA_VERSION, "encoding_revision": ENCODING_REVISION,
                      "loss_revision": LOSS_REVISION, "sampler_revision": SAMPLER_REVISION,

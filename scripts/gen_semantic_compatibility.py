@@ -104,7 +104,7 @@ def main():
     args = parser.parse_args()
 
     lock = json.loads((ROOT / "engine_lock.json").read_text())
-    snapshot = json.loads((ROOT / "native_sources_manifest.json").read_text())
+    snapshot = json.loads((ROOT / "native" / "native_sources_manifest.json").read_text())
     s1r_manifests = json.loads((ROOT / "training/data_manifests.json").read_text())
     s1r_run = json.loads((ROOT / "runs/s1r/M128-R0-s17-S1R/model/run.json").read_text())
 

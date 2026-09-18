@@ -187,8 +187,8 @@ def coverage_scan(encounters, seeds=8, turns=30):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="sampler/field_audit.json")
-    parser.add_argument("--traces", default="lifecycle/events_and_observations.jsonl.gz")
+    parser.add_argument("--out", default="evidence/field_audit.json")
+    parser.add_argument("--traces", default="evidence/events_and_observations.jsonl.gz")
     args = parser.parse_args()
     from stsai.scenarios import NATIVE_ENCOUNTERS
 

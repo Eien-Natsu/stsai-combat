@@ -88,7 +88,7 @@ def g2():
                     ["tests/test_engine_tree_check.py"], "g2_tree_check.txt"),
         run("the offline snapshot is PRE_PATCH and ships every licence",
             [PYTHON, "-c",
-             "import json;m=json.load(open('native_sources_manifest.json'));"
+             "import json;m=json.load(open('native/native_sources_manifest.json'));"
              "print(m['patch_state'][:60]);"
              "print([f['path'] for f in m['files'] if 'LICENSE' in f['path']]);"
              "assert all(f['patch_state']=='PRE_PATCH' for f in m['files'] "
@@ -108,7 +108,7 @@ def g3(clone_source):
     receipt_dir.mkdir(parents=True, exist_ok=True)
     receipt = receipt_dir / "g3_review_receipt.json"
     command = [PYTHON, str(ROOT / "review" / "run_review.py"), "--repo", str(clone),
-               "--sources", str(ROOT / "native_sources.tar.gz"), "--work", str(work / "review"),
+               "--sources", str(ROOT / "native" / "native_sources.tar.gz"), "--work", str(work / "review"),
                "--receipt", str(receipt)]
     log = LOGS / "g3_review_run.txt"
     result = subprocess.run(command, capture_output=True, text=True)

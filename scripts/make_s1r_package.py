@@ -31,15 +31,15 @@ FILES = [
     # git_and_provenance.json is generated below: it names the bundle by hash, so
     # it cannot be written before the bundle exists.
     ("gate_receipts.json", "reports/gate_receipts.json", True),
-    ("native_sources.tar.gz", "native_sources.tar.gz", True),
-    ("native_sources_manifest.json", "native_sources_manifest.json", True),
+    ("native_sources.tar.gz", "native/native_sources.tar.gz", True),
+    ("native_sources_manifest.json", "native/native_sources_manifest.json", True),
     ("review/README.md", "review/README.md", True),
     ("review/run_review.py", "review/run_review.py", True),
     ("review/offline_native_build.py", "review/offline_native_build.py", True),
     ("review/counterfactual_replay.py", "review/counterfactual_replay.py", True),
     ("review/model_smoke.py", "review/model_smoke.py", True),
-    ("audit/patch_reconstruction.json", "audit/patch_reconstruction.json", True),
-    ("audit/public_memory_evidence.jsonl.gz", "audit/public_memory_evidence.jsonl.gz", True),
+    ("audit/patch_reconstruction.json", "evidence/patch_reconstruction.json", True),
+    ("audit/public_memory_evidence.jsonl.gz", "evidence/public_memory_evidence.jsonl.gz", True),
     ("audit/sampler_effect.json", "reports/s1r_sampler_effect.json", True),
     ("audit/collection_report.json", "reports/s1r_collection_report.json", True),
     ("tests/pytest.txt", "reports/s1r_pytest.txt", True),
@@ -90,7 +90,7 @@ def build_command_log(staging):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", default="delivery")
-    parser.add_argument("--delivery-docs", default="delivery_docs",
+    parser.add_argument("--delivery-docs", default="delivery_docs/s1r",
                         help="directory holding hand-written INDEX.md and SUMMARY.md")
     args = parser.parse_args()
 

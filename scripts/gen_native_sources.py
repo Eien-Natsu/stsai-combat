@@ -102,8 +102,8 @@ def stage_vendored(stage: Path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tar", default="native_sources.tar.gz")
-    parser.add_argument("--manifest", default="native_sources_manifest.json")
+    parser.add_argument("--tar", default="native/native_sources.tar.gz")
+    parser.add_argument("--manifest", default="native/native_sources_manifest.json")
     args = parser.parse_args()
     lock = json.loads((ROOT / "engine_lock.json").read_text(encoding="utf-8"))
     revision = git("rev-parse", "HEAD").decode().strip()

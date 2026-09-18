@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble stsai_s2_review_<sha>.zip.
 
-    python scripts/make_s2_package.py [--out-dir delivery] [--docs delivery_docs_s2]
+    python scripts/make_s2_package.py [--out-dir delivery] [--docs delivery_docs/s2]
 
 The package holds one ZIP inside the project budget: the history as a bundle,
 the five-patch offline sources with their manifest, the review scripts, the
@@ -29,8 +29,8 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = [
     ("protocol.json", "reports/s2_volume_protocol.json", True),
     ("semantic_compatibility.json", "reports/s2_semantic_compatibility.json", True),
-    ("native_sources.tar.gz", "native_sources.tar.gz", True),
-    ("native_sources_manifest.json", "native_sources_manifest.json", True),
+    ("native_sources.tar.gz", "native/native_sources.tar.gz", True),
+    ("native_sources_manifest.json", "native/native_sources_manifest.json", True),
     ("review/README.md", "review/README.md", True),
     ("review/run_review.py", "review/run_review.py", True),
     ("review/offline_native_build.py", "review/offline_native_build.py", True),
@@ -86,7 +86,7 @@ def build_command_log(staging):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", default="delivery")
-    parser.add_argument("--docs", default="delivery_docs_s2")
+    parser.add_argument("--docs", default="delivery_docs/s2")
     args = parser.parse_args()
 
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,

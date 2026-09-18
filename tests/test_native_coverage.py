@@ -469,7 +469,7 @@ def test_every_supported_move_has_an_audited_public_intent():
     """A move with no mapping raises rather than defaulting to a class."""
     import csv
     from pathlib import Path as _P
-    rows = list(csv.DictReader((ROOT / "input/intent_mapping.csv").open(encoding="utf-8")))
+    rows = list(csv.DictReader((ROOT / "evidence/intent_mapping.csv").open(encoding="utf-8")))
     assert rows, "the mapping must not be empty"
     for row in rows:
         assert row["public_intent"], row
@@ -491,7 +491,7 @@ def test_the_field_audit_does_not_decide_categories_by_scan():
     measurement.
     """
     import json as _json
-    audit = _json.loads((ROOT / "sampler/field_audit.json").read_text(encoding="utf-8"))
+    audit = _json.loads((ROOT / "evidence/field_audit.json").read_text(encoding="utf-8"))
     assert "COVERAGE REGRESSION ONLY" in audit["coverage_scan"]["role"]
     assert audit["incomplete_evidence"], "the audit must keep an incomplete-evidence bucket"
     required = {"monster", "field", "init_write", "future_read", "visibility",
@@ -512,7 +512,7 @@ def test_the_field_audit_does_not_decide_categories_by_scan():
 def test_the_louse_field_is_audited_as_resampled():
     """The field the review found unlisted must now be present and honest."""
     import json as _json
-    audit = _json.loads((ROOT / "sampler/field_audit.json").read_text(encoding="utf-8"))
+    audit = _json.loads((ROOT / "evidence/field_audit.json").read_text(encoding="utf-8"))
     louse = [f for f in audit["fields"] if "LOUSE" in f["monster"]]
     assert louse, "the louse miscInfo entry must exist"
     assert louse[0]["category"] == "RESAMPLED"

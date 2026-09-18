@@ -3,7 +3,7 @@
 
 Single source of truth: the table is written as an X-macro file that
 `native/bridge.cpp` includes to build its lookup and that this script re-reads to
-emit `input/intent_mapping.csv`. Deriving the class from the simulator's own
+emit `evidence/intent_mapping.csv`. Deriving the class from the simulator's own
 effect composition keeps every row citable to a line of the locked upstream
 source; a small override table records the cases where the game shows something
 the effect composition alone would not tell us, each with its reference.
@@ -174,7 +174,7 @@ def read_def(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--def-path", default="native/intent_table.def")
-    parser.add_argument("--csv", default="input/intent_mapping.csv")
+    parser.add_argument("--csv", default="evidence/intent_mapping.csv")
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--monster-cpp", default=None,
                         help="path to the locked MonsterSpecific.cpp; defaults to the vendored checkout")

@@ -75,9 +75,9 @@ def find_pairs(limit=3):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--counterfactuals", default="sampler/louse_counterfactuals.jsonl.gz")
-    parser.add_argument("--observations", default="sampler/louse_public_observations.jsonl.gz")
-    parser.add_argument("--checks", default="sampler/distribution_checks.json")
+    parser.add_argument("--counterfactuals", default="evidence/louse_counterfactuals.jsonl.gz")
+    parser.add_argument("--observations", default="evidence/louse_public_observations.jsonl.gz")
+    parser.add_argument("--checks", default="evidence/distribution_checks.json")
     args = parser.parse_args()
 
     pairs = find_pairs()

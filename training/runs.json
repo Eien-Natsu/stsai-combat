@@ -1,0 +1,1112 @@
+{
+  "purpose": "The six logical runs of the S2 matrix: five new, D96_s17 reused from S1R.",
+  "selection_rule": "lowest kl_dev on the full V24 set, ties keep the earlier step; the development sets are never used to select",
+  "frozen_config": {
+    "seed": 17,
+    "init_seed": 17,
+    "data_seed": 42,
+    "batch_size": 16,
+    "accumulation_steps": 2,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "max_updates": 500,
+    "epochs": 40,
+    "eval_every": 25,
+    "save_every": 25,
+    "validation_batches": 100000,
+    "shuffle_buffer": 512,
+    "amp": true,
+    "cpu_threads": 4,
+    "model": {
+      "d_model": 128,
+      "layers": 4,
+      "heads": 4,
+      "dropout": 0.1
+    }
+  },
+  "runs": [
+    {
+      "run": "D96_s17",
+      "data": [
+        "data/s1r/train"
+      ],
+      "init_seed": 17,
+      "reused_from": "S1R",
+      "directory": "runs/s1r/M128-R0-s17-S1R/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 17,
+        "data_seed": 42
+      },
+      "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 400,
+        "kl_dev": 0.10868758457738913,
+        "teacher_choice_agreement_decision_states": 0.5668016194331984,
+        "teacher_top1_agreement_legacy": 0.706060606060606,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.4291754425295935,
+        "loss": 3.5210302183377102,
+        "sha256": "34ea8ff0aa55cf6f5ef3ed311819553715a16e1ceb57ef53211f09122c3dfaef"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.11352078145799423,
+        "teacher_choice_agreement_decision_states": 0.562753036437247,
+        "sha256": "696350ae70af56dafa3d276986dc938404ebaa57b762e94f8c7086ff35a11f05"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 12009.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 96,
+          "rows": 1774,
+          "decision_states": 1331
+        },
+        "dropped_tail_rows": 126,
+        "epochs_reached": 9,
+        "passes_over_its_own_rows": 9.019,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 28.16981102398131,
+      "validations": 20
+    },
+    {
+      "run": "D96_s29",
+      "data": [
+        "data/s1r/train"
+      ],
+      "init_seed": 29,
+      "reused_from": null,
+      "directory": "runs/s2/D96_s29/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 29,
+        "data_seed": 42
+      },
+      "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 400,
+        "kl_dev": 0.11105501457132781,
+        "teacher_choice_agreement_decision_states": 0.5708502024291497,
+        "teacher_top1_agreement_legacy": 0.6696969696969697,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.4292535241316204,
+        "loss": 3.6103851490338736,
+        "sha256": "6cf0a94c695f1182b8c92f1c0d6d2c7027d157b34f4ce9820195220c1b189b45"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.11853806043576769,
+        "teacher_choice_agreement_decision_states": 0.562753036437247,
+        "sha256": "15b5669bc6a413af88fce85ffb059571d97320249b73163fd06a0c08af39c594"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 12009.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 96,
+          "rows": 1774,
+          "decision_states": 1331
+        },
+        "dropped_tail_rows": 126,
+        "epochs_reached": 9,
+        "passes_over_its_own_rows": 9.019,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 27.783809017011663,
+      "validations": 20
+    },
+    {
+      "run": "D96_s43",
+      "data": [
+        "data/s1r/train"
+      ],
+      "init_seed": 43,
+      "reused_from": null,
+      "directory": "runs/s2/D96_s43/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 43,
+        "data_seed": 42
+      },
+      "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 400,
+        "kl_dev": 0.10600481499149134,
+        "teacher_choice_agreement_decision_states": 0.5668016194331984,
+        "teacher_top1_agreement_legacy": 0.703030303030303,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.427192568296363,
+        "loss": 3.4544575025337743,
+        "sha256": "aae9f1f754748d4682217f6a6bd99167458f29dfd49bbea4d989488bcab77fe6"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.11500136359945935,
+        "teacher_choice_agreement_decision_states": 0.5668016194331984,
+        "sha256": "df3091ea9361603c3713507c007280162dfb5d2f97859054cee71b664713b462"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 12009.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 96,
+          "rows": 1774,
+          "decision_states": 1331
+        },
+        "dropped_tail_rows": 126,
+        "epochs_reached": 9,
+        "passes_over_its_own_rows": 9.019,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 23.632905409001978,
+      "validations": 20
+    },
+    {
+      "run": "D384_s17",
+      "data": [
+        "data/s1r/train",
+        "data/s2/add288"
+      ],
+      "init_seed": 17,
+      "reused_from": null,
+      "directory": "runs/s2/D384_s17/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 17,
+        "data_seed": 42
+      },
+      "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          },
+          {
+            "directory": "/workspaces/stsai_web/data/s2/add288",
+            "manifest": {
+              "fingerprint": "46955a4f270837134e49541e9b4f96ea0399d329cad2bca03a3ad75dc8200eac",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796",
+                    "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 500,
+        "kl_dev": 0.1000072945840026,
+        "teacher_choice_agreement_decision_states": 0.5951417004048583,
+        "teacher_top1_agreement_legacy": 0.7212121212121212,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.4190751936754233,
+        "loss": 2.7921652098343417,
+        "sha256": "7d758857aa8ba77e7804891633b0d69c625d9eeaaac1da5e5c615046ce80d9de"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.1000072945840026,
+        "teacher_choice_agreement_decision_states": 0.5951417004048583,
+        "sha256": "1074866bc478067f1a3587636a3cb847162dbe54f8694f62841f3f595087715f"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 11985.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 384,
+          "rows": 6891,
+          "decision_states": 5165
+        },
+        "dropped_tail_rows": 22,
+        "epochs_reached": 2,
+        "passes_over_its_own_rows": 2.322,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 25.782004236010835,
+      "validations": 20
+    },
+    {
+      "run": "D384_s29",
+      "data": [
+        "data/s1r/train",
+        "data/s2/add288"
+      ],
+      "init_seed": 29,
+      "reused_from": null,
+      "directory": "runs/s2/D384_s29/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 29,
+        "data_seed": 42
+      },
+      "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          },
+          {
+            "directory": "/workspaces/stsai_web/data/s2/add288",
+            "manifest": {
+              "fingerprint": "46955a4f270837134e49541e9b4f96ea0399d329cad2bca03a3ad75dc8200eac",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796",
+                    "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 425,
+        "kl_dev": 0.11115480321932518,
+        "teacher_choice_agreement_decision_states": 0.611336032388664,
+        "teacher_top1_agreement_legacy": 0.6909090909090909,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.4286028711419356,
+        "loss": 2.7754821393086293,
+        "sha256": "24c26ea9d1f36ed4babaff7b608ef1b24486b621477269041aa05981d38cefd3"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.11195193429648599,
+        "teacher_choice_agreement_decision_states": 0.611336032388664,
+        "sha256": "a1a60b922a83f11f09ba09018619c727c90ff75753e08c97ac4e88a3154ba5c1"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 11985.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 384,
+          "rows": 6891,
+          "decision_states": 5165
+        },
+        "dropped_tail_rows": 22,
+        "epochs_reached": 2,
+        "passes_over_its_own_rows": 2.322,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 29.12506844699965,
+      "validations": 20
+    },
+    {
+      "run": "D384_s43",
+      "data": [
+        "data/s1r/train",
+        "data/s2/add288"
+      ],
+      "init_seed": 43,
+      "reused_from": null,
+      "directory": "runs/s2/D384_s43/model",
+      "training_config": {
+        "seed": 17,
+        "batch_size": 16,
+        "accumulation_steps": 2,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.01,
+        "max_updates": 500,
+        "epochs": 40,
+        "eval_every": 25,
+        "save_every": 25,
+        "validation_batches": 100000,
+        "shuffle_buffer": 512,
+        "amp": true,
+        "cpu_threads": 4,
+        "model": {
+          "d_model": 128,
+          "layers": 4,
+          "heads": 4,
+          "dropout": 0.1
+        },
+        "init_seed": 43,
+        "data_seed": 42
+      },
+      "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2",
+      "data_provenance": {
+        "train": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/train",
+            "manifest": {
+              "fingerprint": "b02f463e7638647003ab244396b1fe9efba16a99deb8cf5da4aed5e840dcae4b",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          },
+          {
+            "directory": "/workspaces/stsai_web/data/s2/add288",
+            "manifest": {
+              "fingerprint": "46955a4f270837134e49541e9b4f96ea0399d329cad2bca03a3ad75dc8200eac",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "train",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": true,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796",
+                    "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ],
+        "val": [
+          {
+            "directory": "/workspaces/stsai_web/data/s1r/val",
+            "manifest": {
+              "fingerprint": "0b019907b1f09279e63cdc22b7e269aa9f5b2e128a29cc2043ca79ccb75e1441",
+              "settings": {
+                "backend": "lightspeed_pilot",
+                "split": "val",
+                "search": {
+                  "simulations": 64,
+                  "max_depth": 64,
+                  "rollout_limit": 128,
+                  "c_puct": 1.5,
+                  "rollout_epsilon": 0.12,
+                  "potion_cost": 0.02,
+                  "use_leaf_value": false
+                },
+                "checkpoint": "",
+                "checkpoint_sha256": null,
+                "master_seed": 20260916,
+                "max_actions": 256,
+                "iteration": 0,
+                "sample_actions": false,
+                "scenario_revision": 3,
+                "encoding_revision": 5,
+                "observation_schema": 4,
+                "utility_revision": 1,
+                "engine": {
+                  "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+                  "patches": [
+                    "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+                    "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+                    "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+                    "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+                  ],
+                  "backend": "lightspeed_pilot",
+                  "belief_model": "independent_rng_approximation",
+                  "game_differential_verified": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      "parameters": 1949325,
+      "device": "cuda",
+      "amp_bfloat16": true,
+      "steps": 500,
+      "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+      "selected": {
+        "step": 350,
+        "kl_dev": 0.10288797378768787,
+        "teacher_choice_agreement_decision_states": 0.5991902834008097,
+        "teacher_top1_agreement_legacy": 0.7090909090909091,
+        "teacher_entropy_decision": 1.3245808798291905,
+        "policy_ce_decision": 1.4223359992146976,
+        "loss": 2.7662094540539144,
+        "sha256": "ac2a5c4b4bde832996d8986ebe5fc76fc62b08a16675e38ab2fbf8a3d44164a6"
+      },
+      "last": {
+        "step": 500,
+        "kl_dev": 0.10345044215532818,
+        "teacher_choice_agreement_decision_states": 0.6032388663967612,
+        "sha256": "e35508d6990d6d028bea2682dffd4a6415d300437c7113685a8e4b68eeeab3a0"
+      },
+      "coverage": {
+        "updates": 500,
+        "rows_seen_with_repeats": 16000,
+        "decision_states_seen_with_repeats": 11985.0,
+        "masked_states_seen_with_repeats": 16000.0,
+        "dataset": {
+          "episodes": 384,
+          "rows": 6891,
+          "decision_states": 5165
+        },
+        "dropped_tail_rows": 22,
+        "epochs_reached": 2,
+        "passes_over_its_own_rows": 2.322,
+        "note": "rows_seen counts every row pushed through an update, including repeats across epochs; the dataset figures count distinct rows and are taken from the data itself"
+      },
+      "elapsed_seconds": 24.79437746599433,
+      "validations": 20
+    }
+  ]
+}

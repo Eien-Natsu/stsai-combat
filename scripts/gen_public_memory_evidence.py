@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Record what the belief sample treats as public memory, step by step.
 
-    python scripts/gen_public_memory_evidence.py --out audit/public_memory_evidence.jsonl.gz
+    python scripts/gen_public_memory_evidence.py --out evidence/public_memory_evidence.jsonl.gz
 
 One gzip line per replayed step of the shipped public trace, each with the
 recomputed observation hash and the public state that a sample must preserve,
@@ -30,7 +30,7 @@ MAX_STEPS = 128
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--trace", default="tests/fixtures/ambiguity_public_trace.json")
-    parser.add_argument("--out", default="audit/public_memory_evidence.jsonl.gz")
+    parser.add_argument("--out", default="evidence/public_memory_evidence.jsonl.gz")
     args = parser.parse_args()
 
     trace = json.loads((ROOT / args.trace).read_text(encoding="utf-8"))
