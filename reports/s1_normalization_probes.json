@@ -1,0 +1,104 @@
+{
+  "purpose": "S1-A counting probes, produced by calling the shipped code.",
+  "loss_revision": 2,
+  "effective_batch": {
+    "per_microbatch_mean_of_means": 2.5,
+    "effective_batch_decision_mean": 3.0,
+    "expected_by_review": 3.0,
+    "passes": true
+  },
+  "gradient_partitioning": {
+    "effective_batch_gradient_row0": [
+      -0.20343690511798332,
+      0.16543208464816378,
+      0.03800482046981951
+    ],
+    "split_over_shared_denominator_row0": [
+      -0.20343690511798332,
+      0.16543208464816378,
+      0.03800482046981951
+    ],
+    "max_abs_difference": 0.0,
+    "passes": true
+  },
+  "all_forced_batch": {
+    "policy_numerator": 0.0,
+    "denominator": 0.0,
+    "gradient_is_zero": true,
+    "finite": true
+  },
+  "trainer_partition_invariance": {
+    "arrangements": [
+      "32x1",
+      "16x2",
+      "8x4"
+    ],
+    "max_abs_parameter_difference": 1.2870877981185913e-06,
+    "passes": true
+  },
+  "validation_batch_invariance": {
+    "by_validation_batch_size": {
+      "1": {
+        "policy_loss": 1.6459817926088969,
+        "outcome_loss": 2.6661834716796875,
+        "value_loss": 0.26749834915002185,
+        "loss": 3.2465718775987624,
+        "kl_dev": 0.003236753803988298,
+        "decision_numerator_D": 15.0,
+        "samples": 18
+      },
+      "2": {
+        "policy_loss": 1.6459817608197531,
+        "outcome_loss": 2.6661833922068277,
+        "value_loss": 0.2674983541170756,
+        "loss": 3.2465718110402424,
+        "kl_dev": 0.0032367374127109847,
+        "decision_numerator_D": 15.0,
+        "samples": 18
+      },
+      "3": {
+        "policy_loss": 1.645981788635254,
+        "outcome_loss": 2.6661833127339682,
+        "value_loss": 0.2674983541170756,
+        "loss": 3.2465717991193137,
+        "kl_dev": 0.0032367374127109847,
+        "decision_numerator_D": 15.0,
+        "samples": 18
+      },
+      "7": {
+        "policy_loss": 1.6459817250569662,
+        "outcome_loss": 2.6661833922068277,
+        "value_loss": 0.26749836405118305,
+        "loss": 3.246571785211563,
+        "kl_dev": 0.0032367372574905553,
+        "decision_numerator_D": 15.0,
+        "samples": 18
+      }
+    },
+    "max_spread": {
+      "policy_loss": 6.755193071583676e-08,
+      "outcome_loss": 1.5894571925301193e-07,
+      "value_loss": 1.4901161193847656e-08,
+      "loss": 9.238719922421978e-08,
+      "kl_dev": 1.654649774271086e-08,
+      "decision_numerator_D": 0.0,
+      "samples": 0
+    },
+    "passes": true
+  },
+  "log_consistency": {
+    "updates": [
+      {
+        "step": 1,
+        "total_matches_components": true,
+        "effective_batch_samples": 32,
+        "decision_states": 28.0,
+        "numerators_present": true
+      }
+    ],
+    "loss_revision": 2,
+    "dropped_tail_rows": 0,
+    "passes": true
+  },
+  "all_passed": false
+}

@@ -211,7 +211,10 @@ def validate(model,loader,device,max_batches=50):
             "teacher_top1_agreement":agree_legacy/max(1,rows),
             "teacher_choice_agreement":agree_choice/max(1,known_rows),
             "teacher_choice_agreement_decision_states":agree_choice_dec/max(1,dec),
-            "decision_states":dec,"forced_states":int(D)-dec,
+            # dec counts decision states that also have a known teacher action;
+            # "forced" is every row that is not a decision state at all.
+            "decision_states":int(D),"decision_states_with_teacher":dec,
+            "forced_states":rows-int(D),
             "unknown_teacher_action_states":unknown_teacher,
             "policy_kl":kl_sum/max(D,1.0),
             "teacher_entropy":entropy_sum/max(D,1.0),

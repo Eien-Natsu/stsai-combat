@@ -1,0 +1,90 @@
+{
+  "scope": "unverified simulator pilot, single training seed, development scenarios already seen; not original-game strength and not a final test",
+  "scenarios": 256,
+  "agents": [
+    "M128-R0-s17-S1",
+    "heuristic",
+    "search"
+  ],
+  "paired": {
+    "M128-R0-s17-S1_minus_heuristic": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": 0.01478515625,
+      "bootstrap95": [
+        -0.010332031249999993,
+        0.041035644531249964
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 59,
+      "b_better": 87,
+      "tie": 110,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    },
+    "M128-R0-s17-S1_minus_search": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": -0.045703125000000004,
+      "bootstrap95": [
+        -0.06955102539062501,
+        -0.024316406250000006
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 36,
+      "b_better": 120,
+      "tie": 100,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    },
+    "search_minus_heuristic": {
+      "n_pairs": 256,
+      "dropped_incomplete": 0,
+      "mean": 0.060488281250000005,
+      "bootstrap95": [
+        0.034130615234375,
+        0.08898461914062498
+      ],
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260918,
+      "a_better": 78,
+      "b_better": 23,
+      "tie": 155,
+      "scope": "paired initial scenarios, conditional on these fixed checkpoints; development only"
+    }
+  },
+  "latency": {
+    "M128-R0-s17-S1": {
+      "decisions_timed": 3649,
+      "forced_decisions": 951,
+      "pooled_p50_ms_all_decisions": 1.2454389943741262,
+      "pooled_p95_ms_all_decisions": 2.206508803647011,
+      "pooled_p50_ms_excluding_forced": 1.2721930106636137,
+      "pooled_p95_ms_excluding_forced": 2.276776684448123,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    },
+    "heuristic": {
+      "decisions_timed": 3791,
+      "forced_decisions": 996,
+      "pooled_p50_ms_all_decisions": 0.020469975424930453,
+      "pooled_p95_ms_all_decisions": 0.05634449189528823,
+      "pooled_p50_ms_excluding_forced": 0.02303501241840422,
+      "pooled_p95_ms_excluding_forced": 0.057784307864494566,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    },
+    "search": {
+      "decisions_timed": 3699,
+      "forced_decisions": 957,
+      "pooled_p50_ms_all_decisions": 151.8810520065017,
+      "pooled_p95_ms_all_decisions": 988.6942702956729,
+      "pooled_p50_ms_excluding_forced": 197.09592498838902,
+      "pooled_p95_ms_excluding_forced": 1176.4678971871022,
+      "note": "pooled over every recorded decision, not a per-episode statistic"
+    }
+  },
+  "latency_definitions": {
+    "pooled": "percentiles computed over every decision across all episodes",
+    "median_of_episode_percentiles": "computed per episode then medianed; a different quantity"
+  },
+  "historical_note": "the fb9bf6e results are kept as-is. Interface, counting rule and data trajectories all changed together, so no difference here can be attributed to any single factor."
+}

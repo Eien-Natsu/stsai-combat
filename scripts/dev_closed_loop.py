@@ -42,15 +42,26 @@ def freeze_scenarios(count):
     return out
 
 
-def step_episode(env, choose, max_actions=MAX_ACTIONS):
-    obs = env.observe(); latencies = []
+def step_episode(env, choose, max_actions=MAX_ACTIONS, record=None, episode_index=None):
+    """Play one episode, returning the final observation and per-decision timings.
+
+    `record` collects one row per decision so the report can give pooled
+    percentiles over every decision as well as the median of per-episode
+    percentiles, which are different quantities.
+    """
+    obs = env.observe(); latencies = []; step = 0
     for _ in range(max_actions):
         if obs["terminal"]:
             break
         start = time.perf_counter()
         index = choose(obs)
-        latencies.append(time.perf_counter() - start)
-        obs = env.step(obs["actions"][index])
+        elapsed = time.perf_counter() - start
+        latencies.append(elapsed)
+        if record is not None:
+            record.append({"episode_index": episode_index, "step": step,
+                           "action_index": index, "forced": len(obs["actions"]) <= 1,
+                           "ms": elapsed * 1000})
+        obs = env.step(obs["actions"][index]); step += 1
     return obs, latencies
 
 
@@ -70,6 +81,12 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     frozen_path = out / "dev_scenarios.json"
     scenarios = freeze_scenarios(args.scenarios)
+    indices = [s["index"] for s in scenarios]
+    if len(set(indices)) != len(indices):
+        raise SystemExit("Duplicate development scenarios; refusing to score")
+    schemas = {s["scenario"].get("encounter") for s in scenarios}
+    if None in schemas:
+        raise SystemExit("A scenario is missing its encounter; refusing to score")
     if frozen_path.exists():
         existing = json.loads(frozen_path.read_text())["scenarios"]
         if digest(existing) != digest(scenarios):
@@ -101,7 +118,9 @@ def main():
     # GPU counterpart for the device comparison only, on a subset.
     gpu_models = {}
 
-    records = []
+    if not models:
+        raise SystemExit("No checkpoint loaded; refusing to report an incomplete comparison")
+    records = []; decision_rows = []
     started = time.perf_counter()
     for entry in scenarios:
         scenario = entry["scenario"]; seed = entry["episode_seed"]; index = entry["index"]
@@ -120,7 +139,10 @@ def main():
             else:
                 evaluator, _ckpt, _dev = models[agent]
                 choose = lambda obs, ev=evaluator: int(np.argmax(ev.evaluate(obs)[0]))  # noqa: E731
-            final, latencies = step_episode(env, choose)
+            collector = []
+            final, latencies = step_episode(env, choose, record=collector, episode_index=index)
+            for row in collector:
+                decision_rows.append({"agent": agent, **row})
             completed = bool(final["terminal"])
             records.append({
                 "agent": agent, "episode_index": index, "family": entry["family"],
@@ -138,6 +160,10 @@ def main():
     with (out / "episodes.jsonl").open("w", encoding="utf-8") as handle:
         for record in records:
             handle.write(json.dumps(record) + "\n")
+    import gzip as _gzip
+    with _gzip.open(out / "decision_latency.jsonl.gz", "wt", encoding="utf-8") as handle:
+        for row in decision_rows:
+            handle.write(json.dumps(row) + "\n")
 
     agents = list(args.baselines) + list(models)
     by_agent = {}
@@ -152,9 +178,17 @@ def main():
             "mean_utility": float(np.mean([r["utility"] for r in completed])) if completed else None,
             "mean_end_hp_survivors": float(np.mean([r["end_hp"] for r in wins])) if wins else None,
             "mean_decisions": float(np.mean([r["decisions"] for r in rows])),
-            "p50_ms": float(np.median([r["p50_ms"] for r in rows])),
-            "p95_ms": float(np.median([r["p95_ms"] for r in rows])),
+            "median_of_episode_p50_ms": float(np.median([r["p50_ms"] for r in rows])),
+            "median_of_episode_p95_ms": float(np.median([r["p95_ms"] for r in rows])),
         }
+        decided = [d["ms"] for d in decision_rows if d["agent"] == agent and not d["forced"]]
+        every = [d["ms"] for d in decision_rows if d["agent"] == agent]
+        by_agent[agent]["pooled_decision_p50_ms"] = float(np.percentile(every, 50)) if every else None
+        by_agent[agent]["pooled_decision_p95_ms"] = float(np.percentile(every, 95)) if every else None
+        by_agent[agent]["pooled_decision_p50_ms_excluding_forced"] = (
+            float(np.percentile(decided, 50)) if decided else None)
+        by_agent[agent]["decisions_timed"] = len(every)
+        by_agent[agent]["forced_decisions"] = len(every) - len(decided)
 
     index_of = {}
     for record in records:
@@ -194,7 +228,7 @@ def main():
     print(json.dumps({k: v for k, v in summary.items() if k not in ("by_agent", "paired_vs_heuristic")}, indent=2))
     for agent, values in by_agent.items():
         print(f"  {agent:16s} wins={values['wins']:3d} util={values['mean_utility']} "
-              f"p50={values['p50_ms']:.2f}ms trunc={values['truncated']}")
+              f"p50={values['median_of_episode_p50_ms']:.2f}ms trunc={values['truncated']}")
 
 
 if __name__ == "__main__":
