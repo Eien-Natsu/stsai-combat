@@ -28,7 +28,8 @@ ROOT = Path(__file__).resolve().parents[1]
 # (archive path, source path, required)
 FILES = [
     ("protocol.json", "reports/s1r_protocol.json", True),
-    ("git_and_provenance.json", "reports/s1r_provenance.json", True),
+    # git_and_provenance.json is generated below: it names the bundle by hash, so
+    # it cannot be written before the bundle exists.
     ("gate_receipts.json", "reports/gate_receipts.json", True),
     ("native_sources.tar.gz", "native_sources.tar.gz", True),
     ("native_sources_manifest.json", "native_sources_manifest.json", True),

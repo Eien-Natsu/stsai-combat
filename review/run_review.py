@@ -178,14 +178,23 @@ def step_counterfactual(repo, work, build_detail):
                                     f"root stable={detail['root_stable']}")
 
 
-def step_model(repo, model, work, build_detail):
+def step_model(repo, model, package, work, build_detail):
     if model is None:
         return None, "no --model given (expected when the round did not train)"
     if not build_detail.get("module_path"):
         return None, "the native module was not built"
+    # The observations and expectations ship beside the weights in the package,
+    # which is a different directory from the checkout the tests run in.
+    base = Path(package) if package else Path(repo)
+    observations = base / "model" / "smoke_observations.jsonl.gz"
+    expected = base / "model" / "smoke_expected.json"
+    for path in (observations, expected):
+        if not path.is_file():
+            return False, f"the package does not ship {path.name}"
     env = dict(os.environ)
     env["PYTHONPATH"] = str(Path(repo) / "src")
     result = subprocess.run([sys.executable, str(HERE / "model_smoke.py"), "--model", str(model),
+                             "--observations", str(observations), "--expected", str(expected),
                              "--out", str(work / "model_smoke.json")], cwd=repo,
                             capture_output=True, text=True, env=env)
     tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
@@ -228,7 +237,8 @@ def main():
     report.add("tests", ok, note)
     ok, note = step_counterfactual(repo, work, detail)
     report.add("counterfactual", ok, note)
-    ok, note = step_model(repo, Path(args.model).resolve() if args.model else None, work, detail)
+    ok, note = step_model(repo, Path(args.model).resolve() if args.model else None,
+                          Path(args.package).resolve() if args.package else None, work, detail)
     report.add("model_smoke", ok, note, required=args.model is not None)
 
     receipt = Path(args.receipt).resolve() if args.receipt else work / "review_receipt.json"
