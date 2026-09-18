@@ -42,27 +42,40 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def python(*args, cwd=None):
-    return subprocess.run([sys.executable, *args], cwd=cwd, capture_output=True, text=True)
+def python(*args, cwd=None, timeout=None):
+    return subprocess.run([sys.executable, *args], cwd=cwd, capture_output=True, text=True,
+                          timeout=timeout)
 
 
 class Report:
+    """PASS / FAIL / NOT_RUN / TIMEOUT, kept apart on purpose.
+
+    NOT_RUN is "this machine cannot run it"; TIMEOUT is "it was still running
+    when its budget ran out". Neither is a failure of the code under review and
+    neither is a pass, so both keep the run non-zero when the step is required.
+    """
     def __init__(self):
         self.rows = []
 
     def add(self, name, ok, note, required=True):
-        self.rows.append({"step": name, "status": "NOT_RUN" if ok is None else
-                          ("PASS" if ok else "FAIL"), "note": note, "required": required})
-        print(f"{self.rows[-1]['status']:8s} {name:14s} {note}", flush=True)
+        if ok is None:
+            status = "NOT_RUN"
+        elif isinstance(ok, str):
+            status = ok  # an explicit status such as TIMEOUT
+        else:
+            status = "PASS" if ok else "FAIL"
+        self.rows.append({"step": name, "status": status, "note": note, "required": required})
+        print(f"{status:8s} {name:14s} {note}", flush=True)
 
     def exit_code(self):
-        failed = [r for r in self.rows if r["status"] == "FAIL"]
-        not_run = [r for r in self.rows if r["status"] == "NOT_RUN" and r["required"]]
-        if failed:
-            print("FAILED: " + ", ".join(r["step"] for r in failed), file=sys.stderr)
-        if not_run:
-            print("NOT_RUN (required): " + ", ".join(r["step"] for r in not_run), file=sys.stderr)
-        if failed or not_run:
+        blocking = [r for r in self.rows if r["status"] in ("FAIL", "TIMEOUT")
+                    or (r["status"] == "NOT_RUN" and r["required"])]
+        for status in ("FAIL", "TIMEOUT", "NOT_RUN"):
+            rows = [r for r in blocking if r["status"] == status
+                    and (status != "NOT_RUN" or r["required"])]
+            if rows:
+                print(f"{status}: " + ", ".join(r["step"] for r in rows), file=sys.stderr)
+        if blocking:
             return 1
         print("all required checks passed on this machine")
         return 0
@@ -86,14 +99,25 @@ def step_attachments(package):
                             else "manifest verified")
 
 
-def step_build(repo, sources, work):
+def step_build(repo, sources, work, timeout):
     receipt = work / "native_build_receipt.json"
-    result = python(str(HERE / "offline_native_build.py"), "--repo", str(repo), "--sources",
-                    str(sources), "--receipt", str(receipt), cwd=PKG)
+    logs = work / "logs"
+    logs.mkdir(parents=True, exist_ok=True)
+    try:
+        result = python(str(HERE / "offline_native_build.py"), "--repo", str(repo), "--sources",
+                        str(sources), "--receipt", str(receipt), "--logs", str(logs),
+                        "--timeout", str(timeout), cwd=PKG, timeout=timeout + 60)
+    except subprocess.TimeoutExpired:
+        return "TIMEOUT", f"the build step exceeded {timeout + 60}s of wall clock", {}
+    (logs / "offline_build_stdout.log").write_text(
+        f"$ offline_native_build.py\nexit code: {result.returncode}\n\n{result.stdout}\n{result.stderr}",
+        encoding="utf-8")
     tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
     detail = json.loads(receipt.read_text()) if receipt.is_file() else {}
     if result.returncode == 2:
         return None, f"NOT_RUN: {detail.get('missing_tool', 'toolchain missing')}", detail
+    if result.returncode == 3:
+        return "TIMEOUT", detail.get("error", "the build timed out"), detail
     if result.returncode != 0:
         return False, detail.get("error", tail[-1] if tail else "build failed"), detail
     return True, f"built and installed {Path(detail['module_path']).name}", detail
@@ -124,19 +148,28 @@ def step_intent(repo, build_detail):
     return result.returncode == 0, tail[-1] if tail else ""
 
 
-def step_tests(repo, work, build_detail):
+def step_tests(repo, work, build_detail, timeout):
     if not build_detail.get("module_path"):
         return None, "the native module was not built, so the native tests would skip"
     junit = work / "junit.xml"
+    logs = work / "logs"
+    logs.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
     env["PYTHONPATH"] = str(Path(repo) / "src")
     # The cloned checkout has no third_party (it is not tracked); point the intent
     # generator at the patched source the build step just verified instead.
     if build_detail.get("engine_source_dir"):
         env["STSAI_ENGINE_SOURCE_DIR"] = build_detail["engine_source_dir"]
-    result = subprocess.run([sys.executable, "-m", "pytest", "tests", "-q",
-                             f"--junitxml={junit}"], cwd=repo, capture_output=True, text=True,
-                            env=env)
+    try:
+        result = subprocess.run([sys.executable, "-m", "pytest", "tests", "-q",
+                                 f"--junitxml={junit}"], cwd=repo, capture_output=True, text=True,
+                                env=env, timeout=timeout)
+    except subprocess.TimeoutExpired as expired:
+        (logs / "pytest.log").write_text(
+            f"TIMEOUT after {timeout}s\n{expired.stdout or ''}{expired.stderr or ''}",
+            encoding="utf-8")
+        return "TIMEOUT", f"pytest did not finish within {timeout}s"
+    (logs / "pytest.log").write_text(result.stdout + result.stderr, encoding="utf-8")
     if not junit.is_file():
         return False, "pytest produced no report"
     import xml.etree.ElementTree as ET
@@ -156,7 +189,7 @@ def step_tests(repo, work, build_detail):
     return True, note
 
 
-def step_counterfactual(repo, work, build_detail):
+def step_counterfactual(repo, work, build_detail, timeout):
     """Replay the shipped public trace and recompute its observation hashes."""
     if not build_detail.get("module_path"):
         return None, "the native module was not built; the counterfactual cannot be replayed"
@@ -166,9 +199,12 @@ def step_counterfactual(repo, work, build_detail):
     env = dict(os.environ)
     env["PYTHONPATH"] = str(Path(repo) / "src")
     out = work / "counterfactual.json"
-    result = subprocess.run([sys.executable, str(HERE / "counterfactual_replay.py"),
-                             "--repo", str(repo), "--trace", str(trace), "--out", str(out)],
-                            cwd=repo, capture_output=True, text=True, env=env)
+    try:
+        result = subprocess.run([sys.executable, str(HERE / "counterfactual_replay.py"),
+                                 "--repo", str(repo), "--trace", str(trace), "--out", str(out)],
+                                cwd=repo, capture_output=True, text=True, env=env, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return "TIMEOUT", f"the replay did not finish within {timeout}s"
     tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
     if not out.is_file():
         return False, tail[-1] if tail else "the replay produced no result"
@@ -178,7 +214,7 @@ def step_counterfactual(repo, work, build_detail):
                                     f"root stable={detail['root_stable']}")
 
 
-def step_model(repo, model, package, work, build_detail):
+def step_model(repo, model, package, work, build_detail, timeout):
     if model is None:
         return None, "no --model given (expected when the round did not train)"
     if not build_detail.get("module_path"):
@@ -190,13 +226,17 @@ def step_model(repo, model, package, work, build_detail):
     expected = base / "model" / "smoke_expected.json"
     for path in (observations, expected):
         if not path.is_file():
-            return False, f"the package does not ship {path.name}"
+            return False, (f"{path.name} is not in {base} ({'the package' if package else 'the checkout'}"
+                           f"); pass --package to point at the directory that ships it")
     env = dict(os.environ)
     env["PYTHONPATH"] = str(Path(repo) / "src")
-    result = subprocess.run([sys.executable, str(HERE / "model_smoke.py"), "--model", str(model),
-                             "--observations", str(observations), "--expected", str(expected),
-                             "--out", str(work / "model_smoke.json")], cwd=repo,
-                            capture_output=True, text=True, env=env)
+    try:
+        result = subprocess.run([sys.executable, str(HERE / "model_smoke.py"), "--model", str(model),
+                                 "--observations", str(observations), "--expected", str(expected),
+                                 "--out", str(work / "model_smoke.json")], cwd=repo,
+                                capture_output=True, text=True, env=env, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return "TIMEOUT", f"the model smoke did not finish within {timeout}s"
     tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
     return result.returncode == 0, tail[-1] if tail else ""
 
@@ -209,6 +249,8 @@ def main():
     parser.add_argument("--model", default=None, help="a selected inference checkpoint")
     parser.add_argument("--work", default=None)
     parser.add_argument("--receipt", default=None, help="where to write the structured receipt")
+    parser.add_argument("--timeout", type=float, default=1800.0,
+                        help="seconds per external step; a step that overruns reports TIMEOUT")
     args = parser.parse_args()
 
     repo = Path(args.repo).resolve()
@@ -226,19 +268,21 @@ def main():
         report.add("native_build", None, "no --sources given", required=True)
         build_ok, build_note, detail = None, "no --sources given", {}
     else:
-        build_ok, build_note, detail = step_build(repo, Path(args.sources).resolve(), work)
+        build_ok, build_note, detail = step_build(repo, Path(args.sources).resolve(), work,
+                                                  args.timeout)
         report.add("native_build", build_ok, build_note)
 
     ok, note = step_import(repo, detail)
     report.add("import", ok, note)
     ok, note = step_intent(repo, detail)
     report.add("intent", ok, note)
-    ok, note = step_tests(repo, work, detail)
+    ok, note = step_tests(repo, work, detail, args.timeout)
     report.add("tests", ok, note)
-    ok, note = step_counterfactual(repo, work, detail)
+    ok, note = step_counterfactual(repo, work, detail, args.timeout)
     report.add("counterfactual", ok, note)
     ok, note = step_model(repo, Path(args.model).resolve() if args.model else None,
-                          Path(args.package).resolve() if args.package else None, work, detail)
+                          Path(args.package).resolve() if args.package else None, work, detail,
+                          args.timeout)
     report.add("model_smoke", ok, note, required=args.model is not None)
 
     receipt = Path(args.receipt).resolve() if args.receipt else work / "review_receipt.json"

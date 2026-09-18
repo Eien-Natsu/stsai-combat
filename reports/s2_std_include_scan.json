@@ -1,0 +1,166 @@
+{
+  "purpose": "Translation units that use std algorithms without including <algorithm>.",
+  "engine": "/workspaces/stsai_web/third_party/sts_lightspeed",
+  "evidence_type": "SOURCE_SCAN",
+  "method": "text scan of #include lines and std::<algorithm>( call sites in the patched tree, which is what gets compiled; a transitive include can still satisfy the compiler, so this neither proves nor rules out a failure on another toolchain",
+  "files_using_algorithms": 19,
+  "engine_files_without_the_include": [],
+  "vendored_files_without_the_include": [
+    "json/test/src/unit-algorithms.cpp",
+    "json/test/src/unit-regression1.cpp",
+    "json/test/thirdparty/Fuzzer/FuzzerMerge.cpp",
+    "json/test/thirdparty/Fuzzer/FuzzerTracePC.cpp"
+  ],
+  "rows": [
+    {
+      "file": "apps/small-test.cpp",
+      "algorithms_used": [
+        "stable_sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "bindings/bindings-util.cpp",
+      "algorithms_used": [
+        "fill",
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "json/test/src/unit-algorithms.cpp",
+      "algorithms_used": [
+        "all_of",
+        "any_of",
+        "count",
+        "count_if",
+        "find",
+        "find_if",
+        "none_of",
+        "partial_sort",
+        "reverse",
+        "rotate",
+        "sort"
+      ],
+      "includes_algorithm": false
+    },
+    {
+      "file": "json/test/src/unit-large_json.cpp",
+      "algorithms_used": [
+        "fill"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "json/test/src/unit-regression1.cpp",
+      "algorithms_used": [
+        "transform"
+      ],
+      "includes_algorithm": false
+    },
+    {
+      "file": "json/test/thirdparty/Fuzzer/FuzzerLoop.cpp",
+      "algorithms_used": [
+        "stable_sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "json/test/thirdparty/Fuzzer/FuzzerMerge.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": false
+    },
+    {
+      "file": "json/test/thirdparty/Fuzzer/FuzzerTracePC.cpp",
+      "algorithms_used": [
+        "binary_search",
+        "sort"
+      ],
+      "includes_algorithm": false
+    },
+    {
+      "file": "json/test/thirdparty/Fuzzer/FuzzerTraceState.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/combat/Actions.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/combat/BattleContext.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/combat/CardInstance.cpp",
+      "algorithms_used": [
+        "find_if"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/combat/CardManager.cpp",
+      "algorithms_used": [
+        "find"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/combat/MonsterSpecific.cpp",
+      "algorithms_used": [
+        "stable_sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/game/Deck.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/game/GameContext.cpp",
+      "algorithms_used": [
+        "fill",
+        "find"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/sim/search/BattleScumSearcher2.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/sim/search/ScumSearchAgent2.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    },
+    {
+      "file": "src/sim/search/SimpleAgent.cpp",
+      "algorithms_used": [
+        "sort"
+      ],
+      "includes_algorithm": true
+    }
+  ],
+  "reported_by_gcc14": [
+    "src/combat/CardManager.cpp"
+  ],
+  "note": "CardManager.cpp is the file the GCC 14 review build stopped on; it is patched by 0005 and therefore no longer appears above. Nothing else in the engine sources has this shape; the vendored nlohmann/json tests are not compiled by this build. A clean scan is not a guarantee for other toolchains."
+}

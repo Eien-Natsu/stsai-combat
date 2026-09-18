@@ -1,7 +1,7 @@
 {
   "purpose": "Minimum redistributable sources to build native/bridge.cpp with no network.",
   "archive": "native_sources.tar.gz",
-  "archive_sha256": "01545d6b86487302d396a015b92a0b9e76b80cf095ce412031c7d53440f02c72",
+  "archive_sha256": "f9eaf1cd3ea6e5c3ea68e3e9d3d7165970e042ba9e0220ef895d82a153e9df77",
   "build_command": "python review/offline_native_build.py --repo <checkout> --sources <archive>",
   "engine": {
     "url": "https://github.com/gamerpuppy/sts_lightspeed.git",
@@ -23,6 +23,10 @@
       {
         "file": "native/patches/0004-add-missing-algorithm-include.patch",
         "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      },
+      {
+        "file": "native/patches/0005-CardManager-algorithm-include.patch",
+        "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
       }
     ],
     "applied_by": "review/offline_native_build.py, before configuring CMake"

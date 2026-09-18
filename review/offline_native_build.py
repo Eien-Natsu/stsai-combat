@@ -37,12 +37,40 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def run(command, cwd=None, check=True):
-    result = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
+def run(command, cwd=None, check=True, timeout=None, logs=None, name=None):
+    """Run a step and keep its whole output, not just its last line.
+
+    A remote reviewer cannot diagnose `gmake ... Error 2` on its own, so the
+    command, its exit code and the complete stdout/stderr go into the receipt
+    and beside it in the evidence directory. A timeout is reported as a timeout:
+    it is neither a test failure nor a pass.
+    """
+    try:
+        result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired as expired:
+        if logs is not None and name:
+            logs.mkdir(parents=True, exist_ok=True)
+            (logs / f"{name}.log").write_text(
+                f"$ {' '.join(map(str, command))}\n\nTIMEOUT after {timeout}s\n"
+                f"{expired.stdout or ''}{expired.stderr or ''}", encoding="utf-8")
+        raise Timeout(name, command, timeout)
+    if logs is not None and name:
+        logs.mkdir(parents=True, exist_ok=True)
+        (logs / f"{name}.log").write_text(
+            f"$ {' '.join(map(str, command))}\nexit code: {result.returncode}\n\n"
+            f"{result.stdout}\n{result.stderr}", encoding="utf-8")
     if check and result.returncode != 0:
         raise SystemExit(f"command failed ({result.returncode}): {' '.join(map(str, command))}\n"
                          f"{result.stdout}{result.stderr}")
     return result
+
+
+class Timeout(Exception):
+    """A step that did not finish inside its own budget."""
+
+    def __init__(self, name, command, timeout):
+        super().__init__(f"{name} timed out after {timeout}s")
+        self.name, self.command, self.timeout = name, command, timeout
 
 
 def log(receipt, step, **fields):
@@ -58,6 +86,9 @@ def main():
     parser.add_argument("--out", default=None)
     parser.add_argument("--receipt", default=None, help="write the structured result here")
     parser.add_argument("--jobs", type=int, default=min(4, os.cpu_count() or 1))
+    parser.add_argument("--timeout", type=float, default=1800.0,
+                        help="seconds per external step; a timeout is reported as TIMEOUT")
+    parser.add_argument("--logs", default=None, help="directory for the complete step logs")
     args = parser.parse_args()
 
     repo = Path(args.repo).resolve()
@@ -69,7 +100,9 @@ def main():
     manifest_path = Path(args.manifest) if args.manifest else sources.with_name("native_sources_manifest.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     lock = json.loads((repo / "engine_lock.json").read_text(encoding="utf-8"))
-    receipt = {"snapshot": str(sources), "repo": str(repo), "steps": []}
+    logs = Path(args.logs).resolve() if args.logs else (
+        Path(args.receipt).resolve().parent / "logs" if args.receipt else None)
+    receipt = {"snapshot": str(sources), "repo": str(repo), "steps": [], "logs": str(logs) if logs else None}
 
     def finish(status, code):
         receipt["status"] = status
@@ -138,21 +171,46 @@ def main():
         receipt["missing_tool"] = "c++ compiler"
         finish("NOT_RUN", 2)
 
-    # 4. build.
+    # 4. build. The toolchain is recorded, because a build result means nothing
+    # without the compiler that produced it.
+    cc = shutil.which("c++") or shutil.which("g++")
+    receipt["toolchain"] = {"compiler": cc, "cmake": shutil.which("cmake"),
+                            "python": sys.version,
+                            "compiler_version": run([cc, "--version"]).stdout.splitlines()[:1]}
+    log(receipt, "toolchain", compiler=cc)
+
     build = work / "build"
     module_dir = work / "module"
     module_dir.mkdir(parents=True, exist_ok=True)
     pybind11_dir = snapshot / "pybind11" / "share" / "cmake" / "pybind11"
-    run(["cmake", "-S", str(repo / "native"), "-B", str(build), "-DCMAKE_BUILD_TYPE=Release",
-         f"-DSTS_ENGINE_DIR={engine}",
-         f"-DSTSAI_ENGINE_REVISION={lock['revision']}",
-         f"-DSTSAI_ENGINE_PATCHES={','.join(p['sha256'] for p in lock['patches'])}",
-         f"-DPython_EXECUTABLE={sys.executable}",
-         f"-Dpybind11_DIR={pybind11_dir}",
-         f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={module_dir}",
-         f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={module_dir}"])
-    run(["cmake", "--build", str(build), "--config", "Release", "--parallel", str(args.jobs)])
-    log(receipt, "build", ok=True, directory=str(build))
+    configure = ["cmake", "-S", str(repo / "native"), "-B", str(build), "-DCMAKE_BUILD_TYPE=Release",
+                 f"-DSTS_ENGINE_DIR={engine}",
+                 f"-DSTSAI_ENGINE_REVISION={lock['revision']}",
+                 f"-DSTSAI_ENGINE_PATCHES={','.join(p['sha256'] for p in lock['patches'])}",
+                 f"-DPython_EXECUTABLE={sys.executable}",
+                 f"-Dpybind11_DIR={pybind11_dir}",
+                 f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={module_dir}",
+                 f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={module_dir}"]
+    compile_step = ["cmake", "--build", str(build), "--config", "Release", "--parallel", str(args.jobs)]
+    receipt["configure_command"] = configure
+    receipt["build_command"] = compile_step
+    try:
+        result = run(configure, timeout=args.timeout, logs=logs, name="configure")
+        if result.returncode != 0:
+            receipt["configure_returncode"] = result.returncode
+            receipt["error"] = "cmake configure failed; see the configure log"
+            finish("FAIL", 1)
+        result = run(compile_step, timeout=args.timeout, logs=logs, name="build")
+        if result.returncode != 0:
+            receipt["build_returncode"] = result.returncode
+            receipt["error"] = "the build failed; see the build log for the compiler diagnostics"
+            finish("FAIL", 1)
+    except Timeout as expired:
+        receipt["timeout_seconds"] = expired.timeout
+        receipt["error"] = (f"{expired.name} did not finish within {expired.timeout}s; "
+                            "reported as TIMEOUT rather than as a failure or a pass")
+        finish("TIMEOUT", 3)
+    log(receipt, "build", ok=True, directory=str(build), log=str(logs / "build.log") if logs else None)
 
     # 5. make it importable by the checkout's own package.
     built = sorted(module_dir.glob("_lightspeed*.so"))

@@ -1,0 +1,12 @@
+diff --git a/src/combat/CardManager.cpp b/src/combat/CardManager.cpp
+index e46d0cc..64733f5 100644
+--- a/src/combat/CardManager.cpp
++++ b/src/combat/CardManager.cpp
+@@ -2,6 +2,7 @@
+ // Created by gamerpuppy on 7/24/2021.
+ //
+ 
++#include <algorithm>
+ #include "combat/CardManager.h"
+ #include "combat/BattleContext.h"
+ 

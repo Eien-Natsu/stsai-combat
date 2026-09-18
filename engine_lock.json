@@ -20,6 +20,10 @@
     {
       "file": "native/patches/0004-add-missing-algorithm-include.patch",
       "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+    },
+    {
+      "file": "native/patches/0005-CardManager-algorithm-include.patch",
+      "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
     }
   ]
 }
