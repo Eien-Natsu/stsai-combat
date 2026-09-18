@@ -1,0 +1,21 @@
+{
+  "rows": 50,
+  "classes": [
+    "ATTACK",
+    "ATTACK_DEBUFF",
+    "ATTACK_DEFEND",
+    "BUFF",
+    "DEBUFF",
+    "DEFEND",
+    "DEFEND_BUFF",
+    "ESCAPE",
+    "SLEEP",
+    "UNKNOWN"
+  ],
+  "same_class_collisions": {
+    "LOOTER|ATTACK": [
+      "LOOTER_LUNGE",
+      "LOOTER_MUG"
+    ]
+  }
+}

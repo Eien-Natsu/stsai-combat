@@ -1,0 +1,75 @@
+{
+  "purpose": "Field-by-field classification of what a belief sample carries.",
+  "categories": {
+    "PUBLIC_DETERMINED": "the complete legal public history determines it, with stated grounds",
+    "RESAMPLED": "drawn from the distribution the legal information implies, or a declared approximation of it",
+    "UNSUPPORTED": "this interface cannot handle it correctly; the branch stops and is reported"
+  },
+  "fields": [
+    {
+      "field": "monsters[].moveHistory[0] (the held move)",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "The public intent class together with the displayed damage and hit count separates every held move, across 3584 inspected states and 93 distinct public signatures with zero collisions (tests/test_native_fairness.py::test_the_held_move_is_determined_by_public_information). The class ALONE does not separate Looter Mug from Lunge; the damage number does. The sampler keeps the field because the player can already know it.",
+      "collisions": {},
+      "test": "tests/test_native_fairness.py::test_the_held_move_is_determined_by_public_information"
+    },
+    {
+      "field": "monsters[].moveHistory[1] (previously rolled)",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "executed moves, exported as the public class in previous_intent",
+      "test": "tests/test_native_fairness.py::test_previous_intent_only_ever_reports_an_executed_move"
+    },
+    {
+      "field": "GREMLIN_WIZARD miscInfo/monsterData (charge counter)",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "the charging state is visible each turn and the counter is a timer, not a move-selection input (MonsterSpecific.cpp:2440, :774)",
+      "test": "tests/test_native_coverage.py covers its two moves"
+    },
+    {
+      "field": "RED_SLAVER miscInfo (usedEntangle)",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "whether Entangle has been used is public history (MonsterSpecific.cpp:2780)",
+      "test": "tests/test_native_coverage.py covers its three moves"
+    },
+    {
+      "field": "other monsters' miscInfo/monsterData",
+      "category": "UNSUPPORTED",
+      "grounds": "Champ, Spiker, Writhing Mass, Time Eater, Awakened One, Book of Stabbing and Bronze Orb read latent state but none is reachable in the 17 supported encounters, so the case cannot arise; widening the encounter list requires re-auditing these",
+      "test": "scripts/gen_sampler_audit.py prints the per-monster read sites"
+    },
+    {
+      "field": "aiRng, cardRandomRng, miscRng, monsterHpRng, potionRng, shuffleRng",
+      "category": "RESAMPLED",
+      "grounds": "all six streams are reconstructed from the sampler seed",
+      "test": "tests/test_native_fairness.py::test_every_distinct_hidden_state_shares_one_belief"
+    },
+    {
+      "field": "cards.drawPile order",
+      "category": "RESAMPLED",
+      "grounds": "sorted by the cross-backend canonical key, then shuffled with the sampler rng, so the sampled order does not depend on the real one",
+      "test": "tests/test_native_fairness.py::test_same_public_history_different_hidden_draw_order_samples_identically"
+    },
+    {
+      "field": "bc.seed",
+      "category": "RESAMPLED",
+      "grounds": "zeroed; never an agent input",
+      "test": "tests/test_native_fairness.py::test_hidden_state_never_appears_in_the_observation"
+    },
+    {
+      "field": "player state, card zones, powers, block, statuses",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "copied verbatim; all of it is exported in the observation",
+      "test": "tests/test_native_*.py validate_public"
+    }
+  ],
+  "coverage": {
+    "states_inspected": 3584,
+    "distinct_public_signatures": 93,
+    "supported_encounters": 17
+  },
+  "not_used_as_proof": [
+    "random collision scans of stored states",
+    "the absence of a move_id key in the observation"
+  ],
+  "residual": "The determinism argument covers the reachable state space sampled here, not every state in principle. No move id is exported, and the teacher's rollouts still use the true id internally; the argument is that the player could know it too."
+}

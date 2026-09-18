@@ -89,6 +89,22 @@ static std::string status_name(MonsterStatus status) {
     }
     return out;
 }
+// Internal move id -> the intent class the player actually sees. The move id is
+// read here ONLY to compute the class; it is never exported under any name. The
+// table is generated from the simulator's own effect composition, with the
+// game-checked overrides recorded in scripts/gen_intent_table.py.
+static const std::unordered_map<MMID, std::string> public_intents = {
+#define PUBLIC_INTENT(name, cls) {MMID::name, #cls},
+#include "intent_table.def"
+#undef PUBLIC_INTENT
+};
+static std::string public_intent(MMID move) {
+    if (move == MMID::INVALID) return "NONE";
+    const auto found = public_intents.find(move);
+    if (found == public_intents.end())
+        throw std::runtime_error("Move has no audited public intent; extend the mapping before widening the pilot");
+    return found->second;
+}
 static std::string move_name(MMID move) {
     const auto index = static_cast<std::size_t>(move);
     return index < std::size(monsterMoveStrings) ? std::string(monsterMoveStrings[index])
@@ -200,7 +216,7 @@ public:
         }
         py::dict o,p; py::list enemies,hand,draw,discard,exhaust,acts,powers,relics;
         // Must match stsai.util.SCHEMA_VERSION; validate_public rejects a mismatch.
-        o["schema_version"]=2; o["backend"]="lightspeed_pilot";
+        o["schema_version"]=3; o["backend"]="lightspeed_pilot";
         o["turn"]=bc.turn; o["phase"]="PLAYER_NORMAL"; o["ascension"]=bc.ascension;
         p["hp"]=bc.player.curHp; p["max_hp"]=bc.player.maxHp;
         p["block"]=bc.player.block; p["energy"]=bc.player.energy;
@@ -224,12 +240,11 @@ public:
                 e["intent_damage"]=m.calculateDamageToPlayer(bc,damage.damage);
                 e["hits"]=damage.attackCount;
             } else { e["intent_damage"]=0; e["hits"]=0; }
-            e["intent"]=m.isAttacking() ? "ATTACK" : "BUFF";
-            // Only the ALREADY EXECUTED move is exported. The plan for the
-            // coming turn is deliberately not: for several enemies two different
-            // moves produce the same visible intent (Jaw Worm Chomp and Thrash
-            // both show "attack N"), so naming it would hand the model the exact
-            // action the game never revealed.
+            // The class the player sees, computed from the held move. Two moves
+            // that show the same class are indistinguishable to the player and
+            // are deliberately NOT separated here; the identity never leaves this
+            // function.
+            e["intent"]=public_intent(m.moveHistory[0]);
             MMID executed = (seen_turn > 0 && i < int(last_executed.size()))
                             ? last_executed[i] : MMID::INVALID;
             // A battle can end on the enemy's own action -- a Looter escaping
@@ -238,7 +253,9 @@ public:
             // surviving one confirms the move it was holding.
             if (bc.outcome != Outcome::UNDECIDED && m.curHp > 0 && i < int(last_planned.size()))
                 executed = last_planned[i];
-            e["previous_move"]=move_name(executed);
+            // The executed move is reported as its PUBLIC class too: the player
+            // watched it resolve, but its identity is still not exported.
+            e["previous_intent"]=public_intent(executed);
             // Never expose miscInfo, stored future damage rolls, hidden seeds,
             // or latent enemy plans.
             enemies.append(e);
@@ -288,6 +305,30 @@ public:
         if(found==legal.end()) throw std::invalid_argument("Illegal or stale native action");
         found->execute(bc); check_supported_state(); return observe();
     }
+    // TEST-ONLY introspection for the coverage tests. This deliberately returns
+    // internal move names, which observe() never does: the coverage suite has to
+    // prove every branch of every supported monster is reachable, and the public
+    // intent class cannot separate two moves that share a class. Nothing here
+    // may reach the trainer, the search or any policy interface -- tests assert
+    // that observe() exposes none of these keys.
+    py::dict debug_internals() const {
+        check_supported_state();
+        py::dict out; py::list moves, classes; py::dict executed;
+        for (int i=0; i<bc.monsters.monsterCount; ++i) {
+            const auto &m=bc.monsters.arr[i];
+            moves.append(move_name(m.moveHistory[0]));
+            classes.append(public_intent(m.moveHistory[0]));
+            MMID done = (seen_turn > 0 && i < int(last_executed.size()))
+                        ? last_executed[i] : MMID::INVALID;
+            // mirror observe(): a surviving enemy at a decided battle has acted
+            if (bc.outcome != Outcome::UNDECIDED && m.curHp > 0 && i < int(last_planned.size()))
+                done = last_planned[i];
+            executed[py::int_(i)] = move_name(done);
+        }
+        out["held_moves"]=moves; out["held_classes"]=classes; out["executed_moves"]=executed;
+        out["warning"]="test-only; never exported by observe() and never a training input";
+        return out;
+    }
     std::unique_ptr<PilotBattle> sample(std::uint64_t sampler_seed) const {
         check_supported_state();
         auto result=std::make_unique<PilotBattle>(*this);
@@ -313,7 +354,8 @@ PYBIND11_MODULE(_lightspeed,m) {
         .def(py::init<const py::dict&,std::uint64_t>())
         .def("observe",&PilotBattle::observe)
         .def("step",&PilotBattle::step)
-        .def("sample",&PilotBattle::sample);
+        .def("sample",&PilotBattle::sample)
+        .def("debug_internals",&PilotBattle::debug_internals);
     m.def("build_info",[](){py::dict d; d["revision"]=STSAI_ENGINE_REVISION;
         // Local rule patches applied on top of `revision`; empty means the tree
         // is byte-for-byte upstream. Tests assert against these hashes.

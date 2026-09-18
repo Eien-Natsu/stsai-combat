@@ -11,6 +11,9 @@ import pytest
 pytest.importorskip("stsai._lightspeed", reason="Native extension not compiled in this environment")
 from stsai.native import NativeBattle
 from stsai.contracts import validate_public, observation_key
+from stsai.scenarios import NATIVE_ENCOUNTERS
+
+SUPPORTED_ENCOUNTERS = tuple(e for v in NATIVE_ENCOUNTERS.values() for e in v)
 
 pytestmark = pytest.mark.native
 
@@ -81,86 +84,159 @@ def test_public_root_check_detects_a_genuine_difference():
     assert key(a) != key(b)
 
 
-# --- sampler lifecycle: what the enemy is holding vs what it has done --------
+# --- sampler lifecycle: what the enemy holds vs what it has done -------------
 #
-# The adapter exports `previous_move` (already executed) and never the move the
-# enemy is holding for the coming turn. These tests fix that ordering: the move
-# held at turn N is the move reported at turn N+1, and nothing in between leaks
-# the held move.
+# observe() exports the public intent CLASS for both the held move and the last
+# executed one. The internal move id is available only through the test-only
+# hook, so branch-level assertions live here while the model-facing surface
+# stays free of identities.
 
-KNOWN_FIRST_MOVE = {"CULTIST": "CULTIST_INCANTATION", "JAW_WORM": "JAW_WORM_CHOMP"}
-KNOWN_FIRST_INTENT = {"CULTIST": "BUFF", "JAW_WORM": "ATTACK"}
-
-# Keys the adapter is allowed to expose per enemy. Any planned-move field would
-# have to appear here to reach the model, so this doubles as the leak guard.
+KNOWN_FIRST = {"CULTIST": ("CULTIST_INCANTATION", "BUFF"),
+               "JAW_WORM": ("JAW_WORM_CHOMP", "ATTACK")}
 PUBLIC_ENEMY_KEYS = frozenset({
     "id", "slot", "hp", "max_hp", "block", "strength", "weak", "vulnerable",
-    "artifact", "half_dead", "intent_damage", "hits", "intent", "previous_move",
+    "artifact", "half_dead", "intent_damage", "hits", "intent", "previous_intent",
 })
 
 
-def turn_one_then_two(encounter):
-    env = NativeBattle({**SCENARIO, "encounter": encounter}, 4)
-    first = env.observe()
-    second = env.step(next(a for a in first["actions"] if a["kind"] == "end"))
-    return first, second
+def internals(env):
+    return env._handle.debug_internals()
 
 
-def test_previous_move_at_turn_two_is_the_move_executed_in_turn_one():
-    """The move held at turn N is reported at turn N+1 as executed."""
-    for encounter, held in KNOWN_FIRST_MOVE.items():
-        first, second = turn_one_then_two(encounter)
-        # Turns are 0-indexed in the observation; assert the transition, not a
-        # literal, so a renumbering does not silently invalidate the test.
-        assert second["turn"] == first["turn"] + 1
-        assert first["enemies"][0]["intent"] == KNOWN_FIRST_INTENT[encounter]
-        assert second["enemies"][0]["previous_move"] == held, \
-            f"{encounter}: turn 2 must report the turn 1 move, got {second['enemies'][0]['previous_move']}"
+def end_turn(obs):
+    return next(a for a in obs["actions"] if a["kind"] == "end")
 
 
-def test_no_enemy_field_can_carry_a_held_move():
-    """The exported key set is exactly the public set: no held-move channel."""
-    for encounter in KNOWN_FIRST_MOVE:
-        first, _ = turn_one_then_two(encounter)
-        keys = set(first["enemies"][0])
-        assert keys == set(PUBLIC_ENEMY_KEYS), \
-            f"{encounter}: unexpected enemy fields {keys ^ set(PUBLIC_ENEMY_KEYS)}"
-        assert "observed_move" not in keys
+def build(encounter, seed=4, hp=80, max_hp=80):
+    return NativeBattle({**SCENARIO, "encounter": encounter, "hp": hp, "max_hp": max_hp}, seed)
 
 
-def test_previous_move_only_ever_reports_an_executed_move():
-    """Across a whole fight the reported move is never the one still to come.
+def test_the_class_held_at_turn_n_is_reported_executed_at_turn_n_plus_one():
+    """The move the enemy was holding is the one that resolves, and only then.
 
-    A held move would surface one turn early. Checking that `previous_move` is
-    stable within a turn, and that the turn-N intent matches the move reported
-    at turn N+1, rules that out without needing to read the held move itself.
+    The held move is read through the test-only hook so the assertion does not
+    depend on the observation exposing an identity it must not expose.
     """
-    seen = {}
-    for encounter in KNOWN_FIRST_MOVE:
-        env = NativeBattle({**SCENARIO, "encounter": encounter}, 9)
-        obs = env.observe()
-        for _ in range(12):
-            if obs["terminal"]:
-                break
-            enemy = obs["enemies"][0]
-            held_intent = enemy["intent"]
-            before = enemy["previous_move"]
-            after = env.step(next(a for a in obs["actions"] if a["kind"] == "end"))
-            resolved = after["enemies"][0]["previous_move"]
-            if resolved != before:
-                # The move that just resolved was the one held during last turn.
-                assert resolved not in seen or seen[resolved] == held_intent, \
-                    f"{resolved} appeared under two different intents"
-                seen[resolved] = held_intent
-            obs = after
-    assert len(seen) >= 3, f"expected several distinct moves, saw {seen}"
+    for encounter, (held, cls) in KNOWN_FIRST.items():
+        env = build(encounter)
+        first = env.observe()
+        assert internals(env)["held_moves"][0] == held
+        assert first["enemies"][0]["intent"] == cls
+        assert first["enemies"][0]["previous_intent"] == "NONE"
+        second = env.step(end_turn(first))
+        assert second["enemies"][0]["previous_intent"] == cls
+        assert internals(env)["executed_moves"][0] == held, \
+            "the executed record must be the move that was held last turn"
 
 
-def test_sampling_preserves_the_executed_history():
-    """A belief sample must not rewrite what already happened."""
-    env = NativeBattle({**SCENARIO, "encounter": "JAW_WORM"}, 9)
-    env.step(next(a for a in env.observe()["actions"] if a["kind"] == "end"))
-    live = env.observe()
+def test_repeated_observes_do_not_advance_history():
+    """Several observe() calls inside one turn must not move the history on."""
+    env = build("JAW_WORM")
+    env.step(end_turn(env.observe()))
+    first = env.observe()
+    for _ in range(4):
+        again = env.observe()
+        assert again["enemies"][0]["previous_intent"] == first["enemies"][0]["previous_intent"]
+    assert internals(env)["executed_moves"][0] == "JAW_WORM_CHOMP"
+
+
+def test_playing_a_card_without_ending_the_turn_does_not_advance_history():
+    env = build("JAW_WORM")
+    after_turn = env.step(end_turn(env.observe()))
+    baseline = after_turn["enemies"][0]["previous_intent"]
+    obs = after_turn
+    for _ in range(3):
+        playable = [a for a in obs["actions"] if a["kind"] == "play"]
+        if not playable:
+            break
+        obs = env.step(playable[0])
+        assert obs["enemies"][0]["previous_intent"] == baseline
+
+
+def test_an_enemy_killed_before_it_acts_reports_no_new_execution():
+    """A monster killed inside turn 1 never acted, so it has no execution.
+
+    The deck is all Strikes so the opening hand is deterministic, and the turn
+    is never ended -- ending it would let the monsters act and the assertion
+    would be about nothing. Energy caps the plays, so the test asserts on the
+    monsters that actually died rather than demanding the fight be over.
+    """
+    scenario = {**SCENARIO, "deck": ["STRIKE_RED"] * 10, "encounter": "SMALL_SLIMES",
+                "hp": 80, "max_hp": 80}
+    env = NativeBattle(scenario, 5)
+    obs = env.observe()
+    turns = {obs["turn"]}
+    while True:
+        plays = [a for a in obs["actions"] if a["kind"] == "play"]
+        if not plays or obs["terminal"]:
+            break
+        obs = env.step(plays[0])
+        turns.add(obs["turn"])
+    assert turns == {0}, "no turn was allowed to end"
+    drained = 0
+    for slot, record in enumerate(obs["enemies"]):
+        if record["hp"] <= 0:
+            drained += 1
+            assert internals(env)["executed_moves"][slot] == "INVALID", \
+                f"slot {slot} died inside turn 1 but reports an execution"
+    assert drained or obs["terminal"], "the fixture landed no killing blow to assert on"
+def test_a_move_that_ends_the_battle_is_still_reported_executed():
+    """A Looter escaping ends the fight on its own action."""
+    env = build("LOOTER", seed=1, hp=200, max_hp=200)
+    obs = env.observe()
+    for _ in range(40):
+        if obs["terminal"]:
+            break
+        obs = env.step(end_turn(obs))
+    assert obs["terminal"], "the Looter should eventually resolve the fight"
+    assert internals(env)["executed_moves"][0] == "LOOTER_ESCAPE"
+
+
+def test_history_is_not_shared_across_belief_samples():
+    """A sampled copy keeps the executed history and never invents one."""
+    env = build("JAW_WORM")
+    env.step(end_turn(env.observe()))
+    live = env.observe()["enemies"][0]["previous_intent"]
+    live_internal = internals(env)["executed_moves"][0]
     for seed in (0, 5, 999):
-        copy = env.sampler()(seed).observe()
-        assert copy["enemies"][0]["previous_move"] == live["enemies"][0]["previous_move"]
+        copy = env.sampler()(seed)
+        assert copy.observe()["enemies"][0]["previous_intent"] == live
+        assert internals(copy)["executed_moves"][0] == live_internal
+
+
+def test_observe_still_exports_only_public_fields():
+    for encounter in KNOWN_FIRST:
+        env = build(encounter)
+        assert set(env.observe()["enemies"][0]) == set(PUBLIC_ENEMY_KEYS)
+        assert internals(env)["held_moves"][0] not in repr(env.observe()["enemies"][0])
+
+
+def test_the_held_move_is_determined_by_public_information():
+    """Is the move the enemy is holding recoverable from what the player sees?
+
+    The public class alone does not separate every pair (Looter Mug and Lunge are
+    both ATTACK), but the class together with the displayed damage and hit count
+    might. This walks the reachable states of every supported encounter and
+    asserts that no two different held moves ever share the same public
+    signature. That is a determinism argument over the reachable space, not a
+    collision scan used as a proof of fairness.
+    """
+    signatures = {}
+    checked = 0
+    for encounter in SUPPORTED_ENCOUNTERS:
+        for seed in range(16):
+            env = NativeBattle({**SCENARIO, "deck": ["DEFEND_RED"] * 10, "encounter": encounter,
+                                "hp": 200, "max_hp": 200}, seed)
+            for _ in range(50):
+                obs = env.observe()
+                held = internals(env)["held_moves"]
+                for slot, enemy in enumerate(obs["enemies"]):
+                    signature = (enemy["id"], enemy["intent"], enemy["intent_damage"], enemy["hits"])
+                    signatures.setdefault(signature, set()).add(held[slot])
+                    checked += 1
+                if obs["terminal"]:
+                    break
+                env.step(end_turn(obs))
+    collisions = {k: sorted(v) for k, v in signatures.items() if len(v) > 1}
+    assert not collisions, f"held move is not public-determined: {collisions}"
+    assert checked > 2000, f"too few states inspected to support the claim: {checked}"

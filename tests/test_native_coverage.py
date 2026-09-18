@@ -7,12 +7,16 @@ NOT a claim that the supported range covers the game.
 
 Skips only when the native extension is not compiled. A skip is not a pass.
 """
+from pathlib import Path
+
 import pytest
 
 pytest.importorskip("stsai._lightspeed", reason="Native extension not compiled in this environment")
 from stsai.native import NativeBattle
 from stsai.contracts import validate_public
 from stsai.encoding import normalize
+
+ROOT = Path(__file__).resolve().parents[1]
 
 pytestmark = pytest.mark.native
 
@@ -274,12 +278,20 @@ def test_build_reports_the_locked_revision_and_patch_hashes():
         "original-game differential testing has not been performed; do not claim it"
 
 
-def observed_moves(encounter, seeds=range(24), turns=60):
-    """Moves the enemy has EXECUTED, read from the public previous_move field.
+def executed_moves(env):
+    """Internal move names, via the TEST-ONLY hook.
 
-    The planned move for the coming turn is deliberately not exported, because
-    for several enemies two different moves show the same intent.
+    observe() exports the public intent CLASS, and two moves of one monster can
+    share a class (Looter Mug and Lunge are both ATTACK), so branch coverage
+    cannot be measured from the observation. The hook is the only place an
+    internal move name is visible; `test_observe_exports_no_internal_move`
+    asserts it never appears in an observation.
     """
+    return env._handle.debug_internals()
+
+
+def observed_moves(encounter, seeds=range(24), turns=60):
+    """Moves the enemy has EXECUTED, per branch-coverage requirements."""
     moves, monsters = set(), set()
     for seed in seeds:
         env = pilot("DEFEND_RED", encounter=encounter, hp=TANK_HP, seed=seed)
@@ -287,8 +299,9 @@ def observed_moves(encounter, seeds=range(24), turns=60):
             obs = env.observe()
             for e in obs["enemies"]:
                 monsters.add(e["id"])
-                if e["previous_move"] != "INVALID":
-                    moves.add(e["previous_move"])
+            for name in executed_moves(env)["executed_moves"].values():
+                if name != "INVALID":
+                    moves.add(name)
             if obs["terminal"]:
                 break
             env.step(end_turn(obs))
@@ -378,7 +391,7 @@ def test_gremlin_nob_follows_the_a18_fixed_pattern():
     for _ in range(9):
         obs = env.observe()
         assert not obs["terminal"], "the tanky fixture must survive the sampled turns"
-        previous = obs["enemies"][0]["previous_move"]
+        previous = executed_moves(env)["executed_moves"][0]
         if previous != "INVALID":
             executed.append(previous)
         env.step(end_turn(obs))  # never damages the Nob, so the cycle runs on
@@ -389,21 +402,44 @@ def test_gremlin_nob_follows_the_a18_fixed_pattern():
     assert executed == expected, executed
 
 
-def test_planned_move_is_never_exported():
-    """The coming turn's move can be invisible to the player, so it is not a feature."""
-    for encounter in ("JAW_WORM", "LAGAVULIN", "LOOTER", "CULTIST"):
-        enemy = pilot("STRIKE_RED", encounter=encounter, seed=3).observe()["enemies"][0]
-        assert "observed_move" not in enemy, f"{encounter} still exports the planned move"
-        assert "previous_move" in enemy
+PUBLIC_ENEMY_KEYS = frozenset({
+    "id", "slot", "hp", "max_hp", "block", "strength", "weak", "vulnerable",
+    "artifact", "half_dead", "intent_damage", "hits", "intent", "previous_intent",
+})
 
 
-def test_previous_move_only_ever_reports_an_executed_move():
-    """At turn 1 nothing has resolved; afterwards it must be a real move name."""
+def test_observe_exports_no_internal_move():
+    """The hook knows the held move; observe() must not, under any key."""
+    for encounter in ("JAW_WORM", "LAGAVULIN", "LOOTER", "CULTIST", "THREE_SENTRIES"):
+        env = pilot("STRIKE_RED", encounter=encounter, seed=3)
+        enemy = env.observe()["enemies"][0]
+        assert set(enemy) == set(PUBLIC_ENEMY_KEYS), f"{encounter}: {set(enemy) ^ set(PUBLIC_ENEMY_KEYS)}"
+        held = executed_moves(env)["held_moves"][0]
+        assert held not in repr(enemy), f"{encounter} leaked the held move {held}"
+
+
+def test_intent_is_a_documented_public_class():
+    allowed = {"ATTACK", "ATTACK_DEFEND", "ATTACK_DEBUFF", "ATTACK_BUFF", "DEFEND",
+               "DEFEND_BUFF", "DEFEND_DEBUFF", "DEBUFF", "BUFF", "SLEEP", "ESCAPE",
+               "UNKNOWN", "NONE"}
+    for encounter in ENCOUNTERS:
+        env = pilot("STRIKE_RED", encounter=encounter, seed=11)
+        for _ in range(12):
+            obs = env.observe()
+            for e in obs["enemies"]:
+                assert e["intent"] in allowed, f"{encounter}: {e['intent']} is not a public class"
+            if obs["terminal"]:
+                break
+            env.step(end_turn(obs))
+
+
+def test_previous_intent_only_ever_reports_an_executed_move():
+    """At turn 1 nothing has resolved; afterwards it is the executed class."""
     env = pilot("DEFEND_RED", encounter="JAW_WORM", hp=TANK_HP)
-    assert env.observe()["enemies"][0]["previous_move"] == "INVALID"
+    assert env.observe()["enemies"][0]["previous_intent"] == "NONE"
     after = env.step(end_turn(env.observe()))
-    first = after["enemies"][0]["previous_move"]
-    assert first.startswith("JAW_WORM_"), first
+    # the executed move was the one held at turn 1: Jaw Worm always opens Chomp
+    assert after["enemies"][0]["previous_intent"] == "ATTACK"
 
 
 def test_enemy_powers_are_exported_generically():
@@ -417,3 +453,24 @@ def test_enemy_powers_are_exported_generically():
             break
         env.step(obs["actions"][0])
     assert "METALLICIZE" in powers, f"Lagavulin's Metallicize was not exported: {powers}"
+
+
+def test_intent_table_matches_its_generator():
+    """The generated table must not drift from the derivation it came from."""
+    import subprocess
+    result = subprocess.run([__import__("sys").executable, "scripts/gen_intent_table.py", "--verify"],
+                            cwd=ROOT, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_every_supported_move_has_an_audited_public_intent():
+    """A move with no mapping raises rather than defaulting to a class."""
+    import csv
+    from pathlib import Path as _P
+    rows = list(csv.DictReader((ROOT / "input/intent_mapping.csv").open(encoding="utf-8")))
+    assert rows, "the mapping must not be empty"
+    for row in rows:
+        assert row["public_intent"], row
+        assert row["source"], row
+        assert row["game_differential_verified"] == "False"
+        assert row["verification"] in ("effect_derived", "wiki_confirmed", "effect_derived_uncertain")

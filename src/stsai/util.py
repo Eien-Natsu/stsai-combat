@@ -6,10 +6,12 @@ import random
 from pathlib import Path
 from typing import Any
 
-# Observation schema. Bumped from 1 to 2 when the native adapter stopped
-# exporting the enemy's planned move and re-expressed the executed move as a
-# name instead of an enum ordinal: a reader of schema 1 would misread it.
-SCHEMA_VERSION = 2
+# Observation schema. Bumped 1->2 when the adapter stopped exporting the
+# enemy's planned move; bumped 2->3 when the enemy intent was widened from
+# ATTACK/BUFF to the classes the game actually shows, and previous_move
+# became previous_intent (a class, not an identity). A reader of schema 2
+# would misread both fields.
+SCHEMA_VERSION = 3
 
 def canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
