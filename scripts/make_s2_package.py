@@ -25,39 +25,13 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "review"))
 
-FILES = [
-    ("protocol.json", "reports/s2_volume_protocol.json", True),
-    ("semantic_compatibility.json", "reports/s2_semantic_compatibility.json", True),
-    ("native_sources.tar.gz", "native/native_sources.tar.gz", True),
-    ("native_sources_manifest.json", "native/native_sources_manifest.json", True),
-    ("review/README.md", "review/README.md", True),
-    ("review/run_review.py", "review/run_review.py", True),
-    ("review/offline_native_build.py", "review/offline_native_build.py", True),
-    ("review/counterfactual_replay.py", "review/counterfactual_replay.py", True),
-    ("review/model_smoke.py", "review/model_smoke.py", True),
-    ("review/recompute_s2.py", "review/recompute_s2.py", True),
-    ("data/initial_scenarios.json.gz", "runs/s2/package_data/data/initial_scenarios.json.gz", True),
-    ("data/composition_and_shards.json", "runs/s2/package_data/data/composition_and_shards.json", True),
-    ("data/coverage.json", "runs/s2/package_data/data/coverage.json", True),
-    ("training/runs.json", "training/runs.json", True),
-    ("training/metrics.jsonl.gz", "training/metrics.jsonl.gz", True),
-    ("training/validation.jsonl.gz", "training/validation.jsonl.gz", True),
-    ("training/selected_summary.csv", "training/selected_summary.csv", True),
-    ("model/D384_s17_selected.pt", "model/D384_s17_selected.pt", True),
-    ("model/smoke_observations.jsonl.gz", "model/smoke_observations.jsonl.gz", True),
-    ("model/smoke_expected.json", "model/smoke_expected.json", True),
-    ("evaluation/scenarios.json.gz", "runs/s2/package_data/evaluation/scenarios.json.gz", True),
-    ("evaluation/episodes.jsonl.gz", "runs/s2/evaluation/episodes.jsonl.gz", True),
-    ("evaluation/decision_latency.jsonl.gz", "runs/s2/evaluation/decision_latency.jsonl.gz", True),
-    ("evaluation/paired_summary.json", "reports/s2_paired_summary.json", True),
-    ("tests/junit.xml", "reports/s2_junit.xml", True),
-    ("reports/known_limitations.md", "reports/s2_known_limitations.md", True),
-    ("reports/commands_and_limits.md", "reports/s2_commands_and_limits.md", True),
-    # provenance.json, repo.bundle, INDEX.md, SUMMARY.md and report command_log.txt
-    # are generated below, so they are not listed here.
-    ("tests/build_and_test.log.gz", "reports/s2_build_and_test.log", True),
-]
+# The required inputs are data, not a list repeated here: the reviewer verifies a
+# package against the same entries with review/check_review_inputs.py.
+import package_contract as contract  # noqa: E402
+
+FILES = [(entry["package_path"], entry["source_path"], True) for entry in contract.REQUIRED_INPUTS]
 
 
 def sha256(path):
@@ -87,7 +61,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", default="delivery")
     parser.add_argument("--docs", default="delivery_docs/s2")
+    parser.add_argument("--artifacts", default=str(ROOT),
+                        help="root the run artefacts are read from; they are not tracked by git, "
+                             "so this is how a package is rebuilt on a machine that only has a "
+                             "checkout plus the release attachment")
+    parser.add_argument("--lock", default=None,
+                        help="JSON map of source path -> sha256; every artefact input is checked "
+                             "against it before anything is packed")
     args = parser.parse_args()
+    artifacts = Path(args.artifacts).resolve()
+    lock = json.loads(Path(args.lock).read_text(encoding="utf-8")) if args.lock else {}
+    lock = lock.get("sha256", lock)
 
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
                           text=True).stdout.strip()
@@ -98,14 +82,16 @@ def main():
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
 
-    missing = []
-    for archive_path, source, required in FILES:
-        if source is None:
-            continue
-        src = ROOT / source
+    missing, mismatched = [], []
+    for entry in contract.REQUIRED_INPUTS:
+        archive_path, source = entry["package_path"], entry["source_path"]
+        src = contract.resolve_source(entry, ROOT, artifacts)
         if not src.is_file():
-            if required:
-                missing.append(source)
+            missing.append(f"{source} (looked in {src})")
+            continue
+        expected = lock.get(source)
+        if expected and sha256(src) != expected:
+            mismatched.append(f"{source}: {sha256(src)} != the locked {expected}")
             continue
         dest = staging / archive_path
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -122,6 +108,8 @@ def main():
             missing.append(str(src))
             continue
         shutil.copy2(src, staging / doc)
+    if mismatched:
+        raise SystemExit("inputs do not match the lock; nothing was packed: " + "; ".join(mismatched))
     if missing:
         raise SystemExit(f"missing required inputs: {missing}")
 
@@ -131,8 +119,11 @@ def main():
     subprocess.run(["git", "bundle", "create", str(bundle), "--all"], cwd=ROOT, check=True,
                    capture_output=True)
     # The provenance names the bundle by hash, so it is written after the bundle.
+    # It reads the same artefact root, so a package can be assembled on a machine
+    # that only has a checkout plus the attachment.
     subprocess.run([sys.executable, str(ROOT / "scripts/gen_s2_provenance.py"),
-                    "--bundle", str(bundle), "--out", str(staging / "provenance.json")],
+                    "--bundle", str(bundle), "--out", str(staging / "provenance.json"),
+                    "--artifacts", str(artifacts)],
                    cwd=ROOT, check=True)
 
     entries = sorted(p for p in staging.rglob("*") if p.is_file() and p.name != "MANIFEST.sha256")
