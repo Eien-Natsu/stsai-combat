@@ -232,8 +232,8 @@
     "hash_scope": "Exact local working-tree bytes before and after this change; Git checkout EOL conversion may produce different file hashes on another OS. This is not a cross-platform git-blob manifest."
   },
   "documents_sha256": {
-    "PROJECT_MAINLINE.md": "9b36c32992bfe7227aa320b556fb39c42dbb930d9977e90e2f68e4d1be6db153",
-    "NEXT_ACTIONS.md": "c530257728aba4d68462859399512d14f1ac0c309ee8f88ad65ae42d5f78e432",
+    "PROJECT_MAINLINE.md": "6a742a16265eaab46d0478dda114d1167960b2fb364cafbf2ae0cbdb49f59678",
+    "NEXT_ACTIONS.md": "cd6b1396aeb09256b5e7ee5ea3e6a8adf94601fafb9caa84cff07b445670294f",
     "README.md": "d1195463757158f1fed657a721f459ba51f57a1e1768c5728f196b4aff86b50b",
     "AGENTS.md": "2c28a7c9adf0d733d0987abea201c42df2f68ce0e27e32b54e4d6b42d1ed7131",
     ".github/pull_request_template.md": "c71fadf3ced11ea915c17e5e885a356c81f64c456cc3d50b078480aa7664ace2",
@@ -258,5 +258,19 @@
     "historical_evidence_and_implementation_hashes": "PASS",
     "local_link_count": 53,
     "all_local_links_exist": true
+  },
+  "new_ci_observation": {
+    "run_id": 35369602279,
+    "job_id": 105680168167,
+    "head": "2cc0c759a4900bb3822a47609bdf6a0a62f824b8",
+    "tested_merge": "3eb32ec766476016964248ee0b9791a17c3da72e",
+    "conclusion": "failure",
+    "passed": 111,
+    "failed": 1,
+    "skipped": 6,
+    "failure": "tests/test_training_loss.py::test_effective_batch_partition_invariance_end_to_end; batch=8 accum=4; policy.2.bias",
+    "root_cause": "NOT_DETERMINED",
+    "method": "Read GitHub job logs; no local execution",
+    "url": "https://github.com/Eien-Natsu/stsai-combat/actions/runs/35369602279"
   }
 }

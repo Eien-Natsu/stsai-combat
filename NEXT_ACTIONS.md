@@ -25,12 +25,19 @@ S2 固定预算对照已报告证据不足；这轮不通过重训、补 seed �
 
 ## 2. 硬预算与停止条件
 
-新增训练 runs=0、优化 updates=0、新采集=0、整场强度评测=0；不创建/读取最终 P6 manifest，不做 DAgger/hybrid/leaf value/容量/teacher/reward/场景分布修改。
+新增实验训练 runs=0、真实训练数据上的优化 updates=0、新采集=0、整场强度评测=0；不创建/读取最终 P6 manifest，不做 DAgger/hybrid/leaf value/容量/teacher/reward/场景分布修改。
 允许读取既有记录、复算统计、离线构建、原有 pytest/定向反事实重放和代表模型的 12 条 CPU smoke。编译并行不超过 2；统计/推理 torch 线程设 1；不使用 GPU 训练、云资源或驱动变更。
 完整冷复核最多 2 次（首次及修复后一次），单个外部步骤 timeout 1800 秒，全部完整复核合计最多 90 分钟。不能通过新命令绕过上限；耗尽即带日志交回 review。
 缺少真实模型/逐场原始结果、哈希不符、没有隔离环境或需系统级安装时立即停止相关阶段，记录 BLOCKED/NOT_RUN；不得重训“补回同一个权重”、从汇总反造逐场结果或删除失败步骤。
 
 ## 3. 按顺序执行
+
+### T0 — 先排查本次 CI 的批次划分一致性失败
+
+保存 [CI run 35369602279](https://github.com/Eien-Natsu/stsai-combat/actions/runs/35369602279) 的完整日志与环境、被测 merge SHA。当前已观察到 111 passed、1 failed、6 skipped；失败为 `tests/test_training_loss.py:199` 的 batch=8 / accum=4、`policy.2.bias` 参数不一致，不能写成历史 277 项全过。
+在无写凭据的隔离 CPU 环境，按原断言针对 `tests/test_training_loss.py::test_effective_batch_partition_invariance_end_to_end` 最多运行 2 次（每次 timeout 60 秒，计入本轮 90 分钟总预算），记录与原 CI 的软件/线程/种子差异。这里及原 pytest 中自带的合成夹具优化仅为小规模单元测试，是“零实验训练”的明确例外；不借此启动真实数据训练或任意优化循环。
+不更改 loss/optimizer 语义、不放宽 allclose、不删/skip 测试。给出可复现的参数/梯度差异证据并区分确定原因与假说；若需要改训练实现或判据，先 BLOCKED 交回 review 申请单独修复计划。本轮文档/打包修复不能默默扩大为训练算法修改。
+输入恢复/静态契约工作可继续，但 T0 仍失败时不开展重复完整冷跑来碰运气，也不能宣布 T3 通过。输出 `reports/s2r/ci_failure_analysis.md`，包含原失败与每次定向诊断的命令、退出码、日志和未解决项。
 
 ### T1 — 固定基线，盘点并恢复已有输入
 

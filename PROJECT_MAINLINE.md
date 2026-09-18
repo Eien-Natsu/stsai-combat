@@ -33,6 +33,12 @@
 - [S2 JUnit](reports/s2_junit.xml) 保存了 277 tests、0 failures、0 errors、0 skipped；[构建日志](reports/s2_build_and_test.log)和[历史小结](delivery_docs/s2/SUMMARY.md)记录了干净目录构建、定向重放、模型 smoke 和训练。这里是读取既有证据，不是本次 Chat 重跑这些实验。
 - `game_differential_verified=false`。原游戏差分、真实游戏联调、完整卡池/药水/遗物/Boss 覆盖尚未完成；历史执行环境没有合法游戏副本，不代表已检查当前 Windows 是否装有游戏。
 
+### 3.2a 文档 PR 暴露的当前 CI 阻塞
+
+[PR #2 的 CPU CI](https://github.com/Eien-Natsu/stsai-combat/actions/runs/35369602279) 在文档 HEAD `2cc0c759a4900bb3822a47609bdf6a0a62f824b8` 的测试合并提交 `3eb32ec766476016964248ee0b9791a17c3da72e` 上失败：111 passed、1 failed、6 skipped，后续 CPU smoke 跳过。
+失败位于 `tests/test_training_loss.py:199` 的 `test_effective_batch_partition_invariance_end_to_end`：batch=8 / accum=4 时 `policy.2.bias` 不满足原 allclose 断言。日志环境为 Ubuntu 24.04、Python 3.12.14、torch 2.9.1+cpu。这是本次读取的新 CI 证据，不是对历史 S2 277 项记录的改写；根因未确定，不能未经排查归因于数值噪声或宣布实现正确。
+这次 PR 未改变实现/测试/CI；新 CI 暴露的问题必须保留并作为 NEXT_ACTIONS 的 T0 先行排查。不直接放宽容差、删除/skip 用例，完整复核仍有失败时不得通过。
+
 ### 3.3 S2 的科学结论
 
 本轮指“固定预算数据量对照 S2”，不是早先同名的 louse 修复轮。权威预注册文件是 `reports/s2_volume_protocol.json`；`reports/s2_protocol.json` 与 `reports/s2_freeze.json` 属于较早修复，保留但不得当作本轮协议。
