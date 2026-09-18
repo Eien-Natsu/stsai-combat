@@ -70,6 +70,11 @@ def collate_samples(samples):
             "decision":torch.tensor([int(batch["action_mask"][i].sum())>1 for i in range(len(samples))])}
     return batch,labels
 
+# Bump when the objective or its normalisation changes meaning. Recorded in
+# run.json and in every checkpoint so a later reader can tell which counting
+# rule produced a weight.
+LOSS_REVISION = 2
+
 def policy_term(elementwise,decision):
     """Mean cross-entropy over states that actually have a choice.
 
@@ -77,28 +82,51 @@ def policy_term(elementwise,decision):
     (batch,) and so is `decision`. The mask is applied elementwise. Reshaping
     the mask to (batch,1) would broadcast the product into a (batch,batch) grid
     and sum batch*batch terms instead of batch, silently scaling the policy
-    gradient by the batch size while the auxiliary heads keep their scale. The
-    shape check makes that mistake loud instead of silent.
+    gradient by the batch size while the auxiliary heads keep their scale. Both
+    the rank and the length are checked so that mistake is loud, not silent.
     """
+    if elementwise.ndim != 1 or decision.ndim != 1:
+        raise ValueError(f"policy term needs rank-1 tensors, got ndim "
+                         f"{elementwise.ndim} and {decision.ndim}")
     if elementwise.shape != decision.shape:
-        raise ValueError(f"policy term needs matching shapes, got {tuple(elementwise.shape)} "
+        raise ValueError(f"policy term needs matching lengths, got {tuple(elementwise.shape)} "
                          f"and {tuple(decision.shape)}; a (batch,1) mask would build a (batch,batch) grid")
     return (elementwise*decision).sum()/decision.sum().clamp_min(1)
 
-def losses(output,labels):
-    """Auxiliary heads keep the batch mean; the policy head is normalised by the
-    number of DECISION states. A state with one legal action contributes ~0 to
-    the policy numerator, so leaving it in the denominator would dilute the
-    policy gradient by the forced-state fraction and silently down-weight it
-    against the outcome and value heads."""
+def loss_numerators(output,labels):
+    """Per-head SUMS and the counts the sums are valid over.
+
+    Returns numerators, not means. One optimizer update is defined as the whole
+    effective batch, so the caller divides by the effective-batch denominators.
+    Averaging per-microbatch means instead would silently weight microbatches
+    with fewer decision states more heavily per decision state.
+    """
     elementwise=-(labels["policy"]*output["policy_logits"].log_softmax(-1)).sum(-1)
-    decision=labels["decision"]
-    policy=policy_term(elementwise,decision)
-    mask=labels["value_mask"]; count=mask.sum().clamp_min(1)
-    outcome=(-(labels["outcome"]*output["outcome_logits"].log_softmax(-1)).sum(-1)*mask).sum()/count
-    value=(((output["value"]-labels["value"])**2)*mask).sum()/count
-    return policy+.5*outcome+value, {"policy_loss":policy,"outcome_loss":outcome,"value_loss":value,
-                                     "decision_fraction":decision.float().mean()}
+    decision=labels["decision"]; mask=labels["value_mask"]
+    if elementwise.ndim != 1: raise ValueError("policy logits must reduce to a per-sample vector")
+    policy_num=(elementwise*decision).sum()
+    outcome_num=(-(labels["outcome"]*output["outcome_logits"].log_softmax(-1)).sum(-1)*mask).sum()
+    value_num=(((output["value"]-labels["value"])**2)*mask).sum()
+    return ({"policy_num":policy_num,"outcome_num":outcome_num,"value_num":value_num},
+            {"D":decision.sum(),"M":mask.sum()})
+
+def combine_numerators(totals,denominators):
+    """Assemble the three losses and the total from effective-batch totals.
+
+    Quoting a per-microbatch loss here would mix two different denominators;
+    the total is always policy + 0.5*outcome + value of the same aggregate.
+    """
+    d=max(float(denominators["D"]),1.0); m=max(float(denominators["M"]),1.0)
+    policy=totals["policy_num"]/d; outcome=totals["outcome_num"]/m; value=totals["value_num"]/m
+    return {"policy_loss":policy,"outcome_loss":outcome,"value_loss":value,
+            "loss":policy+0.5*outcome+value}
+
+def losses(output,labels):
+    """Single-batch convenience wrapper; the trainer uses loss_numerators."""
+    totals,counts=loss_numerators(output,labels)
+    parts=combine_numerators({k:float(v.detach()) for k,v in totals.items()},
+                             {k:float(v.detach()) for k,v in counts.items()})
+    return parts["loss"], {**parts,"decision_fraction":labels["decision"].float().mean()}
 
 def _move(batch,device):
     return {k:(v.to(device,non_blocking=True) if torch.is_tensor(v) else v) for k,v in batch.items()}
@@ -109,6 +137,7 @@ def _save(path,model,optimizer,step,epoch,best,backend,config,data_fingerprint):
     from .util import SCHEMA_VERSION
     payload={"format_version":1,"model_config":asdict(model.config),"model_state":model.state_dict(),
              "encoding_revision":ENCODING_REVISION,"observation_schema":SCHEMA_VERSION,
+             "loss_revision":LOSS_REVISION,
              "optimizer_state":optimizer.state_dict(),"step":step,"epoch":epoch,"best_val":best,
              "backend":backend,"train_config":config,"data_fingerprint":data_fingerprint,
              "torch_rng":torch.get_rng_state(),"python_rng":random.getstate()}
@@ -126,29 +155,36 @@ def validate(model,loader,device,max_batches=50):
     reported alongside decision-state-only figures and the policy divergence,
     and forced single-action states are kept out of the decision figures.
     """
-    model.eval(); total=0; sums={"loss":0.,"policy_loss":0.,"outcome_loss":0.,"value_loss":0.}
-    agree_legacy=agree_choice=0; dec=0; agree_choice_dec=0.0
-    kl_sum=0.; entropy_sum=0.; policy_num=0.
+    model.eval()
+    # Accumulate true numerators and denominators over the WHOLE split, then
+    # normalise once. Averaging per-batch means instead would make every
+    # reported number depend on the validation batch size.
+    totals={"policy_num":0.,"outcome_num":0.,"value_num":0.}
+    D=M=0.0
+    agree_legacy=agree_choice=0; dec=0; agree_choice_dec=0.0; rows=0; known_rows=0
+    kl_sum=0.; entropy_sum=0.; unknown_teacher=0
     per_episode={}; episodes=set()
     for j,(batch,labels) in enumerate(loader):
         if j>=max_batches: break
         episode_ids=labels.get("episode_id")
         batch,labels=_move(batch,device),_move(labels,device)
-        output=model(batch); loss,metrics=losses(output,labels); n=len(labels["value"])
-        sums["loss"]+=float(loss)*n
-        for key in ("policy_loss","outcome_loss","value_loss"): sums[key]+=float(metrics[key])*n
+        with torch.inference_mode(): output=model(batch)
+        numerators,counts=loss_numerators(output,labels)
+        for key in totals: totals[key]+=float(numerators[key])
+        D+=float(counts["D"]); M+=float(counts["M"]); rows+=len(labels["value"])
         student=output["policy_logits"].argmax(-1)
         agree_legacy+=int((student==labels["policy"].argmax(-1)).sum())
         teacher=labels["teacher_action"]
         known=teacher>=0
+        known_rows+=int(known.sum()); unknown_teacher+=int((~known).sum())
         if bool(known.any()):
             matched=(student==teacher)&known
             agree_choice+=int(matched.sum())
             decision=labels["decision"]&known
             dec+=int(decision.sum()); agree_choice_dec+=float(matched[decision].sum())
         # KL(teacher||student) over legal actions, with the teacher's own
-        # entropy so a plateau is not read as a capacity wall.
-        # Mask elementwise terms, never the full tensor against a masked vector.
+        # entropy so a plateau is not read as a capacity wall. Mask elementwise
+        # terms, never the full tensor against a masked vector.
         logp=output["policy_logits"].log_softmax(-1)
         logp_target=torch.log(labels["policy"].clamp_min(1e-12))
         legal=labels["policy"]>0
@@ -157,7 +193,6 @@ def validate(model,loader,device,max_batches=50):
         entropy_sum+=float((-(labels["policy"]*logp_target))[legal].sum())
         # Per-battle policy KL, the frozen checkpoint-selection metric.
         decision_mask=labels["decision"]
-        policy_num+=float((elementwise*decision_mask.unsqueeze(-1)).sum())
         if episode_ids is not None:
             row_kl=elementwise.sum(-1).detach().cpu().tolist()
             row_decision=decision_mask.detach().cpu().tolist()
@@ -165,22 +200,30 @@ def validate(model,loader,device,max_batches=50):
                 episodes.add(ep)
                 bucket=per_episode.setdefault(ep,[])
                 if is_decision: bucket.append(float(value))
-        total+=n
-    if total == 0: raise ValueError("Empty validation replay")
+    if rows==0: raise ValueError("Empty validation replay")
+    parts=combine_numerators(totals,{"D":D,"M":M})
     battles_with_decisions=sum(1 for v in per_episode.values() if v)
     episode_kl=[sum(v)/len(v) for v in per_episode.values() if v]
-    return {**{k:v/total for k,v in sums.items()},
-            "teacher_top1_agreement":agree_legacy/total,
-            "teacher_choice_agreement":agree_choice/total,
+    return {**parts,
+            "policy_ce_decision":parts["policy_loss"],
+            "policy_kl_decision":kl_sum/max(D,1.0),
+            "teacher_entropy_decision":entropy_sum/max(D,1.0),
+            "teacher_top1_agreement":agree_legacy/max(1,rows),
+            "teacher_choice_agreement":agree_choice/max(1,known_rows),
             "teacher_choice_agreement_decision_states":agree_choice_dec/max(1,dec),
-            "decision_states":dec,"forced_states":total-dec,
-            "policy_kl":kl_sum/total,"teacher_entropy":entropy_sum/total,
+            "decision_states":dec,"forced_states":int(D)-dec,
+            "unknown_teacher_action_states":unknown_teacher,
+            "policy_kl":kl_sum/max(D,1.0),
+            "teacher_entropy":entropy_sum/max(D,1.0),
+            "decision_numerator_D":D,"masked_numerator_M":M,
+            "policy_numerator":totals["policy_num"],
+            "outcome_numerator":totals["outcome_num"],
+            "value_numerator":totals["value_num"],
             # Primary: mean over battles of the battle's mean decision-state KL.
             "kl_dev":(sum(episode_kl)/len(episode_kl)) if episode_kl else None,
-            "kl_over_decision_states":policy_num/max(1,dec),
             "battles_seen":len(episodes),"battles_with_decisions":battles_with_decisions,
             "battles_without_decisions":len(episodes)-battles_with_decisions,
-            "samples":total}
+            "samples":rows}
 
 def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config=None,resume="",init_checkpoint=""):
     if resume and init_checkpoint: raise ValueError("Choose resume OR init_checkpoint, not both")
@@ -214,7 +257,7 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
         if ck["backend"]!=backend or ck["model_config"]!=asdict(model.config): raise ValueError("Warm-start architecture/backend mismatch")
         model.load_state_dict(ck["model_state"])
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg["learning_rate"],weight_decay=cfg["weight_decay"])
-    step=0; start_epoch=0; best=float("inf"); best_record=None
+    step=0; start_epoch=0; best=float("inf"); best_record=None; dropped_tail_rows=0
     if resume:
         ck=torch.load(resume,map_location="cpu",weights_only=True)
         if ck["backend"] != backend or ck["model_config"] != asdict(model.config): raise ValueError("Resume architecture/backend mismatch")
@@ -237,23 +280,47 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
                 "init_checkpoint":str(init_checkpoint),
                 "init_seed":cfg["init_seed"],"data_seed":cfg["data_seed"],
                 "validation_batches":cfg["validation_batches"],
-                "selection_metric":"kl_dev (mean over battles of battle mean decision-state KL)"})
+                "selection_metric":"kl_dev (mean over battles of battle mean decision-state KL)",
+                "loss_revision":LOSS_REVISION,
+                "objective":"effective-batch numerators over window denominators; "
+                            "L_total = L_policy + 0.5*L_outcome + L_value"})
     try:
         for epoch in range(start_epoch,cfg["epochs"]):
             if step>=cfg["max_updates"]: break
-            ds.epoch=epoch; model.train(); optimizer.zero_grad(set_to_none=True); pending=0
+            ds.epoch=epoch; model.train(); optimizer.zero_grad(set_to_none=True); pending=0; window=[]
             for batch,labels in loader:
                 batch,labels=_move(batch,dev),_move(labels,dev)
-                with torch.autocast(device_type=dev.type,dtype=torch.bfloat16,enabled=amp):
-                    output=model(batch); loss,parts=losses(output,labels)
-                if not torch.isfinite(loss): raise FloatingPointError("Nonfinite loss")
-                (loss/cfg["accumulation_steps"]).backward(); pending+=1; seen+=len(labels["value"])
+                # Cache the window's labels first so the effective-batch
+                # denominators are known before any gradient is produced.
+                window.append((batch,labels)); pending+=1; seen+=len(labels["value"])
                 if pending<cfg["accumulation_steps"]: continue
+                denominators={"D":sum(float(l["decision"].sum()) for _,l in window),
+                              "M":sum(float(l["value_mask"].sum()) for _,l in window)}
+                totals={"policy_num":0.,"outcome_num":0.,"value_num":0.}
+                d=max(denominators["D"],1.0); m=max(denominators["M"],1.0)
+                for micro_batch,micro_labels in window:
+                    with torch.autocast(device_type=dev.type,dtype=torch.bfloat16,enabled=amp):
+                        output=model(micro_batch)
+                        numerators,_=loss_numerators(output,micro_labels)
+                    for key in totals: totals[key]+=float(numerators[key].detach())
+                    # Each microbatch contributes its own numerators over the SAME
+                    # effective-batch denominators, then its graph is released.
+                    contribution=(numerators["policy_num"]/d
+                                  +0.5*numerators["outcome_num"]/m
+                                  +numerators["value_num"]/m)
+                    if not torch.isfinite(contribution): raise FloatingPointError("Nonfinite loss")
+                    contribution.backward()
                 torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
-                optimizer.step(); optimizer.zero_grad(set_to_none=True); pending=0; step+=1
-                entry={"step":step,"epoch":epoch,"loss":float(loss.detach()),"samples_seen_this_process":seen,
-                       "elapsed_seconds":time.perf_counter()-started}
-                entry.update({k:float(v.detach()) for k,v in parts.items()})
+                optimizer.step(); optimizer.zero_grad(set_to_none=True); window.clear(); pending=0; step+=1
+                entry={"step":step,"epoch":epoch,"samples_seen_this_process":seen,
+                       "elapsed_seconds":time.perf_counter()-started,
+                       "effective_batch_decision_states":denominators["D"],
+                       "effective_batch_masked_states":denominators["M"],
+                       "effective_batch_samples":cfg["batch_size"]*cfg["accumulation_steps"],
+                       # the actual numerators and denominators of this update
+                       "policy_numerator":totals["policy_num"],"outcome_numerator":totals["outcome_num"],
+                       "value_numerator":totals["value_num"]}
+                entry.update(combine_numerators(totals,denominators))
                 if dev.type=="cuda": entry["peak_allocated_bytes"]=torch.cuda.max_memory_allocated(dev)
                 append_json(out/"metrics.jsonl",entry)
                 if step % cfg["eval_every"]==0 or step==cfg["max_updates"]:
@@ -269,8 +336,10 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
                     model.train()
                 if step % cfg["save_every"]==0: _save(out/"last.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
                 if step>=cfg["max_updates"]: break
-            # Partial accumulation is discarded, rather than silently applying
-            # incorrectly scaled gradients. Keep batch*accum <= replay samples.
+            # A trailing partial window is discarded, as before, rather than
+            # scaled up to a full one. The discarded row count is recorded so the
+            # budget is auditable instead of implicit.
+            dropped_tail_rows+=pending*cfg["batch_size"]
             optimizer.zero_grad(set_to_none=True)
         if step==0: raise ValueError("No optimizer updates; reduce batch_size/accumulation_steps or collect more data")
         val=validate(model,vloader,dev,cfg["validation_batches"])
@@ -283,6 +352,7 @@ def train(train_dirs,val_dirs,output,backend="reference_v1",device="auto",config
         _save(out/"last.pt",model,optimizer,step,epoch,best,backend,cfg,fingerprint)
         report={"steps":step,"backend":backend,"parameters":sum(p.numel() for p in model.parameters()),
                 "validation":val,"best_validation_loss":best,"best_selection_metric":best_record,
+                "loss_revision":LOSS_REVISION,"dropped_tail_rows":dropped_tail_rows,
                 "selection_metric":"kl_dev (mean over battles of battle mean decision-state KL)",
                 "elapsed_seconds":time.perf_counter()-started}
         atomic_json(out/"training_summary.json",report); return report

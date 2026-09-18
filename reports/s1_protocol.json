@@ -1,0 +1,122 @@
+{
+  "purpose": "S1 execution protocol. Written BEFORE data collection and training; not rewritten afterwards.",
+  "baseline_commit": "79f42fcc96fa46d1350c2f0b1e0b262badc54256",
+  "branch": "s1/input-semantics",
+  "order": [
+    "S1-A loss/validation counting",
+    "S1-B public intent + sampler audit",
+    "S1-C same-scale data rebuild",
+    "S1-D one M128-R0-s17-S1 training",
+    "S1-E one 256-scenario dev eval"
+  ],
+  "gates": {
+    "S1-C_and_D_require": "S1-A and S1-B engineering gates passed; otherwise training is marked BLOCKED"
+  },
+  "resource_limits": {
+    "gpu": "one RTX 5070, serial",
+    "collect_workers_max": 2,
+    "train_runs": 1,
+    "eval_scenarios": 256,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260918,
+    "cloud": false,
+    "data_expansion": false
+  },
+  "loss_definition": {
+    "effective_batch": "every microbatch inside one optimizer update",
+    "d_i": "1 if the state has >1 legal action else 0",
+    "m_i": "value_mask_i",
+    "L_policy": "sum_i d_i*CE_policy_i / max(D,1), D=sum_i d_i",
+    "L_outcome": "sum_i m_i*CE_outcome_i / max(M,1), M=sum_i m_i",
+    "L_value": "sum_i m_i*MSE_value_i / max(M,1)",
+    "L_total": "L_policy + 0.5*L_outcome + L_value",
+    "explicitly_not": "per-microbatch mean then unweighted average of microbatch means",
+    "optimizer": "AdamW unchanged, effective batch 32, gradient clip once per update, clip threshold unchanged",
+    "tail_window": "discarded as before; the number of dropped rows is recorded",
+    "loss_revision": "introduced by S1-A and recorded in run.json and every checkpoint"
+  },
+  "validation_aggregation": {
+    "method": "accumulate true numerators and denominators over the full validation split, normalise at the end",
+    "invariance_required": "result must not change with validation batch size or sample order (float tolerance)",
+    "policy": "decision states only",
+    "auxiliary": "value_mask-valid states only",
+    "kl_dev": "per battle mean decision KL, then mean over battles that have decision states",
+    "teacher_entropy": "same denominator as the decision KL",
+    "truncation": "validation_batches is set to cover the whole split; coverage is reported, not assumed"
+  },
+  "checkpoint_selection": {
+    "metric": "kl_dev",
+    "ties": "keep the earlier step",
+    "reporting": "selected and last are reported separately with their own step and SHA256, never mixed"
+  },
+  "outcome_label_source": {
+    "train": "behaviour continuation (sample_actions=true) - the episode's own ending is written to every state",
+    "val": "greedy teacher continuation (sample_actions=false)",
+    "consequence": "the two splits use different continuation rules; cross-continuation scores are diagnostics only"
+  },
+  "intent_semantics": {
+    "target": "public intent classes at the granularity the game shows",
+    "classes_in_scope": [
+      "ATTACK",
+      "ATTACK_DEFEND",
+      "ATTACK_DEBUFF",
+      "DEBUFF",
+      "DEFEND",
+      "BUFF",
+      "SLEEP",
+      "ESCAPE",
+      "UNKNOWN"
+    ],
+    "deliverable": "input/intent_mapping.csv with monster, internal move (audit only), public class, source, test location, verification level",
+    "prohibited": "exporting the internal move id under a new field name",
+    "versioning": "observation schema and encoding revision are bumped; old replay and old checkpoints must not load silently"
+  },
+  "sampler_audit": {
+    "per_field_labels": [
+      "PUBLIC_DETERMINED",
+      "RESAMPLED",
+      "UNSUPPORTED"
+    ],
+    "acceptance": "every latent field that can affect the future is classified with a reason; UNSUPPORTED branches stop and are reported",
+    "counterfactual": "identical complete public history with different hidden state, when reachable; otherwise a stated deterministic argument plus uncovered boundary",
+    "not_accepted_as_proof": "random collision scans, or the absence of a move_id key"
+  },
+  "evaluation": {
+    "scenarios": "the 256 already-materialised development scenarios in the repository, reused not regenerated",
+    "agents": [
+      "heuristic",
+      "search(64 sim)",
+      "selected pure network"
+    ],
+    "device": "CPU FP32 for single-episode inference",
+    "latency": "per-decision timings are saved; pooled p50/p95 over all decisions, plus the median of per-episode p50/p95 named as such",
+    "pairing": "per scenario; 20000 paired bootstrap replicates, seed 20260918, conditional on the fixed models",
+    "scope": "unverified simulator pilot, single seed, development only"
+  },
+  "claim_boundaries": {
+    "game_differential_verified": false,
+    "may_claim": [
+      "counting definitions are reproducible",
+      "public input semantics are correct to the declared scope",
+      "one new baseline with a loadable weight and per-episode evidence"
+    ],
+    "may_not_claim": [
+      "original-game strength",
+      "superhuman",
+      "statistical equivalence",
+      "that a difference is caused by any single factor, since interface, counting and data all changed"
+    ]
+  },
+  "forbidden": [
+    "train 192",
+    "multi-seed matrix",
+    "more teacher simulations",
+    "utility change",
+    "new scenarios/cards/potions/relics",
+    "DAgger",
+    "hybrid tuning",
+    "changing selection for Brier",
+    "reading hidden information",
+    "using the final test split"
+  ]
+}
