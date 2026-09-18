@@ -1,0 +1,70 @@
+{
+  "purpose": "S1R freeze before any change.",
+  "baseline_commit": "bf26b0f4713e0bd4ac9858034ca94693840c5040",
+  "head": "bf26b0f4713e0bd4ac9858034ca94693840c5040",
+  "branch": "s1r/gates-and-baseline",
+  "dirty_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "engine": {
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+      }
+    ],
+    "build_info": {
+      "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+      "patches": [
+        "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+        "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+        "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+      ],
+      "backend": "lightspeed_pilot",
+      "belief_model": "independent_rng_approximation",
+      "game_differential_verified": false
+    }
+  },
+  "versions": {
+    "observation_schema": 4,
+    "encoding_revision": 4,
+    "utility_revision": 1,
+    "scenario_revision": 3,
+    "sampler_revision": "public_history_candidate_sampling/2",
+    "loss_revision": 2
+  },
+  "data": {
+    "s1_train_manifest": "dce8058ef3631b63333f52dde2dfbd823f4a068e993381f8722bd88142321851",
+    "s1_val_manifest": "19cb7274afe1c4f4fe1d382bdbd61cccbdf5d8d6e427e5a561320bc2ceb217b6",
+    "dev_scenarios": "508793fd71c5b04bed2d96ff5c8b15599c8f727b913d3e00916ab91829a7bc07"
+  },
+  "open_defects": {
+    "encoding_ignores_public_range": "encoding.py never reads attack_base_low/high",
+    "cumulative_patch_0003": "0003 repeats the 0001 Disarm hunk and the 0002 Nob hunk",
+    "tree_check_by_filename": "assert_tree_matches compares names, not content",
+    "missing_algorithm_include": "offline build fails without -include algorithm on a stricter toolchain",
+    "review_order": "run_review runs pytest before building and reads a saved boolean instead of replaying",
+    "pybind11_license_missing": "the snapshot has no pybind11 LICENSE text",
+    "outcome_batch_length": "loss_numerators does not require outcome batch == policy batch",
+    "sampler_revision_optional": "a native checkpoint missing sampler_revision is accepted"
+  },
+  "resource_limits": {
+    "new_native_training_runs": 0,
+    "new_collection": 0,
+    "new_256_dev_eval": 0,
+    "p6": false,
+    "diagnostic_roots_max": 64,
+    "steps_per_root_max": 128,
+    "sampler_seeds_per_distribution_max": 4096,
+    "mcts_roots_max": 16,
+    "mcts_simulations_max": 64,
+    "gpu": "short forward/backward smoke only"
+  }
+}

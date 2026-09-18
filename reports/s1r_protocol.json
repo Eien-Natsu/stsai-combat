@@ -1,0 +1,50 @@
+{
+  "purpose": "S1R protocol, written before the fixes.",
+  "baseline": "bf26b0f4713e0bd4ac9858034ca94693840c5040",
+  "branch": "s1r/gates-and-baseline",
+  "order": [
+    "G1 encode the public range",
+    "G2 incremental patch + exact tree + licences",
+    "G3 offline build, real replay, correct order",
+    "G4 two contracts + regression cases",
+    "gates",
+    "if all pass: rebuild 96/24, train one M128-R0 seed17, evaluate 3 agents on the 256 scenarios"
+  ],
+  "gates": {
+    "all_four_must_pass": "otherwise BLOCKED, no collection, no training, no evaluation"
+  },
+  "resource_limits": {
+    "collection_workers_max": 2,
+    "teacher_simulations": 64,
+    "new_native_training_runs_max": 1,
+    "optimizer_updates_max": 500,
+    "effective_batch": 32,
+    "eval_scenarios": 256,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260918,
+    "diagnostic_roots_max": 64,
+    "steps_per_root_max": 128,
+    "sampler_seeds_per_distribution_max": 4096,
+    "cloud": false,
+    "p6": false
+  },
+  "frozen_training_config": {
+    "model": "M128-R0",
+    "init_seed": 17,
+    "data_seed": 42,
+    "batch_size": 16,
+    "accumulation_steps": 2,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "layers": 4,
+    "heads": 4,
+    "dropout": 0.1,
+    "epochs": 40,
+    "eval_every": 25,
+    "save_every": 25,
+    "shuffle_buffer": 512,
+    "cpu_threads": 4,
+    "selection": "per-battle decision KL on the full labelled validation set, ties keep the earlier step"
+  },
+  "claim": "unverified simulator pilot with a declared sampling approximation; game_differential_verified stays false"
+}
