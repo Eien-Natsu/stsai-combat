@@ -349,6 +349,47 @@ def check_evaluation_records(package):
     return True, f"{len(rows)} per-episode records, {len(expected)} unique declared keys", detail
 
 
+def check_decision_records(package, episodes_path):
+    """The per-decision records must describe the same battles as the per-episode ones.
+
+    Two files that agree on their key set can still disagree about what happened:
+    a latency file from another run has the same keys and different actions. So the
+    action sequence and the decision count are compared step by step, which is what
+    makes the latency input usable as evidence rather than as a second copy of the
+    key list.
+    """
+    path = package / "evaluation" / "decision_latency.jsonl.gz"
+    if not path.is_file() or not episodes_path.is_file():
+        return False, "the package does not ship both record files", {}
+    episodes = {}
+    with gzip.open(episodes_path, "rt", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                row = json.loads(line)
+                episodes[(row["set"], row["policy"], row["episode_index"])] = row
+    decisions = {}
+    with gzip.open(path, "rt", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                row = json.loads(line)
+                decisions.setdefault((row["set"], row["policy"], row["episode_index"]), []).append(row)
+    missing = [key for key in episodes if key not in decisions]
+    counts = [key for key, rows in decisions.items()
+              if key in episodes and len(rows) != episodes[key]["decisions"]]
+    actions = [key for key, rows in decisions.items()
+               if key in episodes
+               and [row["action_index"] for row in sorted(rows, key=lambda r: r["step"])]
+               != episodes[key]["actions"]]
+    detail = {"decision_rows": sum(len(rows) for rows in decisions.values()),
+              "battles_with_decisions": len(decisions), "battles_without": len(missing),
+              "count_mismatches": len(counts), "action_mismatches": len(actions),
+              "example_mismatch": (actions or counts or missing)[:2]}
+    if missing or counts or actions:
+        return False, (f"{len(missing)} battles have no decision records, {len(counts)} disagree "
+                       f"on the decision count, {len(actions)} on the actions taken"), detail
+    return True, (f"{detail['decision_rows']} decisions match the episodes step by step"), detail
+
+
 def check_training_records(package):
     runs_path = package / "training" / "runs.json"
     runs = json.loads(runs_path.read_text(encoding="utf-8"))
@@ -455,7 +496,8 @@ def main():
     # check is described as it is rather than cascading into misleading findings.
     if not layout_ok:
         for name in ("provenance", "versions", "protocol_identity", "model_identity",
-                     "evaluation_records", "training_records", "native_sources"):
+                     "evaluation_records", "decision_records", "training_records",
+                     "native_sources"):
             report_add(rows, name, None, "not evaluated: the package is incomplete", required=True)
     else:
         ok, note, detail = check_provenance(package, repo)
@@ -468,6 +510,9 @@ def main():
         report_add(rows, "model_identity", ok, note)
         ok, note, episode_detail = check_evaluation_records(package)
         report_add(rows, "evaluation_records", ok, note)
+        ok, note, _ = check_decision_records(package,
+                                             package / "evaluation" / "episodes.jsonl.gz")
+        report_add(rows, "decision_records", ok, note)
         ok, note, _ = check_training_records(package)
         report_add(rows, "training_records", ok, note)
         ok, note, _ = check_native_sources(package, repo)

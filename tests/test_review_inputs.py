@@ -74,7 +74,7 @@ def build_package(root):
             for index in range(SCENARIOS):
                 episodes.append({"set": set_name, "policy": policy, "episode_index": index,
                                  "completed": True, "utility": 0.5, "truncated": False, "won": True,
-                                 "end_hp": 10, "decisions": 3, "actions": [0, 1],
+                                 "end_hp": 10, "decisions": 3, "actions": [0, 1, 2],
                                  "action_sequence_sha256": "0" * 64})
     export = {"format_version": 1, "model_config": {"d_model": 4}, "model_state": {"w": torch.zeros(2)},
               "backend": "reference_v1", "encoding_revision": versions["encoding_revision"],
@@ -110,7 +110,12 @@ def build_package(root):
         for row in episodes:
             handle.write(json.dumps(row) + "\n")
     with gzip.open(package / "evaluation/decision_latency.jsonl.gz", "wt") as handle:
-        handle.write("{}\n")
+        for row in episodes:
+            for step, action in enumerate(row["actions"]):
+                handle.write(json.dumps({"set": row["set"], "policy": row["policy"],
+                                         "episode_index": row["episode_index"], "step": step,
+                                         "action_index": action, "ms": 1.0,
+                                         "forced": False}) + "\n")
     write(package / "tests/junit.xml", "<testsuite tests='0'/>")
     with gzip.open(package / "tests/build_and_test.log.gz", "wt") as handle:
         handle.write("build log\n")
@@ -250,6 +255,25 @@ def test_a_tampered_member_is_rejected(package, tmp_path):
     assert result.returncode != 0
     assert statuses["manifest"] == "FAIL"
     assert "data/coverage.json" in result.stdout
+
+
+def test_decision_records_from_another_run_are_rejected(package, tmp_path):
+    """Same keys, same counts, different actions: the per-decision file must agree."""
+    broken = copied(package, tmp_path, "wrong_decisions")
+    rows = []
+    with gzip.open(broken / "evaluation/decision_latency.jsonl.gz", "rt") as handle:
+        for line in handle:
+            row = json.loads(line)
+            row["action_index"] = (row["action_index"] + 1) % 3
+            rows.append(row)
+    with gzip.open(broken / "evaluation/decision_latency.jsonl.gz", "wt") as handle:
+        for row in rows:
+            handle.write(json.dumps(row) + "\n")
+    reseal(broken)
+    result, statuses, _ = run_checker(broken, tmp_path)
+    assert result.returncode != 0
+    assert statuses["decision_records"] == "FAIL"
+    assert "actions taken" in result.stdout
 
 
 def test_a_half_filled_episode_grid_is_rejected(package, tmp_path):
