@@ -1,8 +1,0 @@
-{"elapsed_seconds":0.01710933499998646,"epoch":0,"loss":3.0146241188049316,"outcome_loss":2.272627353668213,"policy_loss":1.7701935768127441,"samples_seen_this_process":4,"step":1,"value_loss":0.10811679065227509}
-{"elapsed_seconds":0.024812354999994568,"epoch":0,"loss":2.7355778217315674,"outcome_loss":2.304494857788086,"policy_loss":1.4915080070495605,"samples_seen_this_process":8,"step":2,"value_loss":0.09182241559028625}
-{"elapsed_seconds":0.03561365999985355,"epoch":0,"loss":2.115355968475342,"outcome_loss":2.071957588195801,"policy_loss":0.9742799997329712,"samples_seen_this_process":12,"step":3,"value_loss":0.10509727150201797}
-{"elapsed_seconds":0.04396387499991761,"epoch":0,"loss":2.930572986602783,"outcome_loss":2.345724105834961,"policy_loss":1.6794157028198242,"samples_seen_this_process":16,"step":4,"value_loss":0.07829523086547852}
-{"elapsed_seconds":0.07518153499995606,"epoch":0,"loss":1.9207818508148193,"outcome_loss":2.0869812965393066,"policy_loss":0.78627610206604,"samples_seen_this_process":20,"step":5,"value_loss":0.09101508557796478}
-{"elapsed_seconds":0.08205062899992299,"epoch":0,"loss":2.5486459732055664,"outcome_loss":2.6069183349609375,"policy_loss":1.193213939666748,"samples_seen_this_process":24,"step":6,"value_loss":0.05197297781705856}
-{"elapsed_seconds":0.08985941799983266,"epoch":0,"loss":2.4908323287963867,"outcome_loss":2.2392866611480713,"policy_loss":1.305746078491211,"samples_seen_this_process":28,"step":7,"value_loss":0.06544311344623566}
-{"elapsed_seconds":0.10234667299982902,"epoch":0,"loss":2.5915451049804688,"outcome_loss":2.3913769721984863,"policy_loss":1.3461822271347046,"samples_seen_this_process":32,"step":8,"value_loss":0.04967460781335831}

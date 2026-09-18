@@ -4,7 +4,7 @@
 
 检查 pytest 原始输出；测试覆盖参考规则、公开信息隔离、采样、动作 mask、网络梯度、并行采集、数据 split、checkpoint 恢复、控制桥拒绝未知状态。`scripts/smoke.py` 必须实际完成收集→训练→重新加载→评测。报告中始终保留 backend。
 
-交付时此关已在 CPU 完成；精确结果见 `reports/LOCAL_VALIDATION.md`。native 模块 skip 不是通过。这个关卡只证明代码在已测范围可执行，不证明游戏规则正确或策略强。
+交付时此关已在 CPU 完成；精确结果见该轮的全量测试记录（近期为 `reports/s2_junit.xml` 与 `reports/s1r_junit.xml`）。native 模块 skip 不是通过。这个关卡只证明代码在已测范围可执行，不证明游戏规则正确或策略强。
 
 ## G1：目标 5070 机器
 
