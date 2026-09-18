@@ -12,6 +12,15 @@
     "SLEEP",
     "UNKNOWN"
   ],
+  "evidence_levels": {
+    "ENGINE_DERIVED_ONLY": 43,
+    "UI_SOURCE_VERIFIED": 7
+  },
+  "unknown_rows": {
+    "ACID_SLIME_L_SPLIT": "GAME_SHOWS_UNKNOWN",
+    "GREMLIN_WIZARD_CHARGING": "MAPPING_NOT_KNOWN",
+    "SPIKE_SLIME_L_SPLIT": "GAME_SHOWS_UNKNOWN"
+  },
   "same_class_collisions": {
     "LOOTER|ATTACK": [
       "LOOTER_LUNGE",

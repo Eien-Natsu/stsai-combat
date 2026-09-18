@@ -1,0 +1,178 @@
+{
+  "purpose": "Field-by-field classification of what a belief sample carries.",
+  "categories": {
+    "PUBLIC_DETERMINED": "complete legal public history determines it; grounds given",
+    "RESAMPLED": "drawn from a declared conditional law or a named approximation",
+    "UNSUPPORTED": "cannot be handled here; the branch refuses or is out of range"
+  },
+  "coverage_scan": {
+    "states_inspected": 3584,
+    "distinct_public_signatures": 93,
+    "collisions": {},
+    "role": "COVERAGE STATISTIC ONLY. It never decides a category: absence of a counterexample is not an argument that public information determines a field, and it cannot detect a determined move whose hidden parameters are still unknown."
+  },
+  "fields": [
+    {
+      "monster": "GREEN_LOUSE / RED_LOUSE",
+      "field": "miscInfo (base attack)",
+      "init_write": "Monster.cpp:118-120, at construct, from monsterHpRng",
+      "future_read": "MonsterSpecific.cpp:745 (GREEN_LOUSE_BITE), :1006 (RED_LOUSE_BITE)",
+      "visibility": "the displayed attack damage, once an attack intent is shown",
+      "category": "RESAMPLED",
+      "grounds": "The spawn range is public (Monster.cpp:118-120) and every attack intent the player is shown displays calculateDamageToPlayer(base), so the candidate set is narrowed by the displayed number and only ever shrinks. Sampling draws once from that set and keeps the draw; the true miscInfo is never read. Tests: tests/test_louse_hidden_base.py (fixed sampler agrees across two hidden values, pre-fix sampler diverges on the same pair).",
+      "approximation": "uniform prior over the spawn range, narrowed by public observations; not the original game's correlated posterior",
+      "test": "tests/test_louse_hidden_base.py"
+    },
+    {
+      "monster": "GREMLIN_WIZARD",
+      "field": "monsterData / miscInfo (charge counter)",
+      "init_write": "MonsterSpecific.cpp:2440 sets monsterData=1; :774 increments miscInfo",
+      "future_read": "MonsterSpecific.cpp:774 (charges) and the charge state drives its move",
+      "visibility": "the charging intent is displayed on every turn it charges",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "the counter only advances on turns whose intent the player sees, so counting them recovers it",
+      "test": "tests/test_native_coverage.py covers both of its moves"
+    },
+    {
+      "monster": "RED_SLAVER",
+      "field": "miscInfo (usedEntangle)",
+      "init_write": "set when Entangle is used, MonsterSpecific.cpp:1017",
+      "future_read": "MonsterSpecific.cpp:2780 in getMoveForRoll",
+      "visibility": "Entangle applies Entangled to the player, so its use is public",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "a boolean about whether a publicly visible debuff has already happened",
+      "test": "tests/test_native_coverage.py covers all three of its moves"
+    },
+    {
+      "monster": "DARKLING",
+      "field": "miscInfo (base attack)",
+      "init_write": "Monster.cpp:126-128, same pattern as the louse",
+      "future_read": "its multi-strike move",
+      "visibility": "as the louse, but unreachable here",
+      "category": "UNSUPPORTED",
+      "grounds": "Act 3 monster, not in the 17 supported encounters; the adapter refuses the encounter before this can arise, and widening the list requires applying the same candidate treatment",
+      "test": "the encounter whitelist rejects it (bridge.cpp supported_encounters)"
+    },
+    {
+      "monster": "THE_CHAMP, SPIKER, WRITHING_MASS, TIME_EATER, AWAKENED_ONE, BOOK_OF_STABBING, BRONZE_ORB",
+      "field": "miscInfo / monsterData read during move selection",
+      "init_write": "per monster",
+      "future_read": "MonsterSpecific.cpp:2855-2881, :2981, :3090, :3189, :3245, :2069, :2257",
+      "visibility": "not audited",
+      "category": "UNSUPPORTED",
+      "grounds": "none of these is reachable in the 17 supported encounters; the read sites are recorded so widening the encounter list cannot forget them",
+      "test": "no reachable path"
+    },
+    {
+      "monster": "all supported",
+      "field": "moveHistory[0] (held move)",
+      "init_write": "Monster::setMove at roll time",
+      "future_read": "getMoveForRoll via lastMove / lastTwoMoves",
+      "visibility": "the intent class plus the displayed damage and hit count",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "across 3584 reachable states and 93 distinct public signatures no two held moves shared a signature. The class alone does not separate Looter Mug from Lunge; the damage number does. The scan is the coverage evidence; the argument is that the adapter exports exactly those three fields and no more.",
+      "test": "tests/test_native_fairness.py::test_the_held_move_is_determined_by_public_information"
+    },
+    {
+      "monster": "all supported",
+      "field": "moveHistory[1] and the executed history",
+      "init_write": "Monster::setMove",
+      "future_read": "the adapter, via the engine's execution events",
+      "visibility": "the move is watched resolving, and its class is exported",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "taken from the engine's own execution events, not inferred from a turn counter",
+      "test": "tests/test_native_fairness.py lifecycle suite"
+    },
+    {
+      "monster": "all supported",
+      "field": "aiRng, cardRandomRng, miscRng, monsterHpRng, potionRng, shuffleRng",
+      "init_write": "BattleContext construction",
+      "future_read": "every rule that rolls",
+      "visibility": "never visible",
+      "category": "RESAMPLED",
+      "grounds": "all six streams are reconstructed from the sampler seed",
+      "approximation": "independent streams, not the original game's correlated seeded streams",
+      "test": "tests/test_native_fairness.py::test_every_distinct_hidden_state_shares_one_belief"
+    },
+    {
+      "monster": "all supported",
+      "field": "cards.drawPile order",
+      "init_write": "shuffle at battle start and on reshuffle",
+      "future_read": "every draw",
+      "visibility": "only the multiset is public",
+      "category": "RESAMPLED",
+      "grounds": "sorted by the cross-backend canonical key then shuffled with the sampler rng, so the sampled order never depends on the real one",
+      "approximation": "a uniformly random order over the public multiset",
+      "test": "tests/test_native_fairness.py::test_same_public_history_different_hidden_draw_order_samples_identically"
+    },
+    {
+      "monster": "all supported",
+      "field": "bc.seed",
+      "init_write": "scenario construction",
+      "future_read": "debug only",
+      "visibility": "never visible",
+      "category": "RESAMPLED",
+      "grounds": "zeroed in the copy; never an agent input",
+      "approximation": "no seed is modelled at all, which is strictly less information than the player has",
+      "test": "tests/test_native_fairness.py::test_hidden_state_never_appears_in_the_observation"
+    },
+    {
+      "monster": "all supported",
+      "field": "player state, card zones, powers, block, statuses",
+      "init_write": "game flow",
+      "future_read": "rules and the model alike",
+      "visibility": "all exported in the observation",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "copied verbatim and fully exported",
+      "test": "validate_public on every observation"
+    },
+    {
+      "monster": "all supported",
+      "field": "the engine event log",
+      "init_write": "MonsterGroup doMonsterTurn and the spawn sites (patch 0003)",
+      "future_read": "the adapter's previous_intent and slot reset",
+      "visibility": "only executed actions and spawns, both of which the player watches",
+      "category": "PUBLIC_DETERMINED",
+      "grounds": "records only what actually happened; no rule reads it",
+      "test": "tests/test_native_fairness.py lifecycle suite"
+    }
+  ],
+  "by_category": {
+    "RESAMPLED": [
+      "GREEN_LOUSE / RED_LOUSE: miscInfo (base attack)",
+      "all supported: aiRng, cardRandomRng, miscRng, monsterHpRng, potionRng, shuffleRng",
+      "all supported: cards.drawPile order",
+      "all supported: bc.seed"
+    ],
+    "PUBLIC_DETERMINED": [
+      "GREMLIN_WIZARD: monsterData / miscInfo (charge counter)",
+      "RED_SLAVER: miscInfo (usedEntangle)",
+      "all supported: moveHistory[0] (held move)",
+      "all supported: moveHistory[1] and the executed history",
+      "all supported: player state, card zones, powers, block, statuses",
+      "all supported: the engine event log"
+    ],
+    "UNSUPPORTED": [
+      "DARKLING: miscInfo (base attack)",
+      "THE_CHAMP, SPIKER, WRITHING_MASS, TIME_EATER, AWAKENED_ONE, BOOK_OF_STABBING, BRONZE_ORB: miscInfo / monsterData read during move selection"
+    ]
+  },
+  "incomplete_evidence": [
+    {
+      "item": "miscInfo for monsters outside the 17 encounters",
+      "why": "read sites are recorded but no reachable path exists to test them"
+    },
+    {
+      "item": "post-execution identifiability of a move from its visible consequences",
+      "why": "assumed, not measured; the finer intent classes removed the need for it in the cases that were checked"
+    },
+    {
+      "item": "the coverage scan itself",
+      "why": "sampled states, not a proof over all reachable states"
+    }
+  ],
+  "explicitly_not_used_as_proof": [
+    "a random collision scan",
+    "the absence of a move_id key in the observation"
+  ]
+}

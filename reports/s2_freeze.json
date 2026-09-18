@@ -1,0 +1,51 @@
+{
+  "purpose": "S2 freeze at the start of the S1-B directed fix. Written before any code change.",
+  "baseline_commit": "c09167bcb4919e9cb6894e6f19bec59ccc03755c",
+  "head": "c09167bcb4919e9cb6894e6f19bec59ccc03755c",
+  "branch": "s2/louse-and-events",
+  "dirty_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "dirty_diff_bytes": 0,
+  "engine": {
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      }
+    ],
+    "build_info": {
+      "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+      "patches": [
+        "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+        "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      ],
+      "backend": "lightspeed_pilot",
+      "belief_model": "independent_rng_approximation",
+      "game_differential_verified": false
+    }
+  },
+  "versions": {
+    "observation_schema": 3,
+    "encoding_revision": 3,
+    "utility_revision": 1,
+    "scenario_revision": 3,
+    "sampler_revision": "independent_rng_approximation/1",
+    "loss_revision": 2
+  },
+  "preserved": {
+    "accepted_export_weights_sha256": "f268b98a16f030e2cbbedea809497d6c70d17606084a15981d8337fe0b148c59",
+    "s1_run": "runs/s1/M128-R0-s17-S1 (step 400 selected, 500 last)",
+    "s1_dev_eval": "reports/s1_eval (256 scenarios)",
+    "note": "the S1 model and development scores are kept as-is; this round adds corrections only"
+  },
+  "open_defect_under_freeze": {
+    "louse_hidden_base": "Monster::construct:118-120 writes the base attack into miscInfo; GREEN_LOUSE_BITE:745 and RED_LOUSE_BITE:1006 attack with it; sample() copies it unsampled",
+    "execution_history": "observe() infers execution from a turn change rather than a real event",
+    "scan_based_pass": "gen_sampler_audit.py decides PUBLIC_DETERMINED from a collision scan",
+    "entry_contracts": "loss_numerators shape, train(init_checkpoint/resume) version checks, tail count, losses() detach"
+  }
+}

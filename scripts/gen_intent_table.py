@@ -30,6 +30,19 @@ IN_SCOPE = {
 }
 SPLIT_MOVES = {"ACID_SLIME_L_SPLIT", "SPIKE_SLIME_L_SPLIT"}
 
+# Evidence levels, strongest last. Nothing here is ORIGINAL_GAME_VERIFIED: this
+# host has no legal copy of the game, so no row can claim UI parity with it.
+EVIDENCE_LEVELS = ("ENGINE_DERIVED_ONLY", "UI_SOURCE_VERIFIED", "ORIGINAL_GAME_VERIFIED")
+
+# Two different reasons a class can be UNKNOWN, kept apart on purpose:
+#   GAME_SHOWS_UNKNOWN  - a public source says the game itself shows the unknown icon
+#   MAPPING_NOT_KNOWN   - this project has not established what the game shows
+UNKNOWN_KIND = {
+    "ACID_SLIME_L_SPLIT": "GAME_SHOWS_UNKNOWN",
+    "SPIKE_SLIME_L_SPLIT": "GAME_SHOWS_UNKNOWN",
+    "GREMLIN_WIZARD_CHARGING": "MAPPING_NOT_KNOWN",
+}
+
 # Cases where the visible intent is not simply the effect composition.
 # source_checked means a reference was consulted; game_differential_verified stays
 # false everywhere because no legal copy of the game is available on this host.
@@ -98,14 +111,18 @@ def derive():
         if name in SPLIT_MOVES:
             cls = "UNKNOWN"
         source = f"MonsterSpecific.cpp:{lo + 1}"
-        level = "effect_derived"
+        level = "ENGINE_DERIVED_ONLY"
         ref = source
+        page = ""
         if name in OVERRIDES:
             cls, url, why = OVERRIDES[name]
-            level = "wiki_confirmed" if url else "effect_derived_uncertain"
+            level = "UI_SOURCE_VERIFIED" if url else "ENGINE_DERIVED_ONLY"
+            page = url
             ref = f"{source}; {url + ' ' if url else ''}{why}"
         rows.append({"monster": monster, "internal_move": name, "public_intent": cls,
-                     "source": ref, "verification": level,
+                     "evidence_level": level,
+                     "unknown_kind": UNKNOWN_KIND.get(name, "") if cls == "UNKNOWN" else "",
+                     "source": ref, "source_url": page,
                      "source_checked": bool(name in OVERRIDES and OVERRIDES[name][1]),
                      "game_differential_verified": False})
     return rows
@@ -151,20 +168,26 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=["monster", "internal_move", "public_intent",
-                                                    "source", "verification", "source_checked",
+                                                    "evidence_level", "unknown_kind", "source",
+                                                    "source_url", "source_checked",
                                                     "game_differential_verified"])
         writer.writeheader()
         writer.writerows(rows)
     classes = sorted({r["public_intent"] for r in rows})
     print(f"{len(rows)} moves across {len({r['monster'] for r in rows})} monsters")
     print("classes:", classes)
+    levels = {}
+    for r in rows: levels[r["evidence_level"]] = levels.get(r["evidence_level"], 0) + 1
+    print("evidence levels:", levels)
     # a class that does not separate the moves of one monster would be a leak
     collisions = {}
     for r in rows:
         collisions.setdefault((r["monster"], r["public_intent"]), []).append(r["internal_move"])
     ambiguous = {k: v for k, v in collisions.items() if len(v) > 1}
     print("same-monster classes covering more than one move:", ambiguous or "none")
-    json.dump({"rows": len(rows), "classes": classes,
+    json.dump({"rows": len(rows), "classes": classes, "evidence_levels": levels,
+               "unknown_rows": {r["internal_move"]: r["unknown_kind"]
+                                for r in rows if r["public_intent"] == "UNKNOWN"},
                "same_class_collisions": {f"{m}|{c}": v for (m, c), v in ambiguous.items()}},
               open(ROOT / "reports/s1_intent_table_summary.json", "w"), indent=2)
 

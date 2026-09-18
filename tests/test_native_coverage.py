@@ -475,4 +475,55 @@ def test_every_supported_move_has_an_audited_public_intent():
         assert row["public_intent"], row
         assert row["source"], row
         assert row["game_differential_verified"] == "False"
-        assert row["verification"] in ("effect_derived", "wiki_confirmed", "effect_derived_uncertain")
+        assert row["evidence_level"] in ("ENGINE_DERIVED_ONLY", "UI_SOURCE_VERIFIED",
+                                         "ORIGINAL_GAME_VERIFIED")
+        # never claim original-game verification without the game
+        assert row["evidence_level"] != "ORIGINAL_GAME_VERIFIED"
+        if row["public_intent"] == "UNKNOWN":
+            assert row["unknown_kind"] in ("GAME_SHOWS_UNKNOWN", "MAPPING_NOT_KNOWN"), row
+
+
+def test_the_field_audit_does_not_decide_categories_by_scan():
+    """A collision scan is coverage, never a pass criterion."""
+    import json as _json
+    audit = _json.loads((ROOT / "sampler/field_audit.json").read_text(encoding="utf-8"))
+    assert "COVERAGE STATISTIC ONLY" in audit["coverage_scan"]["role"]
+    assert audit["incomplete_evidence"], "the audit must keep an incomplete-evidence bucket"
+    required = {"monster", "field", "init_write", "future_read", "visibility",
+                "category", "grounds", "test"}
+    for field in audit["fields"]:
+        assert required <= set(field), f"field entry is missing {required - set(field)}: {field}"
+        assert field["category"] in ("PUBLIC_DETERMINED", "RESAMPLED", "UNSUPPORTED")
+        if field["category"] == "RESAMPLED":
+            assert field.get("approximation"), "a resampled field must name its approximation"
+    determined = [f for f in audit["fields"] if f["category"] == "PUBLIC_DETERMINED"]
+    assert determined, "the audit would be vacuous without any determined field"
+
+
+def test_the_louse_field_is_audited_as_resampled():
+    """The field the review found unlisted must now be present and honest."""
+    import json as _json
+    audit = _json.loads((ROOT / "sampler/field_audit.json").read_text(encoding="utf-8"))
+    louse = [f for f in audit["fields"] if "LOUSE" in f["monster"]]
+    assert louse, "the louse miscInfo entry must exist"
+    assert louse[0]["category"] == "RESAMPLED"
+    assert "miscInfo" in louse[0]["field"]
+
+
+def test_the_engine_lock_declares_exactly_the_patches_on_disk():
+    """A lock that under-declares the patch series makes builds misreport provenance.
+
+    The patch files are committed independently of the lock, so a missing lock
+    update leaves a checkout that applies three patches while build_info claims
+    two. The two must agree.
+    """
+    import hashlib as _hashlib
+    import json as _json
+    root = Path(__file__).resolve().parents[1]
+    lock = _json.loads((root / "engine_lock.json").read_text(encoding="utf-8"))
+    on_disk = sorted(p.name for p in (root / "native" / "patches").glob("*.patch"))
+    declared = sorted(Path(p["file"]).name for p in lock.get("patches", []))
+    assert on_disk == declared, f"disk {on_disk} vs lock {declared}"
+    for entry in lock["patches"]:
+        path = root / entry["file"]
+        assert _hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"], entry["file"]

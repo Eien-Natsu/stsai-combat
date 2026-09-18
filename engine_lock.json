@@ -12,6 +12,10 @@
     {
       "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
       "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+    },
+    {
+      "file": "native/patches/0003-combat-event-log.patch",
+      "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
     }
   ]
 }

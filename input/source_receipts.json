@@ -1,0 +1,81 @@
+{
+  "purpose": "Where every external claim in this round came from, with a version or content hash.",
+  "engine": {
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "url": "https://github.com/gamerpuppy/sts_lightspeed.git",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "0330d8f1083315ec441a81fe4f0bb5c0baaa78d66f2d859393242f622460e7e2"
+      }
+    ],
+    "note": "the intent table and the event log are derived from this exact revision"
+  },
+  "intent_mapping_sources": {
+    "engine_effect_derivation": {
+      "file": "third_party/sts_lightspeed/src/combat/MonsterSpecific.cpp",
+      "sha256": "2fc8b7fe574eac8ef40fa16621994307ac3c2e3ad49dc08b079b15d750e8d73c",
+      "note": "43 rows: the class is read off the move's own effect composition"
+    },
+    "ui_source_checks": [
+      {
+        "rows": [
+          "JAW_WORM_BELLOW",
+          "JAW_WORM_THRASH"
+        ],
+        "url": "https://slaythespire.wiki.gg/wiki/Jaw_Worm",
+        "checked": "2026-09-18",
+        "content_sha256": null,
+        "quoted": "Bellow is the defend/buff intent and grants Strength and Block; Thrash is attack + defend"
+      },
+      {
+        "rows": [
+          "SENTRY_BOLT"
+        ],
+        "url": "https://slaythespire.wiki.gg/wiki/Sentry",
+        "checked": "2026-09-18",
+        "content_sha256": null,
+        "quoted": "Bolt is shown with a debuff intent icon"
+      },
+      {
+        "rows": [
+          "SHIELD_GREMLIN_PROTECT"
+        ],
+        "url": "https://slaythespire.wiki.gg/wiki/Shield_Gremlin",
+        "checked": "2026-09-18",
+        "content_sha256": null,
+        "quoted": "Protect displays the defend intent icon"
+      },
+      {
+        "rows": [
+          "ACID_SLIME_L_SPLIT",
+          "SPIKE_SLIME_L_SPLIT"
+        ],
+        "url": "https://slaythespire.wiki.gg/wiki/Acid_Slime",
+        "checked": "2026-09-18",
+        "content_sha256": null,
+        "quoted": "Split is shown with the unknown icon"
+      },
+      {
+        "rows": [
+          "LAGAVULIN_SLEEP"
+        ],
+        "url": "https://slaythespire.wiki.gg/wiki/Lagavulin",
+        "checked": "2026-09-18",
+        "content_sha256": null,
+        "quoted": "shows the sleep intent icon"
+      }
+    ],
+    "content_hash_note": "the wiki pages were read through a fetch tool that returns summarised text, so no byte-level page hash is available; the quoted wording and the date are recorded instead. Rows without a URL are ENGINE_DERIVED_ONLY.",
+    "not_available": "CommunicationMod's monster.intent.name() reflects the original game's enum, but no row here can be promoted to ORIGINAL_GAME_VERIFIED without a legal copy of the game on this host"
+  },
+  "game_differential_verified": false
+}

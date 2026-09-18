@@ -1,0 +1,46 @@
+{
+  "purpose": "S2 protocol, written before the fix.",
+  "baseline": "c09167bcb4919e9cb6894e6f19bec59ccc03755c",
+  "branch": "s2/louse-and-events",
+  "order": [
+    "P1 louse hidden base",
+    "P2 real execution events + split",
+    "P3 audit rewrite",
+    "P4 four contracts",
+    "evidence pack"
+  ],
+  "resource_limits": {
+    "new_native_training_runs": 0,
+    "new_collection": 0,
+    "new_256_dev_eval": 0,
+    "p6": false,
+    "diagnostic_roots_max": 64,
+    "steps_per_root_max": 128,
+    "sampler_seeds_per_distribution_max": 4096,
+    "mcts_roots_max": 16,
+    "mcts_simulations_max": 64,
+    "gpu": "short forward/backward smoke only"
+  },
+  "sampler_declaration": {
+    "model": "independent-stream approximation with a public-history-derived candidate set",
+    "not_claimed": "the exact posterior of the original game's correlated seeded streams",
+    "rule": "the true hidden value may never be a prior, a filter, or a sampling seed; when public history determines the value it is kept, otherwise a candidate is drawn once per simulation",
+    "versioning": "intent/observation semantics bump schema+encoding; sampler algorithm bumps sampler revision"
+  },
+  "evidence_levels": [
+    "CURRENT_CODE_RUN",
+    "OLD_VERSION_NEGATIVE_CONTROL_RUN",
+    "SOURCE_ARGUMENT_ONLY",
+    "NOT_VERIFIED"
+  ],
+  "forbidden": [
+    "new training",
+    "data expansion",
+    "re-running the 256-scenario evaluation",
+    "P6",
+    "changing reward/selection/teacher budget",
+    "DAgger",
+    "hybrid work",
+    "mechanic expansion"
+  ]
+}

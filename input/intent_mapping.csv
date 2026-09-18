@@ -1,51 +1,51 @@
-monster,internal_move,public_intent,source,verification,source_checked,game_differential_verified
-ACID_SLIME_L,ACID_SLIME_L_CORROSIVE_SPIT,ATTACK_DEBUFF,MonsterSpecific.cpp:353,effect_derived,False,False
-ACID_SLIME_L,ACID_SLIME_L_LICK,DEBUFF,MonsterSpecific.cpp:359,effect_derived,False,False
-ACID_SLIME_L,ACID_SLIME_L_SPLIT,UNKNOWN,MonsterSpecific.cpp:364; https://slaythespire.wiki.gg/wiki/Acid_Slime wiki: Split 'shown with the unknown icon',wiki_confirmed,True,False
-ACID_SLIME_L,ACID_SLIME_L_TACKLE,ATTACK,MonsterSpecific.cpp:368,effect_derived,False,False
-ACID_SLIME_M,ACID_SLIME_M_CORROSIVE_SPIT,ATTACK_DEBUFF,MonsterSpecific.cpp:373,effect_derived,False,False
-ACID_SLIME_M,ACID_SLIME_M_LICK,DEBUFF,MonsterSpecific.cpp:381,effect_derived,False,False
-ACID_SLIME_M,ACID_SLIME_M_TACKLE,ATTACK,MonsterSpecific.cpp:386,effect_derived,False,False
-ACID_SLIME_S,ACID_SLIME_S_LICK,DEBUFF,MonsterSpecific.cpp:393,effect_derived,False,False
-ACID_SLIME_S,ACID_SLIME_S_TACKLE,ATTACK,MonsterSpecific.cpp:398,effect_derived,False,False
-BLUE_SLAVER,BLUE_SLAVER_RAKE,ATTACK_DEBUFF,MonsterSpecific.cpp:442,effect_derived,False,False
-BLUE_SLAVER,BLUE_SLAVER_STAB,ATTACK,MonsterSpecific.cpp:449,effect_derived,False,False
-FAT_GREMLIN,FAT_GREMLIN_SMASH,ATTACK_DEBUFF,MonsterSpecific.cpp:643,effect_derived,False,False
-MAD_GREMLIN,MAD_GREMLIN_SCRATCH,ATTACK,MonsterSpecific.cpp:658,effect_derived,False,False
-SNEAKY_GREMLIN,SNEAKY_GREMLIN_PUNCTURE,ATTACK,MonsterSpecific.cpp:668,effect_derived,False,False
-CULTIST,CULTIST_DARK_STRIKE,ATTACK,MonsterSpecific.cpp:676,effect_derived,False,False
-CULTIST,CULTIST_INCANTATION,BUFF,MonsterSpecific.cpp:681,effect_derived,False,False
-FUNGI_BEAST,FUNGI_BEAST_BITE,ATTACK,MonsterSpecific.cpp:691,effect_derived,False,False
-FUNGI_BEAST,FUNGI_BEAST_GROW,BUFF,MonsterSpecific.cpp:696,effect_derived,False,False
-GREEN_LOUSE,GREEN_LOUSE_BITE,ATTACK,MonsterSpecific.cpp:744,effect_derived,False,False
-GREEN_LOUSE,GREEN_LOUSE_SPIT_WEB,DEBUFF,MonsterSpecific.cpp:749,effect_derived,False,False
-GREMLIN_NOB,GREMLIN_NOB_BELLOW,BUFF,MonsterSpecific.cpp:756,effect_derived,False,False
-GREMLIN_NOB,GREMLIN_NOB_RUSH,ATTACK,MonsterSpecific.cpp:761,effect_derived,False,False
-GREMLIN_NOB,GREMLIN_NOB_SKULL_BASH,ATTACK_DEBUFF,MonsterSpecific.cpp:766,effect_derived,False,False
-GREMLIN_WIZARD,GREMLIN_WIZARD_CHARGING,UNKNOWN,MonsterSpecific.cpp:774; no observable effect on the turn it is used; the game's icon was not verified,effect_derived_uncertain,False,False
-GREMLIN_WIZARD,GREMLIN_WIZARD_ULTIMATE_BLAST,ATTACK,MonsterSpecific.cpp:782,effect_derived,False,False
-JAW_WORM,JAW_WORM_CHOMP,ATTACK,MonsterSpecific.cpp:850,effect_derived,False,False
-JAW_WORM,JAW_WORM_BELLOW,DEFEND_BUFF,MonsterSpecific.cpp:855; https://slaythespire.wiki.gg/wiki/Jaw_Worm wiki: 'defend/buff intent'; gains Strength and Block,wiki_confirmed,True,False
-JAW_WORM,JAW_WORM_THRASH,ATTACK_DEFEND,MonsterSpecific.cpp:863; https://slaythespire.wiki.gg/wiki/Jaw_Worm wiki: 'attack + defend intent',wiki_confirmed,True,False
-LAGAVULIN,LAGAVULIN_ATTACK,ATTACK,MonsterSpecific.cpp:871,effect_derived,False,False
-LAGAVULIN,LAGAVULIN_SIPHON_SOUL,DEBUFF,MonsterSpecific.cpp:881,effect_derived,False,False
-LAGAVULIN,LAGAVULIN_SLEEP,SLEEP,MonsterSpecific.cpp:888; https://slaythespire.wiki.gg/wiki/Lagavulin wiki: 'shows the sleep intent icon',wiki_confirmed,True,False
-LOOTER,LOOTER_ESCAPE,ESCAPE,MonsterSpecific.cpp:899,effect_derived,False,False
-LOOTER,LOOTER_LUNGE,ATTACK,MonsterSpecific.cpp:911,effect_derived,False,False
-LOOTER,LOOTER_MUG,ATTACK,MonsterSpecific.cpp:918,effect_derived,False,False
-LOOTER,LOOTER_SMOKE_BOMB,DEFEND,MonsterSpecific.cpp:936,effect_derived,False,False
-RED_LOUSE,RED_LOUSE_BITE,ATTACK,MonsterSpecific.cpp:1005,effect_derived,False,False
-RED_LOUSE,RED_LOUSE_GROW,BUFF,MonsterSpecific.cpp:1010,effect_derived,False,False
-RED_SLAVER,RED_SLAVER_ENTANGLE,DEBUFF,MonsterSpecific.cpp:1017,effect_derived,False,False
-RED_SLAVER,RED_SLAVER_SCRAPE,ATTACK_DEBUFF,MonsterSpecific.cpp:1022,effect_derived,False,False
-RED_SLAVER,RED_SLAVER_STAB,ATTACK,MonsterSpecific.cpp:1028,effect_derived,False,False
-SENTRY,SENTRY_BEAM,ATTACK,MonsterSpecific.cpp:1035,effect_derived,False,False
-SENTRY,SENTRY_BOLT,DEBUFF,MonsterSpecific.cpp:1041; https://slaythespire.wiki.gg/wiki/Sentry wiki: Bolt 'shown with a debuff intent icon',wiki_confirmed,True,False
-SHIELD_GREMLIN,SHIELD_GREMLIN_PROTECT,DEFEND,MonsterSpecific.cpp:1073; https://slaythespire.wiki.gg/wiki/Shield_Gremlin wiki: 'displays the defend intent icon',wiki_confirmed,True,False
-SHIELD_GREMLIN,SHIELD_GREMLIN_SHIELD_BASH,ATTACK,MonsterSpecific.cpp:1083,effect_derived,False,False
-SPIKE_SLIME_M,SPIKE_SLIME_M_LICK,DEBUFF,MonsterSpecific.cpp:1172,effect_derived,False,False
-SPIKE_SLIME_M,SPIKE_SLIME_M_FLAME_TACKLE,ATTACK_DEBUFF,MonsterSpecific.cpp:1178,effect_derived,False,False
-SPIKE_SLIME_L,SPIKE_SLIME_L_FLAME_TACKLE,ATTACK_DEBUFF,MonsterSpecific.cpp:1187,effect_derived,False,False
-SPIKE_SLIME_L,SPIKE_SLIME_L_LICK,DEBUFF,MonsterSpecific.cpp:1193,effect_derived,False,False
-SPIKE_SLIME_L,SPIKE_SLIME_L_SPLIT,UNKNOWN,MonsterSpecific.cpp:1198; https://slaythespire.wiki.gg/wiki/Acid_Slime large slime Split family: unknown intent icon,wiki_confirmed,True,False
-SPIKE_SLIME_S,SPIKE_SLIME_S_TACKLE,ATTACK,MonsterSpecific.cpp:1204,effect_derived,False,False
+monster,internal_move,public_intent,evidence_level,unknown_kind,source,source_url,source_checked,game_differential_verified
+ACID_SLIME_L,ACID_SLIME_L_CORROSIVE_SPIT,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:353,,False,False
+ACID_SLIME_L,ACID_SLIME_L_LICK,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:359,,False,False
+ACID_SLIME_L,ACID_SLIME_L_SPLIT,UNKNOWN,UI_SOURCE_VERIFIED,GAME_SHOWS_UNKNOWN,MonsterSpecific.cpp:364; https://slaythespire.wiki.gg/wiki/Acid_Slime wiki: Split 'shown with the unknown icon',https://slaythespire.wiki.gg/wiki/Acid_Slime,True,False
+ACID_SLIME_L,ACID_SLIME_L_TACKLE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:368,,False,False
+ACID_SLIME_M,ACID_SLIME_M_CORROSIVE_SPIT,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:373,,False,False
+ACID_SLIME_M,ACID_SLIME_M_LICK,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:381,,False,False
+ACID_SLIME_M,ACID_SLIME_M_TACKLE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:386,,False,False
+ACID_SLIME_S,ACID_SLIME_S_LICK,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:393,,False,False
+ACID_SLIME_S,ACID_SLIME_S_TACKLE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:398,,False,False
+BLUE_SLAVER,BLUE_SLAVER_RAKE,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:442,,False,False
+BLUE_SLAVER,BLUE_SLAVER_STAB,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:449,,False,False
+FAT_GREMLIN,FAT_GREMLIN_SMASH,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:643,,False,False
+MAD_GREMLIN,MAD_GREMLIN_SCRATCH,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:658,,False,False
+SNEAKY_GREMLIN,SNEAKY_GREMLIN_PUNCTURE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:668,,False,False
+CULTIST,CULTIST_DARK_STRIKE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:676,,False,False
+CULTIST,CULTIST_INCANTATION,BUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:681,,False,False
+FUNGI_BEAST,FUNGI_BEAST_BITE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:691,,False,False
+FUNGI_BEAST,FUNGI_BEAST_GROW,BUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:696,,False,False
+GREEN_LOUSE,GREEN_LOUSE_BITE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:744,,False,False
+GREEN_LOUSE,GREEN_LOUSE_SPIT_WEB,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:749,,False,False
+GREMLIN_NOB,GREMLIN_NOB_BELLOW,BUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:756,,False,False
+GREMLIN_NOB,GREMLIN_NOB_RUSH,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:761,,False,False
+GREMLIN_NOB,GREMLIN_NOB_SKULL_BASH,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:766,,False,False
+GREMLIN_WIZARD,GREMLIN_WIZARD_CHARGING,UNKNOWN,ENGINE_DERIVED_ONLY,MAPPING_NOT_KNOWN,MonsterSpecific.cpp:774; no observable effect on the turn it is used; the game's icon was not verified,,False,False
+GREMLIN_WIZARD,GREMLIN_WIZARD_ULTIMATE_BLAST,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:782,,False,False
+JAW_WORM,JAW_WORM_CHOMP,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:850,,False,False
+JAW_WORM,JAW_WORM_BELLOW,DEFEND_BUFF,UI_SOURCE_VERIFIED,,MonsterSpecific.cpp:855; https://slaythespire.wiki.gg/wiki/Jaw_Worm wiki: 'defend/buff intent'; gains Strength and Block,https://slaythespire.wiki.gg/wiki/Jaw_Worm,True,False
+JAW_WORM,JAW_WORM_THRASH,ATTACK_DEFEND,UI_SOURCE_VERIFIED,,MonsterSpecific.cpp:863; https://slaythespire.wiki.gg/wiki/Jaw_Worm wiki: 'attack + defend intent',https://slaythespire.wiki.gg/wiki/Jaw_Worm,True,False
+LAGAVULIN,LAGAVULIN_ATTACK,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:871,,False,False
+LAGAVULIN,LAGAVULIN_SIPHON_SOUL,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:881,,False,False
+LAGAVULIN,LAGAVULIN_SLEEP,SLEEP,UI_SOURCE_VERIFIED,,MonsterSpecific.cpp:888; https://slaythespire.wiki.gg/wiki/Lagavulin wiki: 'shows the sleep intent icon',https://slaythespire.wiki.gg/wiki/Lagavulin,True,False
+LOOTER,LOOTER_ESCAPE,ESCAPE,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:899,,False,False
+LOOTER,LOOTER_LUNGE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:911,,False,False
+LOOTER,LOOTER_MUG,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:918,,False,False
+LOOTER,LOOTER_SMOKE_BOMB,DEFEND,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:936,,False,False
+RED_LOUSE,RED_LOUSE_BITE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1005,,False,False
+RED_LOUSE,RED_LOUSE_GROW,BUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1010,,False,False
+RED_SLAVER,RED_SLAVER_ENTANGLE,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1017,,False,False
+RED_SLAVER,RED_SLAVER_SCRAPE,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1022,,False,False
+RED_SLAVER,RED_SLAVER_STAB,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1028,,False,False
+SENTRY,SENTRY_BEAM,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1035,,False,False
+SENTRY,SENTRY_BOLT,DEBUFF,UI_SOURCE_VERIFIED,,MonsterSpecific.cpp:1041; https://slaythespire.wiki.gg/wiki/Sentry wiki: Bolt 'shown with a debuff intent icon',https://slaythespire.wiki.gg/wiki/Sentry,True,False
+SHIELD_GREMLIN,SHIELD_GREMLIN_PROTECT,DEFEND,UI_SOURCE_VERIFIED,,MonsterSpecific.cpp:1073; https://slaythespire.wiki.gg/wiki/Shield_Gremlin wiki: 'displays the defend intent icon',https://slaythespire.wiki.gg/wiki/Shield_Gremlin,True,False
+SHIELD_GREMLIN,SHIELD_GREMLIN_SHIELD_BASH,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1083,,False,False
+SPIKE_SLIME_M,SPIKE_SLIME_M_LICK,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1172,,False,False
+SPIKE_SLIME_M,SPIKE_SLIME_M_FLAME_TACKLE,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1178,,False,False
+SPIKE_SLIME_L,SPIKE_SLIME_L_FLAME_TACKLE,ATTACK_DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1187,,False,False
+SPIKE_SLIME_L,SPIKE_SLIME_L_LICK,DEBUFF,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1193,,False,False
+SPIKE_SLIME_L,SPIKE_SLIME_L_SPLIT,UNKNOWN,UI_SOURCE_VERIFIED,GAME_SHOWS_UNKNOWN,MonsterSpecific.cpp:1198; https://slaythespire.wiki.gg/wiki/Acid_Slime large slime Split family: unknown intent icon,https://slaythespire.wiki.gg/wiki/Acid_Slime,True,False
+SPIKE_SLIME_S,SPIKE_SLIME_S_TACKLE,ATTACK,ENGINE_DERIVED_ONLY,,MonsterSpecific.cpp:1204,,False,False
