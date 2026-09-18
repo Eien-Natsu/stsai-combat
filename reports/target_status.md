@@ -462,6 +462,52 @@ RNG 六路与抽牌堆顺序为 RESAMPLED；不可达怪物的 latent 字段为 
 G3 原游戏差分仍未执行（本机无合法游戏）。跨 continuation 的 Brier 只作诊断（模型 0.21150 对
 常数基线 0.12986）。
 
+## S1-B 轮（隐藏状态与生命周期修复）
+
+交付包 `stsai_s1b_review_1d49eec.zip`（2.28 MB / 25 文件）。**0 新训练、0 新采集、0 次 256 场评测、未动 P6。**
+基线 `c09167b`，本轮 5 个 commit。
+
+### 虱子预生成攻击值（复核发现，已修）
+
+`Monster.cpp:118-120` 出生时把基础攻击写入 `miscInfo`，`MonsterSpecific.cpp:745/:1006` 的攻击直接用它。
+c09167b 的 `sample()` 整体复制而不处理 → rollout 用了玩家看不见的数。
+现在按槽位维护**只由公开历史决定**的候选区间（出生范围 → 每显示一次攻击就收窄 → 唯一即保留 → 多解即保留不确定性），
+每次 simulation 抽一次并保持，真实值从不读取；区间经 `attack_base_low/high` 导出。
+`tests/test_louse_hidden_base.py` 6 项：固定 sampler 在 5 个 seed 上一致、
+**修复前的 sampler 在同一对根上全部分叉**（负对照）。
+
+### 真实执行事件（已修）
+
+不再用 `bc.turn` 变化推断。上游补丁 `0003-combat-event-log.patch`（只做观测，无规则读取）
+在 `doMonsterTurn` 真正执行前记录 `EXECUTED`，在 `createMonster` 与 `largeSlimeSplit` 记录 `SPAWNED`。
+适配器按序消费：被杀未行动 = NONE、Looter 逃跑仍计入、重复 observe 幂等、**分裂的新实体不继承旧槽历史与记忆**。
+覆盖了 LARGE_SLIME 分裂（已在范围内，不再写作"扩范围后验证"）。
+负对照测试固定了旧规则的反例：它会给**从未出手**的第三只虱子发 `ATTACK`、给 Sentry 发 `DEBUFF`。
+
+### 审计与证据等级（已改）
+
+删掉 `public_determined = not collisions and checked > 2000`：扫描只作 **coverage 统计**，
+类别由逐字段声明给出（写入点/读取点/可见性/依据/测试）。
+12 字段：6 PUBLIC_DETERMINED / 4 RESAMPLED / 2 UNSUPPORTED，另设 `incomplete_evidence`。
+意图映射 43 行 `ENGINE_DERIVED_ONLY`、7 行 `UI_SOURCE_VERIFIED`、**0 行原游戏核对**；
+`UNKNOWN` 的两种原因（游戏真显示 unknown / 我们不知道）分开记录。
+
+### 四个契约（已修）
+
+生产路径 shape 校验（先前 (B,1) decision 被接受，2.2377→7.5941）；三个入口共用版本检查；
+尾部计数用实际缓存行数（**S1 run 正确值 126，与复核的 16126−16000 精确吻合**，原 144 是错的）；
+`losses()` 恢复可微。顺带修掉 `effective_batch_samples` 记名义值的问题。
+
+### 离线 native
+
+`native_sources.tar.gz`（128 文件，0.62 MB，POST_PATCH，含三份许可证）
++ `review/offline_native_build.py`：校验全部哈希后 cmake 配置/编译/导入，
+`build_info` 报告**三个**补丁，并断言 `game_differential_verified=false`。
+**已在干净克隆上实跑通过**；`review/run_review.py` 七个步骤全 PASS。
+
+**过程中修掉一个 provenance 缺陷**：事件日志补丁已提交但 `engine_lock.json` 未提交，
+会使该 commit 的检出少报补丁；已修并加测试要求 lock 与 `native/patches/` 一致。
+
 ## 阻碍
 
 1. **没有合法原版游戏**（G3 阻塞）。需要合法安装游戏本体 + ModTheSpire + BaseMod +
