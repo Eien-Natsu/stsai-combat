@@ -52,11 +52,18 @@ def parse_message(message:dict,counters=None)->dict:
         attack="ATTACK" in intent
         adjusted=e.get("move_adjusted_damage",-1)
         if attack and adjusted<0:raise UnsupportedState("Missing observed adjusted enemy damage")
+        # A monster whose base attack is rolled at spawn has a public memory the
+        # live bridge cannot rebuild from a single mod snapshot: it would need the
+        # whole observed history. Refusing is the honest answer; claiming
+        # "not applicable" would assert the model has information it does not.
+        if name in ("GREEN_LOUSE", "RED_LOUSE"):
+            raise UnsupportedState("Live bridge cannot reconstruct a louse's public attack-base memory")
         enemies.append({"id":name,"slot":i,"hp":int(e["current_hp"]),"max_hp":int(e["max_hp"]),
             "block":int(e["block"]),"strength":ep.get("STRENGTH",0),"weak":ep.get("WEAK",0),
             "vulnerable":ep.get("VULNERABLE",0),"artifact":ep.get("ARTIFACT",0),
             "half_dead":bool(e.get("half_dead",False)),"intent":"ATTACK" if attack else "BUFF",
-            "intent_damage":adjusted if attack else 0,"hits":max(1,int(e.get("move_hits",1))) if attack else 0})
+            "intent_damage":adjusted if attack else 0,"hits":max(1,int(e.get("move_hits",1))) if attack else 0,
+            "attack_base_low":-1,"attack_base_high":-1})
         if ep.get("RITUAL"):powerlist.append({"id":"RITUAL","owner":i,"amount":ep["RITUAL"]})
     if len(enemies)!=1:raise UnsupportedState("Pilot live bridge requires one enemy")
     obs={"schema_version":SCHEMA_VERSION,"backend":"lightspeed_pilot","turn":int(c["turn"]),"ascension":int(g.get("ascension_level",0)),

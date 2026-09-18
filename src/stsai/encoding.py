@@ -11,7 +11,7 @@ VOCAB = 8192
 # Bump when the encoder changes which information reaches the model. Checkpoints
 # record it and refuse to load across a mismatch, so an old model can never be
 # silently evaluated on inputs it was not trained on.
-ENCODING_REVISION = 4
+ENCODING_REVISION = 5
 MAX_SELECTION = 10
 KIND = {"play": 0, "end": 1, "potion": 2, "select": 3, "select_many": 4}
 ZONE = {"player": 1, "enemies": 2, "hand": 3, "draw_pile": 4, "discard_pile": 5,
@@ -70,12 +70,23 @@ def encode(obs: dict, max_entities: int = 512, max_actions: int = 1024) -> Encod
     feats[0][4] = len(obs["exhaust_pile"]) / 60
     for i, e in enumerate(obs["enemies"]):
         slot = e.get("slot", i)
+        # Features 13/14/15 carry the public-derived interval for a monster whose
+        # base attack was rolled at spawn (the louse). Feature 13 is the
+        # applicability flag, so "this monster has no such parameter" and "the
+        # parameter is known to be 0" are different inputs. The interval is what
+        # the player's own observations allow; the true value is never encoded.
+        base_low = e.get("attack_base_low", -1)
+        base_high = e.get("attack_base_high", -1)
+        base_applies = 1.0 if base_low is not None and base_low >= 0 else 0.0
         add("enemies", slot, e["id"], {2: e["hp"] / 200, 3: e["max_hp"] / 200,
             4: e.get("block", 0) / 100, 5: e.get("intent_damage", 0) / 50,
             6: e.get("strength", 0) / 30, 7: e.get("hits", 1) / 10,
             8: e.get("weak", 0) / 10, 9: e.get("vulnerable", 0) / 10,
             10: float(e["hp"] > 0), 11: e.get("half_dead", 0),
-            12: e.get("artifact", 0) / 5})
+            12: e.get("artifact", 0) / 5,
+            13: base_applies,
+            14: (base_low if base_applies else 0.0) / 10,
+            15: (base_high if base_applies else 0.0) / 10})
         # Intent type and visible power identity must not be reduced to damage.
         add("powers", 10000 + i, "ENEMY_INTENT_" + str(slot) + "_" + str(e.get("intent", "UNKNOWN")), {2: 1})
         # The enemy's already-executed move is public: the player watched it
