@@ -1,0 +1,5 @@
+$ /workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_engine_tree_check.py
+
+......                                                                   [100%]
+6 passed in 0.40s
+

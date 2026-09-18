@@ -1,0 +1,12 @@
+$ /workspaces/stsai_web/.venv/bin/python /workspaces/stsai_web/review/run_review.py --repo /tmp/stsai-g3-pxyct0es/repo --sources /workspaces/stsai_web/native_sources.tar.gz --work /tmp/stsai-g3-pxyct0es/review --receipt /workspaces/stsai_web/reports/s1r_gates/g3_review_receipt.json
+
+NOT_RUN  attachments    no --package given
+PASS     native_build   built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so
+PASS     import         revision 7476a8195402, 4 patches
+PASS     intent         native/intent_table.def matches the derivation (50 rows)
+PASS     tests          277 tests, 0 failed, 0 skipped, 155 native/regression cases
+PASS     counterfactual 5 steps replayed, 1024 sampler seeds, root stable=True
+NOT_RUN  model_smoke    no --model given (expected when the round did not train)
+receipt: /workspaces/stsai_web/reports/s1r_gates/g3_review_receipt.json
+all required checks passed on this machine
+

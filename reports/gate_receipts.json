@@ -1,0 +1,222 @@
+{
+  "purpose": "S1R gate receipts. Every line is a command run for this file.",
+  "baseline": "bf26b0f4713e0bd4ac9858034ca94693840c5040",
+  "head": "88fcae9567697a829e1039f4eaeac1055f8fa509",
+  "versions": {
+    "encoding_revision": 5,
+    "observation_schema": 4,
+    "loss_revision": 2,
+    "sampler_revision": "public_history_candidate_sampling/2"
+  },
+  "resource_limits": {
+    "collection_workers_max": 2,
+    "teacher_simulations": 64,
+    "new_native_training_runs_max": 1,
+    "optimizer_updates_max": 500,
+    "effective_batch": 32,
+    "eval_scenarios": 256,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260918,
+    "diagnostic_roots_max": 64,
+    "steps_per_root_max": 128,
+    "sampler_seeds_per_distribution_max": 4096,
+    "cloud": false,
+    "p6": false
+  },
+  "gates": {
+    "G1_input": {
+      "items": [
+        {
+          "item": "four legal attack-base states encode differently and are normalized",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_encoding_public_range.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g1_encoding_states.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "5 passed in 0.09s"
+        },
+        {
+          "item": "the reviewer's red-light sensitivity case now passes",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_review_gate.py::test_public_attack_base_reaches_encoder",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g1_review_gate.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "1 passed in 0.83s"
+        },
+        {
+          "item": "the native adapter may not omit the memory; hidden values are refused",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_encoding_public_range.py::test_a_native_observation_may_not_omit_the_memory tests/test_encoding_public_range.py::test_only_the_public_interval_reaches_the_encoder tests/test_encoding_public_range.py::test_a_backend_without_the_parameter_declares_it_absent",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g1_contract.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "3 passed in 0.05s"
+        },
+        {
+          "item": "a checkpoint from the older encoding is refused",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_entry_contracts.py::test_a_missing_revision_is_treated_as_the_old_one_not_the_current_one",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g1_old_weights.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "1 passed in 0.78s"
+        }
+      ],
+      "status": "PASS"
+    },
+    "G2_provenance": {
+      "items": [
+        {
+          "item": "the declared series applies in order to a clean locked checkout",
+          "command": "/workspaces/stsai_web/.venv/bin/python scripts/patch_series_receipt.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g2_patch_series.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "PASS: every patch applied in order and the built checkout matches the series output"
+        },
+        {
+          "item": "content, not filenames: extra bytes, removed fragments, half-applied series, untracked files are all refused",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_engine_tree_check.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g2_tree_check.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "6 passed in 0.40s"
+        },
+        {
+          "item": "the offline snapshot is PRE_PATCH and ships every licence",
+          "command": "/workspaces/stsai_web/.venv/bin/python -c import json;m=json.load(open('native_sources_manifest.json'));print(m['patch_state'][:60]);print([f['path'] for f in m['files'] if 'LICENSE' in f['path']]);assert all(f['patch_state']=='PRE_PATCH' for f in m['files'] if f['origin']=='sts_lightspeed');assert any('pybind11' in f['path'] for f in m['files']);assert m['engine']['patch_order']",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g2_snapshot.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "['sts_lightspeed/LICENSE.md', 'sts_lightspeed/json/LICENSE.MIT', 'pybind11/LICENSE.pybind11-2.13.6']"
+        }
+      ],
+      "status": "PASS"
+    },
+    "G3_execution": {
+      "items": [
+        {
+          "item": "offline build, import, intent, native pytest and counterfactual from a fresh clone",
+          "command": "/workspaces/stsai_web/.venv/bin/python /workspaces/stsai_web/review/run_review.py --repo /tmp/stsai-g3-pxyct0es/repo --sources /workspaces/stsai_web/native_sources.tar.gz --work /tmp/stsai-g3-pxyct0es/review --receipt /workspaces/stsai_web/reports/s1r_gates/g3_review_receipt.json",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "all required checks passed on this machine"
+        },
+        {
+          "item": "review step: attachments",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "SKIP",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "no --package given"
+        },
+        {
+          "item": "review step: native_build",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so"
+        },
+        {
+          "item": "review step: import",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "revision 7476a8195402, 4 patches"
+        },
+        {
+          "item": "review step: intent",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "native/intent_table.def matches the derivation (50 rows)"
+        },
+        {
+          "item": "review step: tests",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "277 tests, 0 failed, 0 skipped, 155 native/regression cases"
+        },
+        {
+          "item": "review step: counterfactual",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "5 steps replayed, 1024 sampler seeds, root stable=True"
+        },
+        {
+          "item": "review step: model_smoke",
+          "command": "run_review.py",
+          "exit_code": 0,
+          "status": "SKIP",
+          "log": "reports/s1r_gates/g3_review_run.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "no --model given (expected when the round did not train)"
+        }
+      ],
+      "status": "PASS"
+    },
+    "G4_contracts": {
+      "items": [
+        {
+          "item": "all heads share one batch",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_entry_contracts.py::test_every_head_must_share_one_batch tests/test_entry_contracts.py::test_loss_numerators_rejects_a_broadcasting_decision_mask tests/test_entry_contracts.py::test_the_accepting_batch_still_works",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g4_batch.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "3 passed in 0.81s"
+        },
+        {
+          "item": "the three checkpoint entry points refuse a native checkpoint with no sampler",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_entry_contracts.py::test_every_entry_point_refuses_a_native_checkpoint_with_no_sampler_revision tests/test_entry_contracts.py::test_load_checkpoint_rejects_stale_semantics tests/test_entry_contracts.py::test_warm_start_and_resume_reject_the_same_stale_semantics",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g4_checkpoint.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "3 passed in 1.37s"
+        },
+        {
+          "item": "the reviewer's ambiguity trace and the same-turn lifecycle case",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_ambiguity_regression.py tests/test_louse_hidden_base.py",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g4_regression.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "8 passed in 0.24s"
+        },
+        {
+          "item": "the audit is labelled coverage, and every field states its evidence kind",
+          "command": "/workspaces/stsai_web/.venv/bin/python -m pytest -q tests/test_native_coverage.py::test_the_field_audit_does_not_decide_categories_by_scan",
+          "exit_code": 0,
+          "status": "PASS",
+          "log": "reports/s1r_gates/g4_audit.txt",
+          "evidence_type": "ACTUAL_RUN",
+          "summary": "1 passed in 0.05s"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "claim": "unverified simulator pilot with a declared sampling approximation; game_differential_verified=false",
+  "training_authorised": true,
+  "verdict": "PASS"
+}

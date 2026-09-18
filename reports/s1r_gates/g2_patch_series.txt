@@ -1,0 +1,5 @@
+$ /workspaces/stsai_web/.venv/bin/python scripts/patch_series_receipt.py
+
+4 patches applied in order; wrote /workspaces/stsai_web/audit/patch_reconstruction.json
+PASS: every patch applied in order and the built checkout matches the series output
+

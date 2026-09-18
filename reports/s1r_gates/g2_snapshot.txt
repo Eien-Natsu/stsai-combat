@@ -1,0 +1,5 @@
+$ /workspaces/stsai_web/.venv/bin/python -c import json;m=json.load(open('native_sources_manifest.json'));print(m['patch_state'][:60]);print([f['path'] for f in m['files'] if 'LICENSE' in f['path']]);assert all(f['patch_state']=='PRE_PATCH' for f in m['files'] if f['origin']=='sts_lightspeed');assert any('pybind11' in f['path'] for f in m['files']);assert m['engine']['patch_order']
+
+PRE_PATCH: sts_lightspeed files are the locked revision's ow
+['sts_lightspeed/LICENSE.md', 'sts_lightspeed/json/LICENSE.MIT', 'pybind11/LICENSE.pybind11-2.13.6']
+

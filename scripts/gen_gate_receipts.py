@@ -122,9 +122,14 @@ def g3(clone_source):
     if receipt.is_file():
         detail = json.loads(receipt.read_text())
         for row in detail["steps"]:
+            status = row["status"]
+            if status == "NOT_RUN" and not row.get("required", True):
+                # Optional steps that this round has nothing for: no package to
+                # hash, no model because the round trained none.
+                status = "SKIP"
             items.append({"item": f"review step: {row['step']}", "command": "run_review.py",
-                          "exit_code": 0 if row["status"] == "PASS" else (2 if row["status"] == "NOT_RUN" else 1),
-                          "status": row["status"], "log": str(log.relative_to(ROOT)),
+                          "exit_code": 0 if status in ("PASS", "SKIP") else (2 if status == "NOT_RUN" else 1),
+                          "status": status, "log": str(log.relative_to(ROOT)),
                           "evidence_type": "ACTUAL_RUN", "summary": row["note"][:200]})
     shutil.rmtree(work, ignore_errors=True)
     return items
