@@ -1,0 +1,939 @@
+{
+  "decisions": {
+    "records": 59812,
+    "shards": [
+      {
+        "bytes": 68219,
+        "first_record_index": 0,
+        "path": "reports/github_handoff_001/decisions/part_000.jsonl",
+        "records": 500,
+        "sha256": "5bc3a6ba06af47f2bcf575ee806350a74612a3a87dd34e924eafe9886ec89921"
+      },
+      {
+        "bytes": 68278,
+        "first_record_index": 500,
+        "path": "reports/github_handoff_001/decisions/part_001.jsonl",
+        "records": 500,
+        "sha256": "de15d2443d7fc35ef8315f51f7155e524fe2dd2b2b16026f15f85a1ae99a0191"
+      },
+      {
+        "bytes": 68801,
+        "first_record_index": 1000,
+        "path": "reports/github_handoff_001/decisions/part_002.jsonl",
+        "records": 500,
+        "sha256": "1a2b2d6a1a7ed887eb06a49a652c07cd3891875766ad61c4bdbab069019ae505"
+      },
+      {
+        "bytes": 68703,
+        "first_record_index": 1500,
+        "path": "reports/github_handoff_001/decisions/part_003.jsonl",
+        "records": 500,
+        "sha256": "5d08da9f3e1d51e7e06d5718ca81ddcf23534cb472cf8b5c53cfc4399c145bc8"
+      },
+      {
+        "bytes": 68755,
+        "first_record_index": 2000,
+        "path": "reports/github_handoff_001/decisions/part_004.jsonl",
+        "records": 500,
+        "sha256": "6876e6e99cb09c96cfc957e90d96885e480b266ddf4175e3065eeaba0f66fb7a"
+      },
+      {
+        "bytes": 68684,
+        "first_record_index": 2500,
+        "path": "reports/github_handoff_001/decisions/part_005.jsonl",
+        "records": 500,
+        "sha256": "b322a83a4932e445b02a1dc23ae5e1f3eedbeee2509515b1052fe1256d429546"
+      },
+      {
+        "bytes": 68757,
+        "first_record_index": 3000,
+        "path": "reports/github_handoff_001/decisions/part_006.jsonl",
+        "records": 500,
+        "sha256": "347e6bafe4b18b9865eeb2200352cd6840383c2b0dcbf0f6e86478446a43f4bd"
+      },
+      {
+        "bytes": 68806,
+        "first_record_index": 3500,
+        "path": "reports/github_handoff_001/decisions/part_007.jsonl",
+        "records": 500,
+        "sha256": "7b55329b6a17390262484660f231101faeeaa98f0b7ce65b299942679d6cd9b4"
+      },
+      {
+        "bytes": 68744,
+        "first_record_index": 4000,
+        "path": "reports/github_handoff_001/decisions/part_008.jsonl",
+        "records": 500,
+        "sha256": "803405830ba72348be1e20a9d974cb31c425f8c0f528c028affc57a95e302e6f"
+      },
+      {
+        "bytes": 68828,
+        "first_record_index": 4500,
+        "path": "reports/github_handoff_001/decisions/part_009.jsonl",
+        "records": 500,
+        "sha256": "19df5006259e59ae564b8543808a08e7e0abdb84ac51800dadd7bce8923af7d3"
+      },
+      {
+        "bytes": 68828,
+        "first_record_index": 5000,
+        "path": "reports/github_handoff_001/decisions/part_010.jsonl",
+        "records": 500,
+        "sha256": "d8f456b0d59be07079aa3ae7d122e2979ea9d7d85fe18ffc017226f53c2afc1a"
+      },
+      {
+        "bytes": 68711,
+        "first_record_index": 5500,
+        "path": "reports/github_handoff_001/decisions/part_011.jsonl",
+        "records": 500,
+        "sha256": "b37acfd1a7c85ac8e826506450d2d6353253375610dea72043ef97fb5c993c77"
+      },
+      {
+        "bytes": 68661,
+        "first_record_index": 6000,
+        "path": "reports/github_handoff_001/decisions/part_012.jsonl",
+        "records": 500,
+        "sha256": "54150add6cacd8fe915c1d6bc3646ef6cdc9c6a6188d5fc30bdea2f7ba2a3675"
+      },
+      {
+        "bytes": 68780,
+        "first_record_index": 6500,
+        "path": "reports/github_handoff_001/decisions/part_013.jsonl",
+        "records": 500,
+        "sha256": "55cfca1976cde843286f0d0eb743e81cd732280352cde6bc525369a3b06269fe"
+      },
+      {
+        "bytes": 68885,
+        "first_record_index": 7000,
+        "path": "reports/github_handoff_001/decisions/part_014.jsonl",
+        "records": 500,
+        "sha256": "ba686725e00f41adf47d4858feb68ecc79c24eb2b4eeb5202df38bcfb5a87ccc"
+      },
+      {
+        "bytes": 68669,
+        "first_record_index": 7500,
+        "path": "reports/github_handoff_001/decisions/part_015.jsonl",
+        "records": 500,
+        "sha256": "505ce3e7bc5ae2efec45c19362666311671d755ab8e0ac63a3ca0fb578f7458a"
+      },
+      {
+        "bytes": 68862,
+        "first_record_index": 8000,
+        "path": "reports/github_handoff_001/decisions/part_016.jsonl",
+        "records": 500,
+        "sha256": "39a68d64907192554eb240b1f41eee50804109241976da1fcace5c7c069b2c51"
+      },
+      {
+        "bytes": 68739,
+        "first_record_index": 8500,
+        "path": "reports/github_handoff_001/decisions/part_017.jsonl",
+        "records": 500,
+        "sha256": "53ce78102b8c8d2c8f00c92fbd8589913d05f3c2ddbf54b0160c217f66955971"
+      },
+      {
+        "bytes": 68720,
+        "first_record_index": 9000,
+        "path": "reports/github_handoff_001/decisions/part_018.jsonl",
+        "records": 500,
+        "sha256": "b7bede9e365ac8977240f667499ef8f692c315c9e2961f7b8bf1ce4017b26bbc"
+      },
+      {
+        "bytes": 68801,
+        "first_record_index": 9500,
+        "path": "reports/github_handoff_001/decisions/part_019.jsonl",
+        "records": 500,
+        "sha256": "25814b9a32a3c780126fa9402cb7a0a7dafb1f5540cc9ac728d3dae38a493636"
+      },
+      {
+        "bytes": 68790,
+        "first_record_index": 10000,
+        "path": "reports/github_handoff_001/decisions/part_020.jsonl",
+        "records": 500,
+        "sha256": "f92af5a05d72ae6622df6ca884adacd2f1a38cfc5f647c30cb3be30a673c6ce4"
+      },
+      {
+        "bytes": 68717,
+        "first_record_index": 10500,
+        "path": "reports/github_handoff_001/decisions/part_021.jsonl",
+        "records": 500,
+        "sha256": "7f5e01d9548df42fbe89e967a0cade1bbb5125b5bfaad00dfdbf465a857b5e1d"
+      },
+      {
+        "bytes": 68822,
+        "first_record_index": 11000,
+        "path": "reports/github_handoff_001/decisions/part_022.jsonl",
+        "records": 500,
+        "sha256": "6586bdf0d5e18965dc81d9a8651dd542b91926aec7e733c31e1190e6e9851204"
+      },
+      {
+        "bytes": 69190,
+        "first_record_index": 11500,
+        "path": "reports/github_handoff_001/decisions/part_023.jsonl",
+        "records": 500,
+        "sha256": "1024e0a5b6abadb3210d33348796dadd98cdffc6c60d0899f62f8fbd4d133709"
+      },
+      {
+        "bytes": 69434,
+        "first_record_index": 12000,
+        "path": "reports/github_handoff_001/decisions/part_024.jsonl",
+        "records": 500,
+        "sha256": "ed8922ec0598280d55e1a90b886e2b7cafda31e4d6591dd8fa5653461dbc37e9"
+      },
+      {
+        "bytes": 69229,
+        "first_record_index": 12500,
+        "path": "reports/github_handoff_001/decisions/part_025.jsonl",
+        "records": 500,
+        "sha256": "202648458aee0a166bd01fae142d2c6769e5c966a2594d6280cf10319c6402f3"
+      },
+      {
+        "bytes": 69231,
+        "first_record_index": 13000,
+        "path": "reports/github_handoff_001/decisions/part_026.jsonl",
+        "records": 500,
+        "sha256": "bd3c464b3871bf895ce4fd4a16268f1ad145fee0be1fdf62d2c21bf22e2af747"
+      },
+      {
+        "bytes": 69340,
+        "first_record_index": 13500,
+        "path": "reports/github_handoff_001/decisions/part_027.jsonl",
+        "records": 500,
+        "sha256": "79f763510655c670ff31a23827dd44500201b895f18e1d0ad2cb0925dd7159f1"
+      },
+      {
+        "bytes": 69302,
+        "first_record_index": 14000,
+        "path": "reports/github_handoff_001/decisions/part_028.jsonl",
+        "records": 500,
+        "sha256": "e905368bacb3f85988f1b47bc80ee61d56314bceddf4bc0b85ae6d620ae7e135"
+      },
+      {
+        "bytes": 69418,
+        "first_record_index": 14500,
+        "path": "reports/github_handoff_001/decisions/part_029.jsonl",
+        "records": 500,
+        "sha256": "7055890c05af85edf4e94a3897c31c42bb113641c5f5e540b5c37b1f47e25a3d"
+      },
+      {
+        "bytes": 69181,
+        "first_record_index": 15000,
+        "path": "reports/github_handoff_001/decisions/part_030.jsonl",
+        "records": 500,
+        "sha256": "f3902399c8051a3791e4d60eaf2505fef029ef8283d6332b9b56a36eaa3c527d"
+      },
+      {
+        "bytes": 69277,
+        "first_record_index": 15500,
+        "path": "reports/github_handoff_001/decisions/part_031.jsonl",
+        "records": 500,
+        "sha256": "cc8d11bd4e6973e5c4b1ba6d50c3dd9e38ed27ead2f2306eb17031ababdc4b99"
+      },
+      {
+        "bytes": 69303,
+        "first_record_index": 16000,
+        "path": "reports/github_handoff_001/decisions/part_032.jsonl",
+        "records": 500,
+        "sha256": "0400467332e5f3662bd449916c912d377ada475a2a834266b07f3dbf7c77c915"
+      },
+      {
+        "bytes": 69293,
+        "first_record_index": 16500,
+        "path": "reports/github_handoff_001/decisions/part_033.jsonl",
+        "records": 500,
+        "sha256": "1c2a562e1c289fe052bc5781a6d08450d5006c59a0356d32eac6da181ad9e36d"
+      },
+      {
+        "bytes": 69264,
+        "first_record_index": 17000,
+        "path": "reports/github_handoff_001/decisions/part_034.jsonl",
+        "records": 500,
+        "sha256": "8374c0e91ee3d3f30022dbe1ba48cde83fddb4f534a1e65fa626922f5559d873"
+      },
+      {
+        "bytes": 69256,
+        "first_record_index": 17500,
+        "path": "reports/github_handoff_001/decisions/part_035.jsonl",
+        "records": 500,
+        "sha256": "b5c1a2434b596d23e7ac07ea939393eaaf019f23c0168fd48aab94ccee10363d"
+      },
+      {
+        "bytes": 69348,
+        "first_record_index": 18000,
+        "path": "reports/github_handoff_001/decisions/part_036.jsonl",
+        "records": 500,
+        "sha256": "b6eb804a0ba28b3754b95b2b91633fd0598c8b1601d5f30e32df286c77f10039"
+      },
+      {
+        "bytes": 69277,
+        "first_record_index": 18500,
+        "path": "reports/github_handoff_001/decisions/part_037.jsonl",
+        "records": 500,
+        "sha256": "c82397cc7323a4834b66d3ea72491f8a666d95d01312898b213ee518f1e7eceb"
+      },
+      {
+        "bytes": 69245,
+        "first_record_index": 19000,
+        "path": "reports/github_handoff_001/decisions/part_038.jsonl",
+        "records": 500,
+        "sha256": "02d8a0d5b9fa4ea09274f688c958467fdb6c70e6509b46c3fda924bc91452480"
+      },
+      {
+        "bytes": 69262,
+        "first_record_index": 19500,
+        "path": "reports/github_handoff_001/decisions/part_039.jsonl",
+        "records": 500,
+        "sha256": "c5dcc27ecb45764fecfe52ebc1c8be2564532fbb7cf2cbaeb0854a21d8ef0c1e"
+      },
+      {
+        "bytes": 69271,
+        "first_record_index": 20000,
+        "path": "reports/github_handoff_001/decisions/part_040.jsonl",
+        "records": 500,
+        "sha256": "cf6cdae9ee64edacd76bdf32149f501c9df7d7ac5995e5d154cb3805ae8586fa"
+      },
+      {
+        "bytes": 69159,
+        "first_record_index": 20500,
+        "path": "reports/github_handoff_001/decisions/part_041.jsonl",
+        "records": 500,
+        "sha256": "09db9ef73dd7b451bb1768881c6e564522886121e3a836bec3ee24e3611e35f9"
+      },
+      {
+        "bytes": 69409,
+        "first_record_index": 21000,
+        "path": "reports/github_handoff_001/decisions/part_042.jsonl",
+        "records": 500,
+        "sha256": "f8eb5e237082de18196f9550263a2a3755e06cf14514e045bd1aaea16c80f103"
+      },
+      {
+        "bytes": 69220,
+        "first_record_index": 21500,
+        "path": "reports/github_handoff_001/decisions/part_043.jsonl",
+        "records": 500,
+        "sha256": "55fa4074bb4dafb3ee0766f090f5f46dd4225e86832e3ad58ca7e620b7e07440"
+      },
+      {
+        "bytes": 69242,
+        "first_record_index": 22000,
+        "path": "reports/github_handoff_001/decisions/part_044.jsonl",
+        "records": 500,
+        "sha256": "56a9cb74233bc5936407fb1e077f56b63bd1fb8c074e0bcbcb4faac71738ab8b"
+      },
+      {
+        "bytes": 69310,
+        "first_record_index": 22500,
+        "path": "reports/github_handoff_001/decisions/part_045.jsonl",
+        "records": 500,
+        "sha256": "c69fbadadf4d2690368fcdef46f5ef618c9260d8118df8809c0b078d2981b98d"
+      },
+      {
+        "bytes": 69191,
+        "first_record_index": 23000,
+        "path": "reports/github_handoff_001/decisions/part_046.jsonl",
+        "records": 500,
+        "sha256": "f34518ace9ed6288d229ca16bdb67fba91d9ba107227b321990a90c996de1d4b"
+      },
+      {
+        "bytes": 69269,
+        "first_record_index": 23500,
+        "path": "reports/github_handoff_001/decisions/part_047.jsonl",
+        "records": 500,
+        "sha256": "cf2349f9fb6fea3fbb251ea7d2eb0929c8188fb13d4e08f45e1dfff5f86deb7a"
+      },
+      {
+        "bytes": 69313,
+        "first_record_index": 24000,
+        "path": "reports/github_handoff_001/decisions/part_048.jsonl",
+        "records": 500,
+        "sha256": "71b0c16eaa7b8c82688b2d25f3281935cd01ebb566eed0e28ecfaa7dee3fbc79"
+      },
+      {
+        "bytes": 69196,
+        "first_record_index": 24500,
+        "path": "reports/github_handoff_001/decisions/part_049.jsonl",
+        "records": 500,
+        "sha256": "3cb9ec64bd7fc0a1c1692c9064479c98278c04e33bb0f326f18520997ccd5d00"
+      },
+      {
+        "bytes": 69270,
+        "first_record_index": 25000,
+        "path": "reports/github_handoff_001/decisions/part_050.jsonl",
+        "records": 500,
+        "sha256": "7944615683f47ab0e0ba8004521ec4816c8273482f0ab14b7d8b7134b917598c"
+      },
+      {
+        "bytes": 69200,
+        "first_record_index": 25500,
+        "path": "reports/github_handoff_001/decisions/part_051.jsonl",
+        "records": 500,
+        "sha256": "c8ce459cd48974fed2a0c7a4c4fb3a2cd24c5ee058cedaf0576bfac87a2d9e5f"
+      },
+      {
+        "bytes": 69226,
+        "first_record_index": 26000,
+        "path": "reports/github_handoff_001/decisions/part_052.jsonl",
+        "records": 500,
+        "sha256": "0793556522fb3893d91c45ef81fb924ff8fb23d7f815a9c7b0ae6173d793fb65"
+      },
+      {
+        "bytes": 69222,
+        "first_record_index": 26500,
+        "path": "reports/github_handoff_001/decisions/part_053.jsonl",
+        "records": 500,
+        "sha256": "e869b1fdc239c432c4c76a045692576e42723f6f0fc3dc6755bb474ba907f1f8"
+      },
+      {
+        "bytes": 69409,
+        "first_record_index": 27000,
+        "path": "reports/github_handoff_001/decisions/part_054.jsonl",
+        "records": 500,
+        "sha256": "71a8425e61a6da2b189d2802d59269c70fb22337f34bd6c77c4b8a38d40227dd"
+      },
+      {
+        "bytes": 69123,
+        "first_record_index": 27500,
+        "path": "reports/github_handoff_001/decisions/part_055.jsonl",
+        "records": 500,
+        "sha256": "187b0338a2cdd3e23ff61988aa9b001023dd2dc30e86b083d6ef0f2336569fa7"
+      },
+      {
+        "bytes": 69505,
+        "first_record_index": 28000,
+        "path": "reports/github_handoff_001/decisions/part_056.jsonl",
+        "records": 500,
+        "sha256": "089c2b8dbd0ef1bbf04cb60f031e3d3777dfbeee366f16c446d96437d00e5cca"
+      },
+      {
+        "bytes": 69196,
+        "first_record_index": 28500,
+        "path": "reports/github_handoff_001/decisions/part_057.jsonl",
+        "records": 500,
+        "sha256": "552da12a70e53afae7ea3f31cc792fdea67e6602f950862961cff59c9beda5d7"
+      },
+      {
+        "bytes": 69292,
+        "first_record_index": 29000,
+        "path": "reports/github_handoff_001/decisions/part_058.jsonl",
+        "records": 500,
+        "sha256": "d89c7d8d578a4a1da15d23a6adf55655b57c1516896a64911634fedc30c357b2"
+      },
+      {
+        "bytes": 69262,
+        "first_record_index": 29500,
+        "path": "reports/github_handoff_001/decisions/part_059.jsonl",
+        "records": 500,
+        "sha256": "cdabc02f30a5c479205ee06d8bc8df7c99a02a47df004f48e5c0d91970f685d7"
+      },
+      {
+        "bytes": 69803,
+        "first_record_index": 30000,
+        "path": "reports/github_handoff_001/decisions/part_060.jsonl",
+        "records": 500,
+        "sha256": "ad930e45efa9d2b1c36a871cd789981dc24ef3d74d85a44024049f36752bf8c9"
+      },
+      {
+        "bytes": 69741,
+        "first_record_index": 30500,
+        "path": "reports/github_handoff_001/decisions/part_061.jsonl",
+        "records": 500,
+        "sha256": "fc219cc86298e53dfc6c2a91852bdbd89040b9afa9ad34796cc0a82d5ea168cb"
+      },
+      {
+        "bytes": 69730,
+        "first_record_index": 31000,
+        "path": "reports/github_handoff_001/decisions/part_062.jsonl",
+        "records": 500,
+        "sha256": "7ee91ac5cc327076904aac3f2ceb708283540c432350b9b61c00277b98fd9cf6"
+      },
+      {
+        "bytes": 69876,
+        "first_record_index": 31500,
+        "path": "reports/github_handoff_001/decisions/part_063.jsonl",
+        "records": 500,
+        "sha256": "d8f7a95040c748effc5424bb0a839d1be3d61267e723dcb9edfb21520683c7b7"
+      },
+      {
+        "bytes": 69774,
+        "first_record_index": 32000,
+        "path": "reports/github_handoff_001/decisions/part_064.jsonl",
+        "records": 500,
+        "sha256": "cec695bad224b168fabba7274ec737a3d50316ff6cdf0b85a2d7f95c75c12913"
+      },
+      {
+        "bytes": 69772,
+        "first_record_index": 32500,
+        "path": "reports/github_handoff_001/decisions/part_065.jsonl",
+        "records": 500,
+        "sha256": "6ef7a6db0369d5256a5d868a58f0573c65d94a05ab2fca14e2c8bad1d4cbfd08"
+      },
+      {
+        "bytes": 69717,
+        "first_record_index": 33000,
+        "path": "reports/github_handoff_001/decisions/part_066.jsonl",
+        "records": 500,
+        "sha256": "d31546873a9a614f80b09fd93080f07215e7eebb91bce1e01e75bcbe7873e69b"
+      },
+      {
+        "bytes": 69760,
+        "first_record_index": 33500,
+        "path": "reports/github_handoff_001/decisions/part_067.jsonl",
+        "records": 500,
+        "sha256": "511fc6cb5b412ce3c362ddc6c0b031573a1cf911de0b59d45dd10b1365dc9d51"
+      },
+      {
+        "bytes": 69924,
+        "first_record_index": 34000,
+        "path": "reports/github_handoff_001/decisions/part_068.jsonl",
+        "records": 500,
+        "sha256": "7fa76a4fd2faba73172fda06fd10d984ffa9611cdf90c056438bd2d93270eac7"
+      },
+      {
+        "bytes": 69761,
+        "first_record_index": 34500,
+        "path": "reports/github_handoff_001/decisions/part_069.jsonl",
+        "records": 500,
+        "sha256": "48648c2940d31fa12fdf2715dee115104138d558cfac5b362c26fd1da27242bc"
+      },
+      {
+        "bytes": 69921,
+        "first_record_index": 35000,
+        "path": "reports/github_handoff_001/decisions/part_070.jsonl",
+        "records": 500,
+        "sha256": "05b7ce241fb3b5212e4a71a3b88071453c741a141376a26a1be58a527d1da379"
+      },
+      {
+        "bytes": 69774,
+        "first_record_index": 35500,
+        "path": "reports/github_handoff_001/decisions/part_071.jsonl",
+        "records": 500,
+        "sha256": "9cd30ae93f517239c77caf22113550d12190cfad95190df4601ba4f3e1aebdf1"
+      },
+      {
+        "bytes": 69921,
+        "first_record_index": 36000,
+        "path": "reports/github_handoff_001/decisions/part_072.jsonl",
+        "records": 500,
+        "sha256": "fc2f7c5076750fb1a9e4fae5192de3a0b1758eace55594026a9d77dbfb7f0cea"
+      },
+      {
+        "bytes": 69755,
+        "first_record_index": 36500,
+        "path": "reports/github_handoff_001/decisions/part_073.jsonl",
+        "records": 500,
+        "sha256": "3fb762f53a6f3331b4162ac1537ca4073a2f7136754083540e659da8488044ae"
+      },
+      {
+        "bytes": 69836,
+        "first_record_index": 37000,
+        "path": "reports/github_handoff_001/decisions/part_074.jsonl",
+        "records": 500,
+        "sha256": "e5d96ed6512abaa5eba77cdb65db26e78f6c2c744bf8802ad62090bae6baaed6"
+      },
+      {
+        "bytes": 69688,
+        "first_record_index": 37500,
+        "path": "reports/github_handoff_001/decisions/part_075.jsonl",
+        "records": 500,
+        "sha256": "657aa621be4fdbdc43abb074ca422a7aee0c3814ee893e685d3e052d695551d9"
+      },
+      {
+        "bytes": 69763,
+        "first_record_index": 38000,
+        "path": "reports/github_handoff_001/decisions/part_076.jsonl",
+        "records": 500,
+        "sha256": "d4ffbdff2fa7731e6c0e4e9932313dff72fc3665e75316060bcc76be19e64bf6"
+      },
+      {
+        "bytes": 69796,
+        "first_record_index": 38500,
+        "path": "reports/github_handoff_001/decisions/part_077.jsonl",
+        "records": 500,
+        "sha256": "f44d0735aa036a7c9a5874474da3c93f0a2b1a236539ec8f63fd55e3c049092a"
+      },
+      {
+        "bytes": 69822,
+        "first_record_index": 39000,
+        "path": "reports/github_handoff_001/decisions/part_078.jsonl",
+        "records": 500,
+        "sha256": "73085b3a952027c6ff61737380e25ecf6a0c2022c2c72e5c4b6b7c5e8daa7d90"
+      },
+      {
+        "bytes": 69691,
+        "first_record_index": 39500,
+        "path": "reports/github_handoff_001/decisions/part_079.jsonl",
+        "records": 500,
+        "sha256": "87e19b6c007efc695797fce29b117b43cc7245c2620863336ae4bc481612819c"
+      },
+      {
+        "bytes": 69679,
+        "first_record_index": 40000,
+        "path": "reports/github_handoff_001/decisions/part_080.jsonl",
+        "records": 500,
+        "sha256": "c96af5a66a150acf525b277ece18bd06d3d6b27c89586c79abd1b4e852c36c4d"
+      },
+      {
+        "bytes": 69807,
+        "first_record_index": 40500,
+        "path": "reports/github_handoff_001/decisions/part_081.jsonl",
+        "records": 500,
+        "sha256": "39da571da69d852f78f4ca61f54a63073e949cfed9a9163df039412f9745c796"
+      },
+      {
+        "bytes": 70353,
+        "first_record_index": 41000,
+        "path": "reports/github_handoff_001/decisions/part_082.jsonl",
+        "records": 500,
+        "sha256": "9cc9c303cb9345ffb8dbb920e4f78f49c7e412e6d5ceb862bf9c6ebbe775f577"
+      },
+      {
+        "bytes": 70252,
+        "first_record_index": 41500,
+        "path": "reports/github_handoff_001/decisions/part_083.jsonl",
+        "records": 500,
+        "sha256": "5683ba0545c641adc325493b02df31fd6cf84ceb2afbe9028c9e2e06e9d116c0"
+      },
+      {
+        "bytes": 70188,
+        "first_record_index": 42000,
+        "path": "reports/github_handoff_001/decisions/part_084.jsonl",
+        "records": 500,
+        "sha256": "2ded751c52b381f0212528b0e24177a90694fb238785fa45384d12338a9b68b5"
+      },
+      {
+        "bytes": 70341,
+        "first_record_index": 42500,
+        "path": "reports/github_handoff_001/decisions/part_085.jsonl",
+        "records": 500,
+        "sha256": "cffe784d653387685ec2c950a1eded5d40b6e49f35201067b0977c25a6ae310e"
+      },
+      {
+        "bytes": 70291,
+        "first_record_index": 43000,
+        "path": "reports/github_handoff_001/decisions/part_086.jsonl",
+        "records": 500,
+        "sha256": "48d0875b6d4eeb8f10d2412106c4038212c50ec23f9a5f0f994ed9e8abc2ce58"
+      },
+      {
+        "bytes": 70368,
+        "first_record_index": 43500,
+        "path": "reports/github_handoff_001/decisions/part_087.jsonl",
+        "records": 500,
+        "sha256": "f9c9c4b71b08cad5bd0451ba3f27bf1bfa7e0a4d340ef29683c3408f9fa066a7"
+      },
+      {
+        "bytes": 70281,
+        "first_record_index": 44000,
+        "path": "reports/github_handoff_001/decisions/part_088.jsonl",
+        "records": 500,
+        "sha256": "651a7cd27bb58c22e1779ebd92cf35b557fb4e791ab5f480e4af0b8bac912f64"
+      },
+      {
+        "bytes": 70237,
+        "first_record_index": 44500,
+        "path": "reports/github_handoff_001/decisions/part_089.jsonl",
+        "records": 500,
+        "sha256": "ffa8ca19c807de397c2aab2749a378658924c62fce227107df67c0d3eda5d812"
+      },
+      {
+        "bytes": 70359,
+        "first_record_index": 45000,
+        "path": "reports/github_handoff_001/decisions/part_090.jsonl",
+        "records": 500,
+        "sha256": "5cef876d6c1cb8b9cff673dd23ba64be58694f3e6aa51262650155d3d1b0ad2a"
+      },
+      {
+        "bytes": 70239,
+        "first_record_index": 45500,
+        "path": "reports/github_handoff_001/decisions/part_091.jsonl",
+        "records": 500,
+        "sha256": "deb948c0ba415ff9f312b5be2c0a87d7eeed6aeea558c518a14795498705a510"
+      },
+      {
+        "bytes": 70269,
+        "first_record_index": 46000,
+        "path": "reports/github_handoff_001/decisions/part_092.jsonl",
+        "records": 500,
+        "sha256": "73252ebd79e29ced99ca9ce8db5bd6331854131da0f01800349b499c234a62b4"
+      },
+      {
+        "bytes": 70278,
+        "first_record_index": 46500,
+        "path": "reports/github_handoff_001/decisions/part_093.jsonl",
+        "records": 500,
+        "sha256": "29668cb06ea9673f5a9d16771804906eb69445c741c6621c790c65b84466aed8"
+      },
+      {
+        "bytes": 70361,
+        "first_record_index": 47000,
+        "path": "reports/github_handoff_001/decisions/part_094.jsonl",
+        "records": 500,
+        "sha256": "df86799010815aeba36b0c8b6994b44661f38f00e000aab901eca540e5dbc26e"
+      },
+      {
+        "bytes": 70349,
+        "first_record_index": 47500,
+        "path": "reports/github_handoff_001/decisions/part_095.jsonl",
+        "records": 500,
+        "sha256": "a6059ff7ee53e68979537275950f0aab28ac89c8c16c78c5bbe91ed09a25eddb"
+      },
+      {
+        "bytes": 70230,
+        "first_record_index": 48000,
+        "path": "reports/github_handoff_001/decisions/part_096.jsonl",
+        "records": 500,
+        "sha256": "2e14b48475a38ab7129e23eb9da44818d02a196904bd2e5af8369a1a6de12105"
+      },
+      {
+        "bytes": 70423,
+        "first_record_index": 48500,
+        "path": "reports/github_handoff_001/decisions/part_097.jsonl",
+        "records": 500,
+        "sha256": "defb77e0d66750f29f76bbec670565baa866c50f6edc33fa654efa1511533ac7"
+      },
+      {
+        "bytes": 70270,
+        "first_record_index": 49000,
+        "path": "reports/github_handoff_001/decisions/part_098.jsonl",
+        "records": 500,
+        "sha256": "30934f50d9454ddf8478b35e1b9dce76ac1dc093be1c5f12555fe42832abd8be"
+      },
+      {
+        "bytes": 70355,
+        "first_record_index": 49500,
+        "path": "reports/github_handoff_001/decisions/part_099.jsonl",
+        "records": 500,
+        "sha256": "95dcb789c22744ed01cae31a0720dec147bedf1fc5e57a2efc49ac5b8b078ae0"
+      },
+      {
+        "bytes": 70260,
+        "first_record_index": 50000,
+        "path": "reports/github_handoff_001/decisions/part_100.jsonl",
+        "records": 500,
+        "sha256": "8ccab45f7ec249d502d8b213fd2c2559ab87359fab08acc0e41173b621161604"
+      },
+      {
+        "bytes": 70228,
+        "first_record_index": 50500,
+        "path": "reports/github_handoff_001/decisions/part_101.jsonl",
+        "records": 500,
+        "sha256": "1117f895a0c13fd480a6cefd34553e7db8ba2ffe8aa0b405cc9d011183fa1d08"
+      },
+      {
+        "bytes": 70335,
+        "first_record_index": 51000,
+        "path": "reports/github_handoff_001/decisions/part_102.jsonl",
+        "records": 500,
+        "sha256": "84628f07ef8ea0e359332c199ffb08fe744d0e61e7dfedc7325fefd734775636"
+      },
+      {
+        "bytes": 70332,
+        "first_record_index": 51500,
+        "path": "reports/github_handoff_001/decisions/part_103.jsonl",
+        "records": 500,
+        "sha256": "5959a7492eafede371b0cf97d00f5aafec0478fc4c9058609fc14d32bbb35141"
+      },
+      {
+        "bytes": 70298,
+        "first_record_index": 52000,
+        "path": "reports/github_handoff_001/decisions/part_104.jsonl",
+        "records": 500,
+        "sha256": "2286e0f84882798ab0c978fd7de22467c77b5fb5376f4717b7f2c4b2c6e0f178"
+      },
+      {
+        "bytes": 70239,
+        "first_record_index": 52500,
+        "path": "reports/github_handoff_001/decisions/part_105.jsonl",
+        "records": 500,
+        "sha256": "7d35236128e2881742e4fe91cdba10b2aa3bdd6f7aee56464acbb78ad5c4b61a"
+      },
+      {
+        "bytes": 70389,
+        "first_record_index": 53000,
+        "path": "reports/github_handoff_001/decisions/part_106.jsonl",
+        "records": 500,
+        "sha256": "8da8b038cc4c3c6d2e90d64de44169465cf1f01d5e409579d5e36ee306f5948e"
+      },
+      {
+        "bytes": 70317,
+        "first_record_index": 53500,
+        "path": "reports/github_handoff_001/decisions/part_107.jsonl",
+        "records": 500,
+        "sha256": "3ae53ecfe62c8124ecb2816b5911ad80778f25429edc7ac39d534ca43116f8ad"
+      },
+      {
+        "bytes": 70256,
+        "first_record_index": 54000,
+        "path": "reports/github_handoff_001/decisions/part_108.jsonl",
+        "records": 500,
+        "sha256": "946eb7a7adbb25da4fe55f882888936840284670b016490693ac2f41ddfe59ae"
+      },
+      {
+        "bytes": 70228,
+        "first_record_index": 54500,
+        "path": "reports/github_handoff_001/decisions/part_109.jsonl",
+        "records": 500,
+        "sha256": "90055898bfd3750293abf46a219557d3e8a6d0b5202ae28aab61febefba87576"
+      },
+      {
+        "bytes": 70271,
+        "first_record_index": 55000,
+        "path": "reports/github_handoff_001/decisions/part_110.jsonl",
+        "records": 500,
+        "sha256": "4ce98c4bd10106a2d1995dc35637bc3d8f212321ff53b549100282be64bb75e7"
+      },
+      {
+        "bytes": 70272,
+        "first_record_index": 55500,
+        "path": "reports/github_handoff_001/decisions/part_111.jsonl",
+        "records": 500,
+        "sha256": "94b58a72455b8354b718e71d75f6252c2ac86c735f5bb9159efe4ace40f65788"
+      },
+      {
+        "bytes": 70334,
+        "first_record_index": 56000,
+        "path": "reports/github_handoff_001/decisions/part_112.jsonl",
+        "records": 500,
+        "sha256": "784f713de6e27e7f53fb1ae3d6262e7a5fa5fd3a9d54ca2689e2eede65e456d7"
+      },
+      {
+        "bytes": 70262,
+        "first_record_index": 56500,
+        "path": "reports/github_handoff_001/decisions/part_113.jsonl",
+        "records": 500,
+        "sha256": "d55da702828277a7e29e6a45196e831b2178b61508399cf845499eac65685d3b"
+      },
+      {
+        "bytes": 70272,
+        "first_record_index": 57000,
+        "path": "reports/github_handoff_001/decisions/part_114.jsonl",
+        "records": 500,
+        "sha256": "3b15c818c3dd245c24309d90dc210257befd548cf274d4ca57c4637252a28e51"
+      },
+      {
+        "bytes": 70334,
+        "first_record_index": 57500,
+        "path": "reports/github_handoff_001/decisions/part_115.jsonl",
+        "records": 500,
+        "sha256": "e0d37d0f58a5a4eb8cbc80622609e8d0cade6564455d161accccbbb3ae05ec04"
+      },
+      {
+        "bytes": 70204,
+        "first_record_index": 58000,
+        "path": "reports/github_handoff_001/decisions/part_116.jsonl",
+        "records": 500,
+        "sha256": "004ba26863ebcf26ffd77820d0e074294bf45f08762aa307890a05e03078e905"
+      },
+      {
+        "bytes": 70303,
+        "first_record_index": 58500,
+        "path": "reports/github_handoff_001/decisions/part_117.jsonl",
+        "records": 500,
+        "sha256": "e243356006923fed1a356553635f0a846644c24632ce4626fcfa7f1fdce1977d"
+      },
+      {
+        "bytes": 70374,
+        "first_record_index": 59000,
+        "path": "reports/github_handoff_001/decisions/part_118.jsonl",
+        "records": 500,
+        "sha256": "a19dcbad87b9127645604557676c94e409f284262f67698f5ee9d0db4ba19851"
+      },
+      {
+        "bytes": 43847,
+        "first_record_index": 59500,
+        "path": "reports/github_handoff_001/decisions/part_119.jsonl",
+        "records": 312,
+        "sha256": "9400fc86a549aef527695408c507f1fee4ba5c5755be1bedef2dc9e770a16c75"
+      }
+    ]
+  },
+  "episodes": {
+    "records": 4096,
+    "shards": [
+      {
+        "bytes": 170090,
+        "first_record_index": 0,
+        "path": "reports/github_handoff_001/episodes/part_000.jsonl",
+        "records": 500,
+        "sha256": "82f3a7ac83bdc4bc72d640b58460bc366a46ab53f43f580110e562137196a252"
+      },
+      {
+        "bytes": 171199,
+        "first_record_index": 500,
+        "path": "reports/github_handoff_001/episodes/part_001.jsonl",
+        "records": 500,
+        "sha256": "d800fad6a2a90967f1d8df78ebcc4ce8ed16dcbdcf9c5ef6c001208288a74f47"
+      },
+      {
+        "bytes": 170551,
+        "first_record_index": 1000,
+        "path": "reports/github_handoff_001/episodes/part_002.jsonl",
+        "records": 500,
+        "sha256": "6fbbece04050023fb696a5208220110ed44c549a1363ad161189584e94ca3d04"
+      },
+      {
+        "bytes": 169214,
+        "first_record_index": 1500,
+        "path": "reports/github_handoff_001/episodes/part_003.jsonl",
+        "records": 500,
+        "sha256": "07e68907d2f5e664891c6e300b413031a4712d55a8e3b45ca8ba3494cf053078"
+      },
+      {
+        "bytes": 173039,
+        "first_record_index": 2000,
+        "path": "reports/github_handoff_001/episodes/part_004.jsonl",
+        "records": 500,
+        "sha256": "92cfc77a740d3ee64da7903d56c9a6a335e732e08471df641ee8bc8403069d74"
+      },
+      {
+        "bytes": 171400,
+        "first_record_index": 2500,
+        "path": "reports/github_handoff_001/episodes/part_005.jsonl",
+        "records": 500,
+        "sha256": "38aa2174943ecf26b0312f6da38c7d75cd8675dd96e64217dfb05c1d03644ea9"
+      },
+      {
+        "bytes": 173770,
+        "first_record_index": 3000,
+        "path": "reports/github_handoff_001/episodes/part_006.jsonl",
+        "records": 500,
+        "sha256": "1569e7111051b25e85640d6f346f8c033c04b4f46c101406b5f4cf16f7c0d020"
+      },
+      {
+        "bytes": 172666,
+        "first_record_index": 3500,
+        "path": "reports/github_handoff_001/episodes/part_007.jsonl",
+        "records": 500,
+        "sha256": "84e5729d4a5b1cd1a32b3e635fd69796e4c1737ae8354d79e79592d2fec1532d"
+      },
+      {
+        "bytes": 32882,
+        "first_record_index": 4000,
+        "path": "reports/github_handoff_001/episodes/part_008.jsonl",
+        "records": 96,
+        "sha256": "ebb750058a9bcf956968664fc3b489b6f7961af4ac7b79a40472ecbf8f5b9a76"
+      }
+    ]
+  },
+  "kind": "s2_record_text_shards",
+  "limits": {
+    "max_bytes_per_shard": 204800,
+    "max_lines_per_shard": 500
+  },
+  "normalisation": "none: input lines are copied verbatim, in file order; only the line at which a shard ends is chosen here",
+  "sources": {
+    "decisions": {
+      "compressed_bytes": 861961,
+      "compressed_sha256": "c0c8ac50c1c7f7e2763729bf8b5024f3a131a5822ed72a3c8e772249a835a3d2",
+      "compressed_source_path": "/workspaces/stsai_web/runs/s2/evaluation/decision_latency.jsonl.gz",
+      "decompressed_bytes": 8323805,
+      "decompressed_lines": 59812,
+      "decompressed_sha256": "5ee6ac903636e5d926b7adbc9a9dacacea441c1acb75d37dcbe12c3b521356b4"
+    },
+    "episodes": {
+      "compressed_bytes": 184546,
+      "compressed_sha256": "55e03a6a2c142c08d6e26905cdc55af2facf66f53de14a3887c2ef55a154f30a",
+      "compressed_source_path": "/workspaces/stsai_web/runs/s2/evaluation/episodes.jsonl.gz",
+      "decompressed_bytes": 1404811,
+      "decompressed_lines": 4096,
+      "decompressed_sha256": "3973293dffa701c9cc2aa86b39f7bfe60ec799ee18b9a709a38d2475969376ba"
+    }
+  }
+}

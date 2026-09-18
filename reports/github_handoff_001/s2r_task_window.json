@@ -1,0 +1,372 @@
+{
+  "ancestry": {
+    "evidence": "git merge-base --is-ancestor, both directions checked",
+    "package_provenance_head_is_ancestor_of_implementation_head": true,
+    "plan_commit_is_ancestor_of_implementation_head": true
+  },
+  "driver_versions": [
+    {
+      "blob_at_implementation_head": "e83ff22df5763ca3010bc768fafa5fe7b93202b0",
+      "blob_at_package_provenance_head": "4a46fe8966cbb9909a1c321c3f539268e633d0d9",
+      "identical_in_both_trees": false,
+      "path": "review/run_review.py"
+    },
+    {
+      "blob_at_implementation_head": "d521ebdf2e68db8e1ae06820a9b19bac680b6ae6",
+      "blob_at_package_provenance_head": "d521ebdf2e68db8e1ae06820a9b19bac680b6ae6",
+      "identical_in_both_trees": true,
+      "path": "review/offline_native_build.py"
+    },
+    {
+      "blob_at_implementation_head": "5c01d656b5957a8aee972c8d282aa6484143f6c4",
+      "blob_at_package_provenance_head": "5c01d656b5957a8aee972c8d282aa6484143f6c4",
+      "identical_in_both_trees": true,
+      "path": "review/counterfactual_replay.py"
+    },
+    {
+      "blob_at_implementation_head": "680bfa11a8280aaeb2296e909274a4bc77b14d54",
+      "blob_at_package_provenance_head": "680bfa11a8280aaeb2296e909274a4bc77b14d54",
+      "identical_in_both_trees": true,
+      "path": "review/model_smoke.py"
+    },
+    {
+      "blob_at_implementation_head": "ddff0e76259172c2a822cc1dd5f49bbf0bdb1c21",
+      "blob_at_package_provenance_head": "ddff0e76259172c2a822cc1dd5f49bbf0bdb1c21",
+      "identical_in_both_trees": true,
+      "path": "review/recompute_s2.py"
+    },
+    {
+      "blob_at_implementation_head": "06c75d86387d6a772243323aaed2b7a6d2713d40",
+      "blob_at_package_provenance_head": null,
+      "identical_in_both_trees": false,
+      "path": "review/package_contract.py"
+    },
+    {
+      "blob_at_implementation_head": "9a34b6740927d6fc0169a6620e7f6656d323ffbb",
+      "blob_at_package_provenance_head": null,
+      "identical_in_both_trees": false,
+      "path": "review/check_review_inputs.py"
+    },
+    {
+      "blob_at_implementation_head": "e76c337babad8c50eca65d83bbe97cb70befee2a",
+      "blob_at_package_provenance_head": "b8900d46299404041824ba08a4f81be2207ff773",
+      "identical_in_both_trees": false,
+      "path": "scripts/gen_intent_table.py"
+    }
+  ],
+  "implementation_head": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+  "increments": {
+    "plan_commit..implementation_head": {
+      "deletions": 50,
+      "files": 58,
+      "insertions": 6837,
+      "paths": [
+        "reports/s2r/SUMMARY.md",
+        "reports/s2r/artifact_lock.json",
+        "reports/s2r/ci_failure_analysis.md",
+        "reports/s2r/evidence/ci_run_35369602279.log",
+        "reports/s2r/evidence/ci_run_35369602279.log.gz",
+        "reports/s2r/evidence/t0_run1_exit.txt",
+        "reports/s2r/evidence/t0_run1_historical_env.json",
+        "reports/s2r/evidence/t0_run1_stdout.txt",
+        "reports/s2r/evidence/t0_run2_cpu_torch.json",
+        "reports/s2r/evidence/t0_run2_exit.txt",
+        "reports/s2r/evidence/t0_run2_stdout.txt",
+        "reports/s2r/input_receipt.json",
+        "reports/s2r/t0_gauge_check.json",
+        "reports/s2r/t0_gauge_check.py",
+        "reports/s2r/t0_partition_diagnose.py",
+        "reports/s2r/t0_runs_summary.json",
+        "reports/s2r/t1_input_receipt.py",
+        "reports/s2r/t3/cold_review.json",
+        "reports/s2r/t3/comparison.json",
+        "reports/s2r/t3/counterfactual.json",
+        "reports/s2r/t3/input_receipt.json",
+        "reports/s2r/t3/junit.xml",
+        "reports/s2r/t3/model_smoke.json",
+        "reports/s2r/t3/native_build_receipt.json",
+        "reports/s2r/t3/recomputed_s2.json",
+        "reports/s2r/t3/review_receipt.json",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.command.txt",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.stderr.log",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.stdout.log",
+        "reports/s2r/t3/step_logs/01_clone_bundle.command.txt",
+        "reports/s2r/t3/step_logs/01_clone_bundle.stderr.log",
+        "reports/s2r/t3/step_logs/01_clone_bundle.stdout.log",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.command.txt",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stderr.log",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stdout.log",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.command.txt",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.stderr.log",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.stdout.log",
+        "reports/s2r/t3/step_logs/04_run_review.command.txt",
+        "reports/s2r/t3/step_logs/04_run_review.stderr.log",
+        "reports/s2r/t3/step_logs/04_run_review.stdout.log",
+        "reports/s2r/t3/step_logs/05_recompute_s2.command.txt",
+        "reports/s2r/t3/step_logs/05_recompute_s2.stderr.log",
+        "reports/s2r/t3/step_logs/05_recompute_s2.stdout.log",
+        "reports/s2r/t3/step_logs/build.log",
+        "reports/s2r/t3/step_logs/configure.log",
+        "reports/s2r/t3/step_logs/driver.log",
+        "reports/s2r/t3/step_logs/offline_build_stdout.log",
+        "reports/s2r/t3/step_logs/pytest.log",
+        "reports/s2r/t3_cold_review.py",
+        "reports/s2r/t3_compare.py",
+        "review/check_review_inputs.py",
+        "review/package_contract.py",
+        "review/run_review.py",
+        "scripts/gen_s2_provenance.py",
+        "scripts/make_s2_package.py",
+        "tests/test_review_inputs.py",
+        "tests/test_run_review_jobs.py"
+      ]
+    },
+    "pr_3_base..implementation_head": {
+      "deletions": 622,
+      "files": 76,
+      "insertions": 7564,
+      "paths": [
+        ".github/pull_request_template.md",
+        "AGENTS.md",
+        "HANDOFF_PROMPT_zh.md",
+        "NEXT_ACTIONS.md",
+        "PROJECT_MAINLINE.md",
+        "README.md",
+        "THIRD_PARTY_NOTICES.md",
+        "delivery_docs/README.md",
+        "docs/00_ACCEPTANCE.md",
+        "docs/01_ARCHITECTURE.md",
+        "docs/02_FAIRNESS.md",
+        "docs/03_RUNBOOK.md",
+        "docs/04_NATIVE.md",
+        "docs/05_ROADMAP.md",
+        "docs/REPORT_TEMPLATE.md",
+        "docs/SOURCES.md",
+        "reports/docs_consolidation_audit.json",
+        "reports/s2r/SUMMARY.md",
+        "reports/s2r/artifact_lock.json",
+        "reports/s2r/ci_failure_analysis.md",
+        "reports/s2r/evidence/ci_run_35369602279.log",
+        "reports/s2r/evidence/ci_run_35369602279.log.gz",
+        "reports/s2r/evidence/t0_run1_exit.txt",
+        "reports/s2r/evidence/t0_run1_historical_env.json",
+        "reports/s2r/evidence/t0_run1_stdout.txt",
+        "reports/s2r/evidence/t0_run2_cpu_torch.json",
+        "reports/s2r/evidence/t0_run2_exit.txt",
+        "reports/s2r/evidence/t0_run2_stdout.txt",
+        "reports/s2r/input_receipt.json",
+        "reports/s2r/t0_gauge_check.json",
+        "reports/s2r/t0_gauge_check.py",
+        "reports/s2r/t0_partition_diagnose.py",
+        "reports/s2r/t0_runs_summary.json",
+        "reports/s2r/t1_input_receipt.py",
+        "reports/s2r/t3/cold_review.json",
+        "reports/s2r/t3/comparison.json",
+        "reports/s2r/t3/counterfactual.json",
+        "reports/s2r/t3/input_receipt.json",
+        "reports/s2r/t3/junit.xml",
+        "reports/s2r/t3/model_smoke.json",
+        "reports/s2r/t3/native_build_receipt.json",
+        "reports/s2r/t3/recomputed_s2.json",
+        "reports/s2r/t3/review_receipt.json",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.command.txt",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.stderr.log",
+        "reports/s2r/t3/step_logs/00_verify_and_extract.stdout.log",
+        "reports/s2r/t3/step_logs/01_clone_bundle.command.txt",
+        "reports/s2r/t3/step_logs/01_clone_bundle.stderr.log",
+        "reports/s2r/t3/step_logs/01_clone_bundle.stdout.log",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.command.txt",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stderr.log",
+        "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stdout.log",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.command.txt",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.stderr.log",
+        "reports/s2r/t3/step_logs/03_contract_against_checkout.stdout.log",
+        "reports/s2r/t3/step_logs/04_run_review.command.txt",
+        "reports/s2r/t3/step_logs/04_run_review.stderr.log",
+        "reports/s2r/t3/step_logs/04_run_review.stdout.log",
+        "reports/s2r/t3/step_logs/05_recompute_s2.command.txt",
+        "reports/s2r/t3/step_logs/05_recompute_s2.stderr.log",
+        "reports/s2r/t3/step_logs/05_recompute_s2.stdout.log",
+        "reports/s2r/t3/step_logs/build.log",
+        "reports/s2r/t3/step_logs/configure.log",
+        "reports/s2r/t3/step_logs/driver.log",
+        "reports/s2r/t3/step_logs/offline_build_stdout.log",
+        "reports/s2r/t3/step_logs/pytest.log",
+        "reports/s2r/t3_cold_review.py",
+        "reports/s2r/t3_compare.py",
+        "review/README.md",
+        "review/check_review_inputs.py",
+        "review/package_contract.py",
+        "review/run_review.py",
+        "scripts/gen_s2_provenance.py",
+        "scripts/make_s2_package.py",
+        "tests/test_review_inputs.py",
+        "tests/test_run_review_jobs.py"
+      ]
+    }
+  },
+  "kind": "s2r_task_window",
+  "note": "Everything here is read from git; no experiment was re-run to produce it.",
+  "package_provenance_head": "253e3914a2da95bd5984b45c1559635f5f1621c3",
+  "plan_commit": "4462a7c048beebd1caed82a7c0ba1fc80d0cb16b",
+  "pr_3_base": "de266c4cf79fe3543d6fcfc1b69028c702e5d4d0",
+  "steps": [
+    {
+      "commit": "eede81872268841cd70398e288ad62921f5b5771",
+      "diffstat_vs_previous_step": {
+        "deletions": 0,
+        "files": 13,
+        "insertions": 1705,
+        "paths": [
+          "reports/s2r/ci_failure_analysis.md",
+          "reports/s2r/evidence/ci_run_35369602279.log",
+          "reports/s2r/evidence/ci_run_35369602279.log.gz",
+          "reports/s2r/evidence/t0_run1_exit.txt",
+          "reports/s2r/evidence/t0_run1_historical_env.json",
+          "reports/s2r/evidence/t0_run1_stdout.txt",
+          "reports/s2r/evidence/t0_run2_cpu_torch.json",
+          "reports/s2r/evidence/t0_run2_exit.txt",
+          "reports/s2r/evidence/t0_run2_stdout.txt",
+          "reports/s2r/t0_gauge_check.json",
+          "reports/s2r/t0_gauge_check.py",
+          "reports/s2r/t0_partition_diagnose.py",
+          "reports/s2r/t0_runs_summary.json"
+        ]
+      },
+      "step": "T0",
+      "subject": "Diagnose CI's partition failure as a gauge-direction artefact"
+    },
+    {
+      "commit": "11b636cf0626a3b61cadcbcb80a4bac091d3e0e4",
+      "diffstat_vs_previous_step": {
+        "deletions": 0,
+        "files": 3,
+        "insertions": 1303,
+        "paths": [
+          "reports/s2r/artifact_lock.json",
+          "reports/s2r/input_receipt.json",
+          "reports/s2r/t1_input_receipt.py"
+        ]
+      },
+      "step": "T1",
+      "subject": "Record where every S2 package input comes from"
+    },
+    {
+      "commit": "bbb6782f5679855d4b73193e8ce4b1bb5f55a1ed",
+      "diffstat_vs_previous_step": {
+        "deletions": 44,
+        "files": 5,
+        "insertions": 1052,
+        "paths": [
+          "review/check_review_inputs.py",
+          "review/package_contract.py",
+          "scripts/gen_s2_provenance.py",
+          "scripts/make_s2_package.py",
+          "tests/test_review_inputs.py"
+        ]
+      },
+      "step": "T2",
+      "subject": "Make the package input contract machine-readable and checkable"
+    },
+    {
+      "commit": "0c859f4374c4191125ebb049d7baa0504d434ab2",
+      "diffstat_vs_previous_step": {
+        "deletions": 6,
+        "files": 2,
+        "insertions": 74,
+        "paths": [
+          "review/run_review.py",
+          "tests/test_run_review_jobs.py"
+        ]
+      },
+      "step": "T2",
+      "subject": "Forward --jobs from the review wrapper to the offline build"
+    },
+    {
+      "commit": "5ea011a85066e145bdfd7885fc9d4b3d7e1c1097",
+      "diffstat_vs_previous_step": {
+        "deletions": 0,
+        "files": 35,
+        "insertions": 2634,
+        "paths": [
+          "reports/s2r/SUMMARY.md",
+          "reports/s2r/t3/cold_review.json",
+          "reports/s2r/t3/comparison.json",
+          "reports/s2r/t3/counterfactual.json",
+          "reports/s2r/t3/input_receipt.json",
+          "reports/s2r/t3/junit.xml",
+          "reports/s2r/t3/model_smoke.json",
+          "reports/s2r/t3/native_build_receipt.json",
+          "reports/s2r/t3/recomputed_s2.json",
+          "reports/s2r/t3/review_receipt.json",
+          "reports/s2r/t3/step_logs/00_verify_and_extract.command.txt",
+          "reports/s2r/t3/step_logs/00_verify_and_extract.stderr.log",
+          "reports/s2r/t3/step_logs/00_verify_and_extract.stdout.log",
+          "reports/s2r/t3/step_logs/01_clone_bundle.command.txt",
+          "reports/s2r/t3/step_logs/01_clone_bundle.stderr.log",
+          "reports/s2r/t3/step_logs/01_clone_bundle.stdout.log",
+          "reports/s2r/t3/step_logs/02_checkout_pinned_commit.command.txt",
+          "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stderr.log",
+          "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stdout.log",
+          "reports/s2r/t3/step_logs/03_contract_against_checkout.command.txt",
+          "reports/s2r/t3/step_logs/03_contract_against_checkout.stderr.log",
+          "reports/s2r/t3/step_logs/03_contract_against_checkout.stdout.log",
+          "reports/s2r/t3/step_logs/04_run_review.command.txt",
+          "reports/s2r/t3/step_logs/04_run_review.stderr.log",
+          "reports/s2r/t3/step_logs/04_run_review.stdout.log",
+          "reports/s2r/t3/step_logs/05_recompute_s2.command.txt",
+          "reports/s2r/t3/step_logs/05_recompute_s2.stderr.log",
+          "reports/s2r/t3/step_logs/05_recompute_s2.stdout.log",
+          "reports/s2r/t3/step_logs/build.log",
+          "reports/s2r/t3/step_logs/configure.log",
+          "reports/s2r/t3/step_logs/driver.log",
+          "reports/s2r/t3/step_logs/offline_build_stdout.log",
+          "reports/s2r/t3/step_logs/pytest.log",
+          "reports/s2r/t3_cold_review.py",
+          "reports/s2r/t3_compare.py"
+        ]
+      },
+      "step": "T3",
+      "subject": "Verify the S2 package in a clean environment and recompute its statistics"
+    },
+    {
+      "commit": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+      "diffstat_vs_previous_step": {
+        "deletions": 3,
+        "files": 2,
+        "insertions": 72,
+        "paths": [
+          "review/check_review_inputs.py",
+          "tests/test_review_inputs.py"
+        ]
+      },
+      "step": "T4",
+      "subject": "Require the per-decision records to describe the same battles"
+    }
+  ],
+  "test_tree_at_implementation_head": {
+    "files": [
+      "tests/conftest.py",
+      "tests/test_ambiguity_regression.py",
+      "tests/test_bridge.py",
+      "tests/test_diagnostic_stats.py",
+      "tests/test_encoding_public_range.py",
+      "tests/test_engine_tree_check.py",
+      "tests/test_entry_contracts.py",
+      "tests/test_fairness.py",
+      "tests/test_louse_hidden_base.py",
+      "tests/test_native.py",
+      "tests/test_native_coverage.py",
+      "tests/test_native_fairness.py",
+      "tests/test_pipeline.py",
+      "tests/test_reference.py",
+      "tests/test_review_gate.py",
+      "tests/test_search_model.py",
+      "tests/test_training_loss.py"
+    ],
+    "new_test_files_absent_from_the_checkout": [
+      "tests/test_review_inputs.py",
+      "tests/test_run_review_jobs.py"
+    ]
+  }
+}

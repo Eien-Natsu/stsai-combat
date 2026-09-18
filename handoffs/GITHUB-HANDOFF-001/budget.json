@@ -1,0 +1,115 @@
+{
+  "kind": "budget",
+  "task_id": "GITHUB-HANDOFF-001",
+  "plan_commit": "5c331ca8c043c951b5ea9687fc7b92b3566ee21d",
+  "note": "Two scopes are reported side by side and are never netted against each other. The old scope's usage is history that this round cannot refund; this round's scope authorises text work only and cannot be spent on experiments.",
+  "scopes": [
+    {
+      "budget_scope_id": "S2R-REPRO",
+      "owner": "the previous round (PR #3, plan 4462a7c048beebd1caed82a7c0ba1fc80d0cb16b)",
+      "status": "closed; this round added no usage and reset nothing",
+      "authorised": {
+        "new_training_runs": 0,
+        "optimisation_updates_on_real_data": 0,
+        "new_collection": 0,
+        "full-strength_evaluation_episodes": 0,
+        "targeted_diagnostic_runs": 2,
+        "complete_cold_reviews": 2,
+        "per_step_timeout_seconds": 1800,
+        "total_cold_review_wall_clock_minutes": 90,
+        "compile_parallelism": 2,
+        "torch_threads_for_stats_and_inference": 1
+      },
+      "used": {
+        "new_training_runs": 0,
+        "optimisation_updates_on_real_data": 0,
+        "new_collection": 0,
+        "full-strength_evaluation_episodes": 0,
+        "targeted_diagnostic_runs": 2,
+        "complete_cold_reviews": 2
+      },
+      "remaining": {
+        "targeted_diagnostic_runs": 0,
+        "complete_cold_reviews": 0,
+        "exhausted": true
+      },
+      "evidence": [
+        "reports/s2r/t0_runs_summary.json (budget block: allowed 2, used 2, timeout 60 s)",
+        "reports/s2r/SUMMARY.md §6",
+        "reports/s2r/t3/cold_review.json (one complete review's six steps)",
+        "reports/s2r/t3/step_logs/"
+      ],
+      "unknowns_not_zeros": [
+        "Wall clock actually spent on the two cold reviews: only the second is recorded per step (33.1 s of step time); the first is reported as 31.4 s in prose with no per-step receipt. The round's 'about 3 minutes total' is an approximation and is not presented as a measurement.",
+        "Wall clock spent on the two T0 targeted runs: the summary gives a 60 s timeout per run and SUMMARY.md §6 says 'about 10-20 s each'; the per-run receipt records exit code and results but not elapsed time.",
+        "CPU model of the CI runner that produced the failing run: never recorded, so the one figure that would explain the local-versus-CI divergence is unrecoverable.",
+        "Whether the first cold review's per-step logs still exist anywhere: not in this repository, and this round did not go looking outside the authorised project locations."
+      ],
+      "evidence_availability": {
+        "second_cold_review": "AUDITABLE — six steps with command, cwd, exit code, start, finish, elapsed and full stdout/stderr",
+        "first_cold_review": "EVIDENCE_NOT_AVAILABLE — a sentence in SUMMARY.md and nothing else",
+        "targeted_runs": "AUDITABLE for result and exit code; elapsed time is prose only"
+      }
+    },
+    {
+      "budget_scope_id": "HANDOFF-PUBLISH-001",
+      "owner": "this round (GITHUB-HANDOFF-001)",
+      "status": "delivered; usage recorded below",
+      "authorised": {
+        "cpu_workers": 1,
+        "cumulative_cpu_wall_clock_minutes": 10,
+        "memory_ceiling_mib": 512,
+        "new_training_optimisation_collection_inference_pytest_cold_build_model_load_bootstrap": 0,
+        "install_system_dependencies": 0,
+        "paid_resources": 0,
+        "write_credentials_read": 0
+      },
+      "used": {
+        "commands_executed": 2,
+        "cpu_seconds": 0.41,
+        "wall_seconds": 0.41,
+        "peak_rss_mib": 41.5,
+        "cpu_workers_used": 1,
+        "experiments": 0,
+        "pytest_runs": 0,
+        "model_loads": 0,
+        "bootstrap_resamples": 0,
+        "cold_builds": 0,
+        "git_pushes": 2,
+        "network_reads": 3
+      },
+      "command_accounting": [
+        {
+          "command": "convert_s2_records.py --evaluation /workspaces/stsai_web/runs/s2/evaluation --out reports/github_handoff_001",
+          "wall_seconds": 0.25,
+          "cpu_seconds": 0.25,
+          "peak_rss_mib": 34.4,
+          "exit_code": 0
+        },
+        {
+          "command": "derive_handoff_facts.py --out reports/github_handoff_001",
+          "wall_seconds": 0.16,
+          "cpu_seconds": 0.16,
+          "peak_rss_mib": 41.5,
+          "exit_code": 0
+        }
+      ],
+      "measurement_method": "subprocess.run with resource.getrusage(RUSAGE_CHILDREN) in the calling interpreter; peak RSS is the child high-water mark, so it is an upper bound that includes the decompressed 8.3 MB decision file held once in memory",
+      "remaining": {
+        "cpu_wall_clock_minutes": "9.99",
+        "memory_headroom_mib": 470.5,
+        "note": "the ceiling was never approached; the round is a text transformation and its cost is dominated by process start-up"
+      },
+      "other_operations_not_in_the_two_commands": [
+        "Shard round-trip verification: one further decompression of each input plus a read of every shard, performed once to produce shard_roundtrip.json. Sub-second, inside the accounting above by an order of magnitude, and not separately instrumented.",
+        "git operations (worktree add, diff, ls-tree, rev-parse, hash-object), a gh auth status query, and reads of tracked files. No CPU-meaningful work.",
+        "No file outside the two authorised project locations was read; no credentials were read, printed or requested; no system package was installed; no paid resource was used."
+      ]
+    }
+  ],
+  "carry_over_rules_applied": [
+    "The old scope's two targeted runs and two cold reviews stay consumed; this round does not restore them.",
+    "This round's scope cannot be spent on experiments, and none was spent.",
+    "An unknown is written as unknown, never as 0: see unknowns_not_zeros above."
+  ]
+}

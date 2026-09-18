@@ -1,0 +1,433 @@
+# Raw command output for the S2 round
+
+===== reports/s2_build_and_test.log =====
+# S2 cold-build and test verification, in a clean clone of this repository
+
+# written 2026-09-18T21:20:41
+
+
+## toolchain
+
+$ g++ --version
+g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+
+$ cmake --version
+[Errno 2] No such file or directory: 'cmake'
+
+$ /workspaces/stsai_web/.venv/bin/python --version
+Python 3.12.14
+
+
+## review chain (unpacked clone, PRE_PATCH snapshot + 5-patch series)
+
+NOT_RUN  attachments    no --package given
+PASS     native_build   built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so
+PASS     import         revision 7476a8195402, 5 patches
+PASS     intent         native/intent_table.def matches the derivation (50 rows)
+PASS     tests          277 tests, 0 failed, 0 skipped, 155 native/regression cases
+PASS     counterfactual 5 steps replayed, 1024 sampler seeds, root stable=True
+PASS     model_smoke    12 observations loaded and run; max probability delta 0.00e+00; 0 failures
+receipt: /tmp/s2verify/work/review_receipt.json
+all required checks passed on this machine
+
+
+## configure.log
+$ cmake -S /tmp/s2verify/repo/native -B /tmp/stsai-native-3tk2boli/build -DCMAKE_BUILD_TYPE=Release -DSTS_ENGINE_DIR=/tmp/stsai-native-3tk2boli/engine -DSTSAI_ENGINE_REVISION=7476a81954020087da31d41d16fddf475746ec2d -DSTSAI_ENGINE_PATCHES=6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db,1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab,312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5,bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796,762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f -DPython_EXECUTABLE=/workspaces/stsai_web/.venv/bin/python -Dpybind11_DIR=/tmp/stsai-native-3tk2boli/src/native_sources/pybind11/share/cmake/pybind11 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/tmp/stsai-native-3tk2boli/module -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=/tmp/stsai-native-3tk2boli/module
+exit code: 0
+
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python: /workspaces/stsai_web/.venv/bin/python (found version "3.12.14") found components: Interpreter Development.Module
+-- Performing Test HAS_FLTO
+-- Performing Test HAS_FLTO - Success
+-- Found pybind11: /tmp/stsai-native-3tk2boli/src/native_sources/pybind11/include (found version "2.13.6")
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/stsai-native-3tk2boli/build
+
+
+
+## build.log
+$ cmake --build /tmp/stsai-native-3tk2boli/build --config Release --parallel 4
+exit code: 0
+
+[  3%] Building CXX object CMakeFiles/_lightspeed.dir/bridge.cpp.o
+[  6%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Actions.cpp.o
+[  9%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardInstance.cpp.o
+[ 12%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/BattleContext.cpp.o
+[ 16%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardManager.cpp.o
+[ 19%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardQueue.cpp.o
+[ 22%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Monster.cpp.o
+[ 29%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterGroup.cpp.o
+[ 29%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterMoveDamage.cpp.o
+[ 32%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterSpecific.cpp.o
+[ 35%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Player.cpp.o
+[ 38%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Card.cpp.o
+[ 41%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/CombatReward.cpp.o
+[ 45%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Deck.cpp.o
+[ 48%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Game.cpp.o
+[ 51%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/GameContext.cpp.o
+[ 54%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Map.cpp.o
+[ 58%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Neow.cpp.o
+[ 61%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/SaveFile.cpp.o
+[ 64%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Shop.cpp.o
+[ 67%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/BattleSimulator.cpp.o
+[ 70%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/ConsoleSimulator.cpp.o
+[ 74%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/PrintHelpers.cpp.o
+[ 77%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/SimHelpers.cpp.o
+[ 80%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/Action.cpp.o
+[ 83%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/BattleScumSearcher2.cpp.o
+[ 87%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/ExpertKnowledge.cpp.o
+[ 90%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/GameAction.cpp.o
+[ 93%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/ScumSearchAgent2.cpp.o
+[ 96%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/SimpleAgent.cpp.o
+[100%] Linking CXX shared module /tmp/stsai-native-3tk2boli/module/_lightspeed.cpython-312-x86_64-linux-gnu.so
+[100%] Built target _lightspeed
+
+lto-wrapper: warning: using serial compilation of 11 LTRANS jobs
+lto-wrapper: note: see the '-flto' option documentation for more information
+
+
+## pytest.log
+........................................................................ [ 25%]
+........................................................................ [ 51%]
+........................................................................ [ 77%]
+.............................................................            [100%]
+--------------- generated xml file: /tmp/s2verify/work/junit.xml ---------------
+277 passed in 7.50s
+
+===== logs/71_s2_train_D384_s17.log =====
+$ /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s17/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s17/config.json
+{
+  "steps": 500,
+  "backend": "lightspeed_pilot",
+  "parameters": 1949325,
+  "validation": {
+    "policy_loss": 1.4190751936754233,
+    "outcome_loss": 2.6442851904666784,
+    "value_loss": 0.05094742092557929,
+    "loss": 2.7921652098343417,
+    "policy_ce_decision": 1.4190751936754233,
+    "policy_kl_decision": 0.09449434014949722,
+    "teacher_entropy_decision": 1.3245808798291905,
+    "teacher_top1_agreement": 0.7212121212121212,
+    "teacher_choice_agreement": 0.696969696969697,
+    "teacher_choice_agreement_decision_states": 0.5951417004048583,
+    "decision_states": 247,
+    "decision_states_with_teacher": 247,
+    "forced_states": 83,
+    "unknown_teacher_action_states": 0,
+    "policy_kl": 0.09449434014949722,
+    "teacher_entropy": 1.3245808798291905,
+    "decision_numerator_D": 247.0,
+    "masked_numerator_M": 330.0,
+    "policy_numerator": 350.5115728378296,
+    "outcome_numerator": 872.6141128540039,
+    "value_numerator": 16.812648905441165,
+    "kl_dev": 0.1000072945840026,
+    "battles_seen": 24,
+    "battles_with_decisions": 24,
+    "battles_without_decisions": 0,
+    "samples": 330
+  },
+  "best_validation_loss": 2.7921652098343417,
+  "best_selection_metric": [
+    0.1000072945840026,
+    500
+  ],
+  "loss_revision": 2,
+  "dropped_tail_rows": 22,
+  "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+  "elapsed_seconds": 25.782004236010835
+}
+
+===== logs/71_s2_train_D384_s29.log =====
+$ /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s29/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s29/config.json
+{
+  "steps": 500,
+  "backend": "lightspeed_pilot",
+  "parameters": 1949325,
+  "validation": {
+    "policy_loss": 1.4253216755052327,
+    "outcome_loss": 2.579427724896055,
+    "value_loss": 0.043298213059350735,
+    "loss": 2.7583337510126107,
+    "policy_ce_decision": 1.4253216755052327,
+    "policy_kl_decision": 0.10074079157369822,
+    "teacher_entropy_decision": 1.3245808798291905,
+    "teacher_top1_agreement": 0.693939393939394,
+    "teacher_choice_agreement": 0.7090909090909091,
+    "teacher_choice_agreement_decision_states": 0.611336032388664,
+    "decision_states": 247,
+    "decision_states_with_teacher": 247,
+    "forced_states": 83,
+    "unknown_teacher_action_states": 0,
+    "policy_kl": 0.10074079157369822,
+    "teacher_entropy": 1.3245808798291905,
+    "decision_numerator_D": 247.0,
+    "masked_numerator_M": 330.0,
+    "policy_numerator": 352.0544538497925,
+    "outcome_numerator": 851.2111492156982,
+    "value_numerator": 14.288410309585743,
+    "kl_dev": 0.11195193429648599,
+    "battles_seen": 24,
+    "battles_with_decisions": 24,
+    "battles_without_decisions": 0,
+    "samples": 330
+  },
+  "best_validation_loss": 2.7754821393086293,
+  "best_selection_metric": [
+    0.11115480321932518,
+    425
+  ],
+  "loss_revision": 2,
+  "dropped_tail_rows": 22,
+  "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+  "elapsed_seconds": 29.12506844699965
+}
+
+===== logs/71_s2_train_D384_s43.log =====
+$ /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s43/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s43/config.json
+{
+  "steps": 500,
+  "backend": "lightspeed_pilot",
+  "parameters": 1949325,
+  "validation": {
+    "policy_loss": 1.4198260558278937,
+    "outcome_loss": 2.487261494723233,
+    "value_loss": 0.042311442505822264,
+    "loss": 2.705768245695333,
+    "policy_ce_decision": 1.4198260558278937,
+    "policy_kl_decision": 0.09524520905876932,
+    "teacher_entropy_decision": 1.3245808798291905,
+    "teacher_top1_agreement": 0.7151515151515152,
+    "teacher_choice_agreement": 0.703030303030303,
+    "teacher_choice_agreement_decision_states": 0.6032388663967612,
+    "decision_states": 247,
+    "decision_states_with_teacher": 247,
+    "forced_states": 83,
+    "unknown_teacher_action_states": 0,
+    "policy_kl": 0.09524520905876932,
+    "teacher_entropy": 1.3245808798291905,
+    "decision_numerator_D": 247.0,
+    "masked_numerator_M": 330.0,
+    "policy_numerator": 350.69703578948975,
+    "outcome_numerator": 820.796293258667,
+    "value_numerator": 13.962776026921347,
+    "kl_dev": 0.10345044215532818,
+    "battles_seen": 24,
+    "battles_with_decisions": 24,
+    "battles_without_decisions": 0,
+    "samples": 330
+  },
+  "best_validation_loss": 2.7662094540539144,
+  "best_selection_metric": [
+    0.10288797378768787,
+    350
+  ],
+  "loss_revision": 2,
+  "dropped_tail_rows": 22,
+  "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+  "elapsed_seconds": 24.79437746599433
+}
+
+===== logs/71_s2_train_D96_s29.log =====
+$ /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D96_s29/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D96_s29/config.json
+{
+  "steps": 500,
+  "backend": "lightspeed_pilot",
+  "parameters": 1949325,
+  "validation": {
+    "policy_loss": 1.4367933620808095,
+    "outcome_loss": 4.14004736813632,
+    "value_loss": 0.1721987321464853,
+    "loss": 3.6790157782954545,
+    "policy_ce_decision": 1.4367933620808095,
+    "policy_kl_decision": 0.11221250336662478,
+    "teacher_entropy_decision": 1.3245808798291905,
+    "teacher_top1_agreement": 0.6696969696969697,
+    "teacher_choice_agreement": 0.6727272727272727,
+    "teacher_choice_agreement_decision_states": 0.562753036437247,
+    "decision_states": 247,
+    "decision_states_with_teacher": 247,
+    "forced_states": 83,
+    "unknown_teacher_action_states": 0,
+    "policy_kl": 0.11221250336662478,
+    "teacher_entropy": 1.3245808798291905,
+    "decision_numerator_D": 247.0,
+    "masked_numerator_M": 330.0,
+    "policy_numerator": 354.88796043395996,
+    "outcome_numerator": 1366.2156314849854,
+    "value_numerator": 56.825581608340144,
+    "kl_dev": 0.11853806043576769,
+    "battles_seen": 24,
+    "battles_with_decisions": 24,
+    "battles_without_decisions": 0,
+    "samples": 330
+  },
+  "best_validation_loss": 3.6103851490338736,
+  "best_selection_metric": [
+    0.11105501457132781,
+    400
+  ],
+  "loss_revision": 2,
+  "dropped_tail_rows": 126,
+  "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+  "elapsed_seconds": 27.783809017011663
+}
+
+===== logs/71_s2_train_D96_s43.log =====
+$ /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D96_s43/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D96_s43/config.json
+{
+  "steps": 500,
+  "backend": "lightspeed_pilot",
+  "parameters": 1949325,
+  "validation": {
+    "policy_loss": 1.4340502395321,
+    "outcome_loss": 4.227468398123077,
+    "value_loss": 0.17267189018629406,
+    "loss": 3.7204563287799326,
+    "policy_ce_decision": 1.4340502395321,
+    "policy_kl_decision": 0.10946938359303031,
+    "teacher_entropy_decision": 1.3245808798291905,
+    "teacher_top1_agreement": 0.703030303030303,
+    "teacher_choice_agreement": 0.6757575757575758,
+    "teacher_choice_agreement_decision_states": 0.5668016194331984,
+    "decision_states": 247,
+    "decision_states_with_teacher": 247,
+    "forced_states": 83,
+    "unknown_teacher_action_states": 0,
+    "policy_kl": 0.10946938359303031,
+    "teacher_entropy": 1.3245808798291905,
+    "decision_numerator_D": 247.0,
+    "masked_numerator_M": 330.0,
+    "policy_numerator": 354.2104091644287,
+    "outcome_numerator": 1395.0645713806152,
+    "value_numerator": 56.98172376147704,
+    "kl_dev": 0.11500136359945935,
+    "battles_seen": 24,
+    "battles_with_decisions": 24,
+    "battles_without_decisions": 0,
+    "samples": 330
+  },
+  "best_validation_loss": 3.4544575025337743,
+  "best_selection_metric": [
+    0.10600481499149134,
+    400
+  ],
+  "loss_revision": 2,
+  "dropped_tail_rows": 126,
+  "selection_metric": "kl_dev (mean over battles of battle mean decision-state KL)",
+  "elapsed_seconds": 23.632905409001978
+}
+
+===== logs/71_s2_train_all.log =====
+D96_s29: /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D96_s29/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D96_s29/config.json
+D96_s29: exit 0 in 30.3s 500 steps
+D96_s43: /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D96_s43/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D96_s43/config.json
+D96_s43: exit 0 in 25.9s 500 steps
+D384_s17: /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s17/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s17/config.json
+D384_s17: exit 0 in 28.1s 500 steps
+D384_s29: /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s29/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s29/config.json
+D384_s29: exit 0 in 31.2s 500 steps
+D384_s43: /workspaces/stsai_web/.venv/bin/python -m stsai train --train-data /workspaces/stsai_web/data/s1r/train /workspaces/stsai_web/data/s2/add288 --val-data /workspaces/stsai_web/data/s1r/val --output /workspaces/stsai_web/runs/s2/D384_s43/model --backend lightspeed_pilot --device cuda --config /workspaces/stsai_web/runs/s2/D384_s43/config.json
+D384_s43: exit 0 in 28.3s 500 steps
+[
+  {
+    "run": "D96_s29",
+    "data": [
+      "data/s1r/train"
+    ],
+    "init_seed": 29,
+    "exit_code": 0,
+    "seconds": 30.299165339005413,
+    "log": "logs/71_s2_train_D96_s29.log",
+    "output": "runs/s2/D96_s29/model",
+    "steps": 500,
+    "best_selection_metric": [
+      0.11105501457132781,
+      400
+    ],
+    "kl_dev_last": 0.11853806043576769,
+    "dropped_tail_rows": 126
+  },
+  {
+    "run": "D96_s43",
+    "data": [
+      "data/s1r/train"
+    ],
+    "init_seed": 43,
+    "exit_code": 0,
+    "seconds": 25.864320887980284,
+    "log": "logs/71_s2_train_D96_s43.log",
+    "output": "runs/s2/D96_s43/model",
+    "steps": 500,
+    "best_selection_metric": [
+      0.10600481499149134,
+      400
+    ],
+    "kl_dev_last": 0.11500136359945935,
+    "dropped_tail_rows": 126
+  },
+  {
+    "run": "D384_s17",
+    "data": [
+      "data/s1r/train",
+      "data/s2/add288"
+    ],
+    "init_seed": 17,
+    "exit_code": 0,
+    "seconds": 28.07281398397754,
+    "log": "logs/71_s2_train_D384_s17.log",
+    "output": "runs/s2/D384_s17/model",
+    "steps": 500,
+    "best_selection_metric": [
+      0.1000072945840026,
+      500
+    ],
+    "kl_dev_last": 0.1000072945840026,
+    "dropped_tail_rows": 22
+  },
+  {
+    "run": "D384_s29",
+    "data": [
+      "data/s1r/train",
+      "data/s2/add288"
+    ],
+    "init_seed": 29,
+    "exit_code": 0,
+    "seconds": 31.1596168410033,
+    "log": "logs/71_s2_train_D384_s29.log",
+    "output": "runs/s2/D384_s29/model",
+    "steps": 500,
+    "best_selection_metric": [
+      0.11115480321932518,
+      425
+    ],
+    "kl_dev_last": 0.11195193429648599,
+    "dropped_tail_rows": 22
+  },
+  {
+    "run": "D384_s43",
+    "data": [
+      "data/s1r/train",
+      "data/s2/add288"
+    ],
+    "init_seed": 43,
+    "exit_code": 0,
+    "seconds": 28.305844949005404,
+    "log": "logs/71_s2_train_D384_s43.log",
+    "output": "runs/s2/D384_s43/model",
+    "steps": 500,
+    "best_selection_metric": [
+      0.10288797378768787,
+      350
+    ],
+    "kl_dev_last": 0.10345044215532818,
+    "dropped_tail_rows": 22
+  }
+]

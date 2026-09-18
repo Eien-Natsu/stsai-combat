@@ -1,0 +1,243 @@
+{
+  "kind": "command_versions",
+  "task_id": "GITHUB-HANDOFF-001",
+  "purpose": "For every command the previous round actually ran, say which code was the driver and which code was under test. The two are not the same tree, and the difference is the thing a reviewer has to be able to see.",
+  "plan_commit": "5c331ca8c043c951b5ea9687fc7b92b3566ee21d",
+  "code_base": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+  "trees": {
+    "implementation_head": {
+      "commit": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+      "role": "PR #3 branch agent/s2r-repro; the tree that invoked every command",
+      "worktree": "/home/node/stsai-s2r"
+    },
+    "package_provenance_head": {
+      "commit": "253e3914a2da95bd5984b45c1559635f5f1621c3",
+      "role": "the checkout the cold review cloned from the package bundle and the code the tests ran against",
+      "ancestry": "ancestor of the implementation head; verified with git merge-base --is-ancestor"
+    }
+  },
+  "how_the_drivers_were_located": {
+    "review/run_review.py": "HERE = Path(__file__).resolve().parent, so every sub-script it dispatches (offline_native_build.py, counterfactual_replay.py, model_smoke.py) is imported from the implementation head, not from the checkout",
+    "scripts/gen_intent_table.py": "invoked as a relative path with cwd=repo, so the checkout's copy ran",
+    "pytest": "invoked with cwd=repo, so the checkout's tests ran",
+    "consequence": "four drivers are byte-identical in both trees, run_review.py is not, and two files exist only in the implementation head"
+  },
+  "driver_identity": [
+    {
+      "path": "review/run_review.py",
+      "blob_at_implementation_head": "e83ff22df5763ca3010bc768fafa5fe7b93202b0",
+      "blob_at_package_provenance_head": "4a46fe8966cbb9909a1c321c3f539268e633d0d9",
+      "identical": false,
+      "which_ran": "implementation head",
+      "difference": "the head copy adds --jobs (default 2) and forwards it to offline_native_build.py; deletion of the flag is the whole delta the previous round described"
+    },
+    {
+      "path": "review/offline_native_build.py",
+      "blob_at_implementation_head": "d521ebdf2e68db8e1ae06820a9b19bac680b6ae6",
+      "blob_at_package_provenance_head": "d521ebdf2e68db8e1ae06820a9b19bac680b6ae6",
+      "identical": true,
+      "which_ran": "same bytes either way"
+    },
+    {
+      "path": "review/counterfactual_replay.py",
+      "blob_at_implementation_head": "5c01d656b5957a8aee972c8d282aa6484143f6c4",
+      "blob_at_package_provenance_head": "5c01d656b5957a8aee972c8d282aa6484143f6c4",
+      "identical": true,
+      "which_ran": "same bytes either way"
+    },
+    {
+      "path": "review/model_smoke.py",
+      "blob_at_implementation_head": "680bfa11a8280aaeb2296e909274a4bc77b14d54",
+      "blob_at_package_provenance_head": "680bfa11a8280aaeb2296e909274a4bc77b14d54",
+      "identical": true,
+      "which_ran": "same bytes either way"
+    },
+    {
+      "path": "review/recompute_s2.py",
+      "blob_at_implementation_head": "ddff0e76259172c2a822cc1dd5f49bbf0bdb1c21",
+      "blob_at_package_provenance_head": "ddff0e76259172c2a822cc1dd5f49bbf0bdb1c21",
+      "identical": true,
+      "which_ran": "same bytes either way"
+    },
+    {
+      "path": "review/check_review_inputs.py",
+      "blob_at_implementation_head": "9a34b6740927d6fc0169a6620e7f6656d323ffbb",
+      "blob_at_package_provenance_head": null,
+      "identical": false,
+      "which_ran": "implementation head",
+      "difference": "absent from the checkout: this is the new validator the round introduced, so the contract it enforced was not itself part of the reviewed tree"
+    },
+    {
+      "path": "review/package_contract.py",
+      "blob_at_implementation_head": "06c75d86387d6a772243323aaed2b7a6d2713d40",
+      "blob_at_package_provenance_head": null,
+      "identical": false,
+      "which_ran": "implementation head",
+      "difference": "absent from the checkout"
+    },
+    {
+      "path": "scripts/gen_intent_table.py",
+      "blob_at_implementation_head": "e76c337babad8c50eca65d83bbe97cb70befee2a",
+      "blob_at_package_provenance_head": "b8900d46299404041824ba08a4f81be2207ff773",
+      "identical": false,
+      "which_ran": "checkout (invoked relative to cwd=repo)",
+      "difference": "the checkout's copy ran"
+    }
+  ],
+  "commands": [
+    {
+      "id": "T0-run1",
+      "statement": "timeout 60 /workspaces/stsai_web/.venv/bin/python reports/s2r/t0_partition_diagnose.py --out /tmp/t0_run1_historical_env.json",
+      "cwd": "implementation head",
+      "driver": {
+        "path": "reports/s2r/t0_partition_diagnose.py",
+        "blob_at_implementation_head": "5c63582d5e781c996ec70b3a29ede48ba1ebaee4",
+        "unchanged_between_the_T0_commit_and_the_head": true
+      },
+      "code_under_test": {
+        "path": "src/stsai/training.py",
+        "blob": "2e199b0e79784e97a7591f3b2107d25b1120bf95",
+        "note": "imported from /home/node/stsai-s2r/src; identical in the T0 commit, the implementation head, the 253e391 checkout and the failing CI head 2cc0c75"
+      },
+      "environment": {
+        "python": "3.12.14",
+        "torch": "2.9.1+cu128",
+        "cuda_available": false,
+        "cpu_count": 1,
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+      },
+      "exit_code": 0,
+      "source": "transcribed from the previous round's evidence, not re-run this round",
+      "evidence": [
+        "reports/s2r/evidence/t0_run1_stdout.txt",
+        "reports/s2r/evidence/t0_run1_exit.txt",
+        "reports/s2r/evidence/t0_run1_historical_env.json",
+        "reports/s2r/t0_runs_summary.json"
+      ]
+    },
+    {
+      "id": "T0-run2",
+      "statement": "timeout 60 /home/node/s2r-cpu-venv/bin/python reports/s2r/t0_partition_diagnose.py --out /tmp/t0_run2_cpu_torch.json",
+      "cwd": "implementation head",
+      "driver": {
+        "path": "reports/s2r/t0_partition_diagnose.py",
+        "blob_at_implementation_head": "5c63582d5e781c996ec70b3a29ede48ba1ebaee4"
+      },
+      "code_under_test": {
+        "path": "src/stsai/training.py",
+        "blob": "2e199b0e79784e97a7591f3b2107d25b1120bf95"
+      },
+      "environment": {
+        "python": "3.12.14",
+        "torch": "2.9.1+cpu",
+        "cuda_available": false,
+        "cpu_count": 1,
+        "note": "the CI runner's wheel flavour; the two runs produced bit-identical gradients, updates and parameter deltas, so the wheel is not the source of the CI-local difference"
+      },
+      "exit_code": 0,
+      "source": "transcribed from the previous round's evidence, not re-run this round",
+      "evidence": [
+        "reports/s2r/evidence/t0_run2_stdout.txt",
+        "reports/s2r/evidence/t0_run2_exit.txt",
+        "reports/s2r/evidence/t0_run2_cpu_torch.json",
+        "reports/s2r/t0_runs_summary.json"
+      ]
+    },
+    {
+      "id": "T3-00-verify-and-extract",
+      "statement": "check_review_inputs.py --repo <implementation head> --package <zip> --work <out>/work --out <out>/input_receipt.json --lock reports/s2r/artifact_lock.json",
+      "driver": {
+        "path": "review/check_review_inputs.py",
+        "blob_at_implementation_head": "9a34b6740927d6fc0169a6620e7f6656d323ffbb"
+      },
+      "code_under_test": "the validator is new in this round and is itself the driver; the package it read is the 253e391 delivery",
+      "inputs": {
+        "/workspaces/stsai_web/stsai_s2_review_253e391.zip": "92a07276a2dabef7def32c80d30bdccd63a4e0ed628e26576f3c6721f8ef4d52"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.2,
+      "evidence": ["reports/s2r/t3/input_receipt.json", "reports/s2r/t3/step_logs/00_verify_and_extract.command.txt", "reports/s2r/t3/step_logs/00_verify_and_extract.stdout.log"]
+    },
+    {
+      "id": "T3-01-clone-bundle",
+      "statement": "git clone <package>/repo.bundle <checkout>",
+      "driver": "git",
+      "code_under_test": "the bundle shipped inside the package",
+      "exit_code": 0,
+      "elapsed_seconds": 0.1,
+      "evidence": ["reports/s2r/t3/step_logs/01_clone_bundle.command.txt", "reports/s2r/t3/step_logs/01_clone_bundle.stderr.log"]
+    },
+    {
+      "id": "T3-02-checkout-pinned",
+      "statement": "git -C <checkout> checkout --detach 253e3914a2da95bd5984b45c1559635f5f1621c3",
+      "driver": "git",
+      "code_under_test": "the checkout is pinned by the commit recorded in the package provenance",
+      "exit_code": 0,
+      "elapsed_seconds": 0.0,
+      "evidence": ["reports/s2r/t3/step_logs/02_checkout_pinned_commit.command.txt", "reports/s2r/t3/step_logs/02_checkout_pinned_commit.stderr.log"]
+    },
+    {
+      "id": "T3-03-contract-against-checkout",
+      "statement": "check_review_inputs.py --repo <checkout 253e391> --package <extracted> --out <out>/input_receipt_checkout.json --lock reports/s2r/artifact_lock.json",
+      "driver": {
+        "path": "review/check_review_inputs.py",
+        "blob_at_implementation_head": "9a34b6740927d6fc0169a6620e7f6656d323ffbb"
+      },
+      "code_under_test": {
+        "tree": "checkout 253e391",
+        "note": "the contract is applied to the checkout that the tests will run against"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.2,
+      "evidence": ["reports/s2r/t3/step_logs/03_contract_against_checkout.command.txt", "reports/s2r/t3/step_logs/03_contract_against_checkout.stdout.log"]
+    },
+    {
+      "id": "T3-04-run-review",
+      "statement": "run_review.py --repo <checkout 253e391> --package <extracted> --sources <package>/native_sources.tar.gz --model <package>/model/D384_s17_selected.pt --jobs 2 --timeout 1800 --work <out>/work/review --receipt <out>/review_receipt.json",
+      "driver": {
+        "path": "review/run_review.py",
+        "blob_at_implementation_head": "e83ff22df5763ca3010bc768fafa5fe7b93202b0",
+        "note": "the package ships a different run_review.py (4a46fe8966cb); the head copy ran because run_review.py locates its siblings relative to itself"
+      },
+      "code_under_test": {
+        "tree": "checkout 253e391",
+        "components": "src/, tests/, scripts/gen_intent_table.py, tests/fixtures/ambiguity_public_trace.json all come from the checkout; the native module is built from the package's native_sources.tar.gz at engine base 7476a8195402 plus 5 patches"
+      },
+      "inputs": {
+        "model/D384_s17_selected.pt": "ce9ff924499ccae817f919b6091833564383db3918f32b64948acedf1ef0648b",
+        "native_sources.tar.gz": "f9eaf1cd3ea6e5c3ea68e3e9d3d7165970e042ba9e0220ef895d82a153e9df77"
+      },
+      "sub_steps": {
+        "tests": "pytest tests -q --junitxml=<work>/junit.xml with cwd=checkout and PYTHONPATH=checkout/src",
+        "reported": "277 tests, 0 failed, 0 errors, 0 skipped, 155 native/regression cases",
+        "caveat": "277 is the checkout's count; the 17 tests added later in the branch are not in that tree and are not in this run"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 27.9,
+      "evidence": ["reports/s2r/t3/review_receipt.json", "reports/s2r/t3/junit.xml", "reports/s2r/t3/step_logs/04_run_review.stdout.log", "reports/s2r/t3/step_logs/pytest.log", "reports/s2r/t3/model_smoke.json", "reports/s2r/t3/counterfactual.json", "reports/s2r/t3/native_build_receipt.json"]
+    },
+    {
+      "id": "T3-05-recompute",
+      "statement": "recompute_s2.py --package <extracted> --out <out>/recomputed_s2.json",
+      "driver": {
+        "path": "review/recompute_s2.py",
+        "blob_at_implementation_head": "ddff0e76259172c2a822cc1dd5f49bbf0bdb1c21",
+        "identical_in_both_trees": true
+      },
+      "code_under_test": "the per-episode records inside the package",
+      "inputs": {
+        "evaluation/episodes.jsonl.gz": "55e03a6a2c142c08d6e26905cdc55af2facf66f53de14a3887c2ef55a154f30a",
+        "evaluation/paired_summary.json": "882352674fac39679ea8319bf393b03f62684a2cbb84729fb502d6c283797df5"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 2.7,
+      "evidence": ["reports/s2r/t3/recomputed_s2.json", "reports/s2r/t3/comparison.json", "reports/s2r/t3/step_logs/05_recompute_s2.stdout.log"]
+    }
+  ],
+  "limitations": [
+    "The commands above are transcribed from the previous round's committed logs; this round re-ran none of them. Every field not present in those logs is marked as such rather than filled in.",
+    "The worktree /home/node/stsai-s2r is clean at e0fc584 today, which is consistent with the drivers having been the head's bytes, but the tree state at the moment each command ran was not recorded by the round.",
+    "The failing CI run's runner CPU model was never recorded, so the one number that would explain the local-versus-CI divergence is not recoverable from this repository.",
+    "review/check_review_inputs.py and review/package_contract.py were written by the round that then used them as the validator; they are not covered by the 277-test JUnit, which pre-dates them."
+  ]
+}

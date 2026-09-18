@@ -1,0 +1,37 @@
+{
+  "answer": "NOT_AVAILABLE for a run; the source is committed, the run is not.",
+  "committed_test_run_found": {
+    "contains_the_new_tests": false,
+    "path": "reports/s2r/t3/junit.xml",
+    "testsuite_attributes": {
+      "errors": "0",
+      "failures": "0",
+      "hostname": "32d3e7c857e9",
+      "skipped": "0",
+      "tests": "277",
+      "timestamp": "2026-09-18T17:09:19.745440+00:00"
+    }
+  },
+  "kind": "s2r_new_tests_run_evidence",
+  "limitation": "Absence of a log is not evidence the tests failed; it means this repository cannot show that they ran. The committed JUnit has 277 cases from the 253e391 checkout and none of them is from the two files added later in the branch.",
+  "question": "Did the 17 tests added by this round actually execute anywhere?",
+  "search": {
+    "files_matching": [],
+    "pattern": "test_review_inputs|test_run_review_jobs",
+    "searched": "every tracked file of the implementation head"
+  },
+  "test_source_at_implementation_head": [
+    {
+      "blob": "77dd746ada8de3e70de71410ececfcf54a958704",
+      "bytes": 19044,
+      "path": "tests/test_review_inputs.py",
+      "test_functions": 14
+    },
+    {
+      "blob": "8e14c70842bf5370ff08fa1f7b389fb3c0924617",
+      "bytes": 1888,
+      "path": "tests/test_run_review_jobs.py",
+      "test_functions": 3
+    }
+  ]
+}
