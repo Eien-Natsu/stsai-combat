@@ -1,0 +1,234 @@
+{
+  "purpose": "Provenance for the S2 review package.",
+  "protocol": {
+    "baseline_commit": "c31ba2f02dccb92ff96d593e14ed5b3dd2644183",
+    "protocol_file": {
+      "file": "/workspaces/stsai_web/reports/s2_volume_protocol.json",
+      "sha256": "ec35160712f2b56a0fabc3b5bffc6c032784102ad618d00045cb50fd3e153acc",
+      "bytes": 13469
+    }
+  },
+  "head": "253e3914a2da95bd5984b45c1559635f5f1621c3",
+  "branch": "s2/fixed-budget-data",
+  "bundle": {
+    "file": "/workspaces/stsai_web/delivery/stsai_s2_review_253e391/repo.bundle",
+    "sha256": "76ceffeb28a28d4d52e0fc9178631ec9c382751c3051c9e9a0db5cbf70e0b0b1",
+    "bytes": 2955387,
+    "verify_returncode": 0,
+    "verify_output": "The bundle contains these 7 refs:\ne2e58d61c9bf9fde6ff18448ce44880549c99464 refs/heads/main\nc09167bcb4919e9cb6894e6f19bec59ccc03755c refs/heads/s1/input-semantics\nc31ba2f02dccb92ff96d593e14ed5b3dd2644183 refs/heads/s1r/gates-and-baseline\n253e3914a2da95bd5984b45c1559635f5f1621c3 refs/heads/s2/fixed-budget-data\nbf26b0f4713e0bd4ac9858034ca94693840c5040 refs/heads/s2/louse-and-events\n79f42fcc96fa46d1350c2f0b1e0b262badc54256 refs/heads/work/5070-bringup\n253e3914a2da95bd5984b45c1559635f5f1621c3 HEAD\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1",
+    "clone_command": "git clone repo.bundle repo && git -C repo checkout 253e3914a2da95bd5984b45c1559635f5f1621c3"
+  },
+  "engine": {
+    "url": "https://github.com/gamerpuppy/sts_lightspeed.git",
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "json_submodule": "0b345b20c888f7dc8888485768e4bf9a6be29de0",
+    "license_sha256": "accfd22486a9cc31c17760450036171962a2085dd94eaa905c5777509f05ca2a",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+      },
+      {
+        "file": "native/patches/0004-add-missing-algorithm-include.patch",
+        "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      },
+      {
+        "file": "native/patches/0005-CardManager-algorithm-include.patch",
+        "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+      }
+    ]
+  },
+  "versions": {
+    "observation_schema": 4,
+    "encoding_revision": 5,
+    "loss_revision": 2,
+    "utility_revision": 1,
+    "scenario_revision": 3,
+    "sampler_revision": "public_history_candidate_sampling/2"
+  },
+  "data": {
+    "D96_manifest_sha256": "c7cce53eb67e0694f228b8db7f7f07f1b6c3a091c6cbde629521a62944ca1287",
+    "V24_manifest_sha256": "3857734662b323d3acc4c88433f8c807134d2a02e6beec20bad4017042849142",
+    "D96_shards": 96,
+    "Dadd288_shards": 288,
+    "Dadd288_normalized_sample_hash": "e077fa5346b5af044f74f2c36511223d04c1c05247a47d8cd22fc1b2c08f6ead",
+    "D384_episodes": 384,
+    "dev_sets": {
+      "DEV_OLD256": "61731c6c7175644fd6ab0480d28433876c4d77dc690b6ad4cd2c30c433ab6547",
+      "DEV_PROBE256": "15bfe445f264a60ada7050b2966e681fc432d6b461b53b6327162e64f969e344"
+    }
+  },
+  "training": {
+    "runs": [
+      {
+        "run": "D96_s17",
+        "data": [
+          "data/s1r/train"
+        ],
+        "init_seed": 17,
+        "reused_from": "S1R",
+        "steps": 500,
+        "selected_step": 400,
+        "selected_sha256": "34ea8ff0aa55cf6f5ef3ed311819553715a16e1ceb57ef53211f09122c3dfaef",
+        "last_step": 500,
+        "last_sha256": "696350ae70af56dafa3d276986dc938404ebaa57b762e94f8c7086ff35a11f05",
+        "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02"
+      },
+      {
+        "run": "D96_s29",
+        "data": [
+          "data/s1r/train"
+        ],
+        "init_seed": 29,
+        "reused_from": null,
+        "steps": 500,
+        "selected_step": 400,
+        "selected_sha256": "6cf0a94c695f1182b8c92f1c0d6d2c7027d157b34f4ce9820195220c1b189b45",
+        "last_step": 500,
+        "last_sha256": "15b5669bc6a413af88fce85ffb059571d97320249b73163fd06a0c08af39c594",
+        "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02"
+      },
+      {
+        "run": "D96_s43",
+        "data": [
+          "data/s1r/train"
+        ],
+        "init_seed": 43,
+        "reused_from": null,
+        "steps": 500,
+        "selected_step": 400,
+        "selected_sha256": "aae9f1f754748d4682217f6a6bd99167458f29dfd49bbea4d989488bcab77fe6",
+        "last_step": 500,
+        "last_sha256": "df3091ea9361603c3713507c007280162dfb5d2f97859054cee71b664713b462",
+        "data_fingerprint": "a7b6882273cd828688442c0f85bd9549e41ab9f8d405b6fef119886ac1cc2b02"
+      },
+      {
+        "run": "D384_s17",
+        "data": [
+          "data/s1r/train",
+          "data/s2/add288"
+        ],
+        "init_seed": 17,
+        "reused_from": null,
+        "steps": 500,
+        "selected_step": 500,
+        "selected_sha256": "7d758857aa8ba77e7804891633b0d69c625d9eeaaac1da5e5c615046ce80d9de",
+        "last_step": 500,
+        "last_sha256": "1074866bc478067f1a3587636a3cb847162dbe54f8694f62841f3f595087715f",
+        "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2"
+      },
+      {
+        "run": "D384_s29",
+        "data": [
+          "data/s1r/train",
+          "data/s2/add288"
+        ],
+        "init_seed": 29,
+        "reused_from": null,
+        "steps": 500,
+        "selected_step": 425,
+        "selected_sha256": "24c26ea9d1f36ed4babaff7b608ef1b24486b621477269041aa05981d38cefd3",
+        "last_step": 500,
+        "last_sha256": "a1a60b922a83f11f09ba09018619c727c90ff75753e08c97ac4e88a3154ba5c1",
+        "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2"
+      },
+      {
+        "run": "D384_s43",
+        "data": [
+          "data/s1r/train",
+          "data/s2/add288"
+        ],
+        "init_seed": 43,
+        "reused_from": null,
+        "steps": 500,
+        "selected_step": 350,
+        "selected_sha256": "ac2a5c4b4bde832996d8986ebe5fc76fc62b08a16675e38ab2fbf8a3d44164a6",
+        "last_step": 500,
+        "last_sha256": "e35508d6990d6d028bea2682dffd4a6415d300437c7113685a8e4b68eeeab3a0",
+        "data_fingerprint": "749254379e59f4295ebd96f37014fd7dc18630d5ce3fd4e7b2eb8187bca0d1c2"
+      }
+    ]
+  },
+  "model": {
+    "shipped": {
+      "file": "/workspaces/stsai_web/model/D384_s17_selected.pt",
+      "sha256": "ce9ff924499ccae817f919b6091833564383db3918f32b64948acedf1ef0648b",
+      "bytes": 7832457
+    },
+    "smoke_observations": {
+      "file": "/workspaces/stsai_web/model/smoke_observations.jsonl.gz",
+      "sha256": "a69ce787594fac54abee85be50eec29032e40d3b7a45f18146acb5e8aedcdec0",
+      "bytes": 2698
+    },
+    "smoke_expected": {
+      "file": "/workspaces/stsai_web/model/smoke_expected.json",
+      "sha256": "68889ca3dbab3c3129f711f41e5985e488055f6917a97f6992f021d92787ef31",
+      "bytes": 8647
+    }
+  },
+  "evaluation": {
+    "environment": {
+      "policies": [
+        "heuristic",
+        "search",
+        "D96_s17",
+        "D96_s29",
+        "D96_s43",
+        "D384_s17",
+        "D384_s29",
+        "D384_s43"
+      ],
+      "sets": {
+        "dev_old256": {
+          "count": 256,
+          "sha256": "61731c6c7175644fd6ab0480d28433876c4d77dc690b6ad4cd2c30c433ab6547"
+        },
+        "dev_probe256": {
+          "count": 256,
+          "sha256": "15bfe445f264a60ada7050b2966e681fc432d6b461b53b6327162e64f969e344"
+        }
+      },
+      "max_actions": 256,
+      "torch_threads": 1,
+      "torch_version": "2.9.1+cu128",
+      "cpu_model": "AMD Ryzen 5 9500F 6-Core Processor",
+      "device": "cpu fp32, batch one; the GPU is used for training only",
+      "search": {
+        "simulations": 64,
+        "max_depth": 64,
+        "rollout_limit": 128,
+        "c_puct": 1.5,
+        "rollout_epsilon": 0.12,
+        "potion_cost": 0.02,
+        "use_leaf_value": false
+      },
+      "episodes_recorded": 4096,
+      "decisions_recorded": 59812,
+      "elapsed_seconds": 2427.2209268410224
+    },
+    "episodes": {
+      "file": "/workspaces/stsai_web/runs/s2/evaluation/episodes.jsonl.gz",
+      "sha256": "55e03a6a2c142c08d6e26905cdc55af2facf66f53de14a3887c2ef55a154f30a",
+      "bytes": 184546
+    },
+    "decisions": {
+      "file": "/workspaces/stsai_web/runs/s2/evaluation/decision_latency.jsonl.gz",
+      "sha256": "c0c8ac50c1c7f7e2763729bf8b5024f3a131a5822ed72a3c8e772249a835a3d2",
+      "bytes": 861961
+    },
+    "paired_summary": {
+      "file": "/workspaces/stsai_web/reports/s2_paired_summary.json",
+      "sha256": "882352674fac39679ea8319bf393b03f62684a2cbb84729fb502d6c283797df5",
+      "bytes": 23477
+    }
+  },
+  "claim": "unverified simulator pilot with a declared sampling approximation; game_differential_verified=false"
+}

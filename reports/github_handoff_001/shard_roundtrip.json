@@ -1,0 +1,22 @@
+{
+  "checks": [
+    {
+      "decompressed_bytes": 1404811,
+      "decompressed_sha256": "3973293dffa701c9cc2aa86b39f7bfe60ec799ee18b9a709a38d2475969376ba",
+      "identical": true,
+      "joined_sha256": "3973293dffa701c9cc2aa86b39f7bfe60ec799ee18b9a709a38d2475969376ba",
+      "name": "episodes",
+      "shards_joined": 9
+    },
+    {
+      "decompressed_bytes": 8323805,
+      "decompressed_sha256": "5ee6ac903636e5d926b7adbc9a9dacacea441c1acb75d37dcbe12c3b521356b4",
+      "identical": true,
+      "joined_sha256": "5ee6ac903636e5d926b7adbc9a9dacacea441c1acb75d37dcbe12c3b521356b4",
+      "name": "decisions",
+      "shards_joined": 120
+    }
+  ],
+  "claim": "concatenating the shards in index order reproduces the decompressed input byte for byte",
+  "kind": "s2_record_shard_roundtrip"
+}

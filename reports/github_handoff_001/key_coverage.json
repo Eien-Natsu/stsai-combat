@@ -1,0 +1,343 @@
+{
+  "decisions": {
+    "declared_by_episodes": 59812,
+    "distinct_episode_keys_seen": 4096,
+    "episodes_with_wrong_decision_count": [],
+    "episodes_without_any_decision": [],
+    "per_set_policy": [
+      {
+        "completed": 256,
+        "declared_decisions": 3509,
+        "episodes": 256,
+        "policy": "D384_s17",
+        "seen_decisions": 3509,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 235
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3605,
+        "episodes": 256,
+        "policy": "D384_s29",
+        "seen_decisions": 3605,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 236
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3489,
+        "episodes": 256,
+        "policy": "D384_s43",
+        "seen_decisions": 3489,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 238
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3616,
+        "episodes": 256,
+        "policy": "D96_s17",
+        "seen_decisions": 3616,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 235
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3565,
+        "episodes": 256,
+        "policy": "D96_s29",
+        "seen_decisions": 3565,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 231
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3628,
+        "episodes": 256,
+        "policy": "D96_s43",
+        "seen_decisions": 3628,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 233
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3791,
+        "episodes": 256,
+        "policy": "heuristic",
+        "seen_decisions": 3791,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 228
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3703,
+        "episodes": 256,
+        "policy": "search",
+        "seen_decisions": 3703,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 245
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3726,
+        "episodes": 256,
+        "policy": "D384_s17",
+        "seen_decisions": 3726,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 237
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3945,
+        "episodes": 256,
+        "policy": "D384_s29",
+        "seen_decisions": 3945,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 239
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3776,
+        "episodes": 256,
+        "policy": "D384_s43",
+        "seen_decisions": 3776,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 236
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3826,
+        "episodes": 256,
+        "policy": "D96_s17",
+        "seen_decisions": 3826,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 234
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3812,
+        "episodes": 256,
+        "policy": "D96_s29",
+        "seen_decisions": 3812,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 238
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3822,
+        "episodes": 256,
+        "policy": "D96_s43",
+        "seen_decisions": 3822,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 233
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 4059,
+        "episodes": 256,
+        "policy": "heuristic",
+        "seen_decisions": 4059,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 225
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3940,
+        "episodes": 256,
+        "policy": "search",
+        "seen_decisions": 3940,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 247
+      }
+    ],
+    "rows_pointing_at_an_unknown_episode_or_step": 0,
+    "step_index_contiguous_from_zero_per_episode": true,
+    "total_rows": 59812
+  },
+  "episodes": {
+    "distinct_keys": 4096,
+    "duplicate_keys": [],
+    "episode_index_max": 255,
+    "episode_index_min": 0,
+    "expected_keys": 4096,
+    "grid": [
+      {
+        "completed": 256,
+        "declared_decisions": 3509,
+        "episodes": 256,
+        "policy": "D384_s17",
+        "seen_decisions": 3509,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 235
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3605,
+        "episodes": 256,
+        "policy": "D384_s29",
+        "seen_decisions": 3605,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 236
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3489,
+        "episodes": 256,
+        "policy": "D384_s43",
+        "seen_decisions": 3489,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 238
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3616,
+        "episodes": 256,
+        "policy": "D96_s17",
+        "seen_decisions": 3616,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 235
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3565,
+        "episodes": 256,
+        "policy": "D96_s29",
+        "seen_decisions": 3565,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 231
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3628,
+        "episodes": 256,
+        "policy": "D96_s43",
+        "seen_decisions": 3628,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 233
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3791,
+        "episodes": 256,
+        "policy": "heuristic",
+        "seen_decisions": 3791,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 228
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3703,
+        "episodes": 256,
+        "policy": "search",
+        "seen_decisions": 3703,
+        "set": "dev_old256",
+        "truncated": 0,
+        "won": 245
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3726,
+        "episodes": 256,
+        "policy": "D384_s17",
+        "seen_decisions": 3726,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 237
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3945,
+        "episodes": 256,
+        "policy": "D384_s29",
+        "seen_decisions": 3945,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 239
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3776,
+        "episodes": 256,
+        "policy": "D384_s43",
+        "seen_decisions": 3776,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 236
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3826,
+        "episodes": 256,
+        "policy": "D96_s17",
+        "seen_decisions": 3826,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 234
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3812,
+        "episodes": 256,
+        "policy": "D96_s29",
+        "seen_decisions": 3812,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 238
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3822,
+        "episodes": 256,
+        "policy": "D96_s43",
+        "seen_decisions": 3822,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 233
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 4059,
+        "episodes": 256,
+        "policy": "heuristic",
+        "seen_decisions": 4059,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 225
+      },
+      {
+        "completed": 256,
+        "declared_decisions": 3940,
+        "episodes": 256,
+        "policy": "search",
+        "seen_decisions": 3940,
+        "set": "dev_probe256",
+        "truncated": 0,
+        "won": 247
+      }
+    ]
+  },
+  "kind": "s2_record_key_coverage"
+}

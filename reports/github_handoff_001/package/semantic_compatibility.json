@@ -1,0 +1,124 @@
+{
+  "purpose": "Why the S1R data and weights stay valid under the S2 header patch.",
+  "conclusion": "patch 0005 adds one standard-library include to one translation unit; no rule, sampler, encoding, loss, utility or scenario semantics change, so the S1R shards, validation set and D96-seed17 weights are reusable",
+  "old_build": {
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+      },
+      {
+        "file": "native/patches/0004-add-missing-algorithm-include.patch",
+        "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      }
+    ],
+    "recorded_in": "training/data_manifests.json settings.engine, runs/s1r/.../run.json",
+    "s1r_collection_engine": {
+      "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+      "patches": [
+        "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db",
+        "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab",
+        "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5",
+        "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      ],
+      "backend": "lightspeed_pilot",
+      "belief_model": "independent_rng_approximation",
+      "game_differential_verified": false
+    },
+    "s1r_run_backend": "lightspeed_pilot"
+  },
+  "new_build": {
+    "revision": "7476a81954020087da31d41d16fddf475746ec2d",
+    "patches": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+      },
+      {
+        "file": "native/patches/0004-add-missing-algorithm-include.patch",
+        "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      },
+      {
+        "file": "native/patches/0005-CardManager-algorithm-include.patch",
+        "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+      }
+    ],
+    "added": {
+      "file": "native/patches/0005-CardManager-algorithm-include.patch",
+      "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f",
+      "patch_text": "diff --git a/src/combat/CardManager.cpp b/src/combat/CardManager.cpp\nindex e46d0cc..64733f5 100644\n--- a/src/combat/CardManager.cpp\n+++ b/src/combat/CardManager.cpp\n@@ -2,6 +2,7 @@\n // Created by gamerpuppy on 7/24/2021.\n //\n \n+#include <algorithm>\n #include \"combat/CardManager.h\"\n #include \"combat/BattleContext.h\"\n \n",
+      "diff_shape": "one added line: #include <algorithm>, before the existing first include, in src/combat/CardManager.cpp",
+      "why": "the GCC 14 review build failed on std::find in that file; GCC 12 compiles it through a transitive include"
+    },
+    "snapshot_manifest_patch_order": [
+      {
+        "file": "native/patches/0001-disarm-upgrade-strength.patch",
+        "sha256": "6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db"
+      },
+      {
+        "file": "native/patches/0002-gremlin-nob-asc18-pattern.patch",
+        "sha256": "1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab"
+      },
+      {
+        "file": "native/patches/0003-combat-event-log.patch",
+        "sha256": "312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5"
+      },
+      {
+        "file": "native/patches/0004-add-missing-algorithm-include.patch",
+        "sha256": "bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796"
+      },
+      {
+        "file": "native/patches/0005-CardManager-algorithm-include.patch",
+        "sha256": "762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f"
+      }
+    ],
+    "snapshot_archive_sha256": "f9eaf1cd3ea6e5c3ea68e3e9d3d7165970e042ba9e0220ef895d82a153e9df77"
+  },
+  "versions": {
+    "now": {
+      "observation_schema": 4,
+      "encoding_revision": 5,
+      "loss_revision": 2,
+      "sampler_revision": "public_history_candidate_sampling/2",
+      "scenario_revision": 3,
+      "utility_revision": 1
+    },
+    "s1r_recorded": {
+      "observation_schema": 4,
+      "encoding_revision": 5,
+      "loss_revision": 2,
+      "sampler_revision": "public_history_candidate_sampling/2",
+      "scenario_revision": 3,
+      "utility_revision": 1
+    },
+    "changed_by_this_patch": []
+  },
+  "regression": {
+    "agent": "M128-R0-s17-S1R",
+    "compared": 256,
+    "differences": [],
+    "identical": true
+  },
+  "not_claimed": [
+    "the patch is not a claim that every other translation unit is portable",
+    "a clean replay is not original-game verification"
+  ],
+  "version_match": true
+}

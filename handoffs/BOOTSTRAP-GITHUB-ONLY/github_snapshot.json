@@ -1,0 +1,31 @@
+{
+  "source": "gh pr view; GitHub read; no implementation tests run",
+  "pr3": {
+    "baseRefName": "s2/fixed-budget-data",
+    "baseRefOid": "de266c4cf79fe3543d6fcfc1b69028c702e5d4d0",
+    "headRefName": "agent/s2r-repro",
+    "headRefOid": "e0fc584d19afe58ac10b65c93c7bcc75a2630f05",
+    "labels": [
+      {
+        "id": "LA_kwDOUgOK5c8AAAAC2lRFMQ",
+        "name": "agent-blocked",
+        "description": "Human input, permission or evidence required",
+        "color": "B60205"
+      }
+    ],
+    "mergeStateStatus": "UNSTABLE",
+    "number": 3,
+    "state": "OPEN",
+    "url": "https://github.com/Eien-Natsu/stsai-combat/pull/3"
+  },
+  "prior_rules_commit": "d2e1f0f1449e880af21912b17687d9527dfc49f6",
+  "original_plan": "4462a7c048beebd1caed82a7c0ba1fc80d0cb16b",
+  "ci_observed": "two FAILURE checks at PR3; no new reproduction",
+  "iteration_limits_from_agent_report": {
+    "targeted_used": 2,
+    "targeted_limit": 2,
+    "cold_used": 2,
+    "cold_limit": 2,
+    "total_minutes": "approximately 3 claimed; exact accounting to be verified"
+  }
+}
