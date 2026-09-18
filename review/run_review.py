@@ -1,20 +1,30 @@
 #!/usr/bin/env python3
-"""Re-run the S1-B checks from this package in one command; non-zero on failure.
+"""Re-run the S1R checks from this package in one command; non-zero on failure.
 
-    python review/run_review.py --repo <checkout of repo.bundle> [--sources native_sources.tar.gz]
+    python review/run_review.py --repo <checkout of repo.bundle> \
+        --sources native_sources.tar.gz [--package <unpacked package>] [--model model/policy_weights.pt]
 
-Steps
-  manifest      every file in MANIFEST.sha256 still hashes as recorded
-  provenance    engine_lock declares exactly the patches present, hashes match
-  intent        the intent table regenerates identically from the locked source
-  audit         the field audit keeps its categories and its incomplete bucket
-  counterfactual the louse pairs in the package reproduce: fixed sampler agrees,
-                pre-fix sampler diverges
-  tests         the package's tests that do not need the native extension
-  native        the offline build, when cmake and a compiler are present
+Order, and it matters:
 
-Steps that cannot run on this machine report NOT_RUN and do not fail the run;
-a step that runs and fails does.
+  attachments   every file in the package manifest still hashes as recorded
+  sources       the offline snapshot hashes as its manifest says, and the patch
+                series applies to it in order (done by the build step)
+  native_build  build in a scratch directory from the PRE_PATCH snapshot
+  import        the built module is importable as stsai._lightspeed and reports
+                the locked revision and patch hashes
+  intent        the intent table regenerates from the VERIFIED patched source
+  tests         the whole suite, with the native module present, zero skips
+  counterfactual replay the shipped public trace and recompute its observation
+                hashes against the built engine
+  model_smoke   only when a model is supplied: load it and run the 12 shipped
+                public observations
+
+Running pytest first and building afterwards would leave the native tests
+skipped and the build unverified, and reading a saved boolean is not running the
+counterfactual, so the order is enforced here rather than left to the reader.
+
+A required step that cannot run reports NOT_RUN and makes the run non-zero:
+"the toolchain is missing" must never come out looking like "checks passed".
 """
 import argparse
 import hashlib
@@ -32,122 +42,199 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def step_manifest():
+def python(*args, cwd=None):
+    return subprocess.run([sys.executable, *args], cwd=cwd, capture_output=True, text=True)
+
+
+class Report:
+    def __init__(self):
+        self.rows = []
+
+    def add(self, name, ok, note, required=True):
+        self.rows.append({"step": name, "status": "NOT_RUN" if ok is None else
+                          ("PASS" if ok else "FAIL"), "note": note, "required": required})
+        print(f"{self.rows[-1]['status']:8s} {name:14s} {note}", flush=True)
+
+    def exit_code(self):
+        failed = [r for r in self.rows if r["status"] == "FAIL"]
+        not_run = [r for r in self.rows if r["status"] == "NOT_RUN" and r["required"]]
+        if failed:
+            print("FAILED: " + ", ".join(r["step"] for r in failed), file=sys.stderr)
+        if not_run:
+            print("NOT_RUN (required): " + ", ".join(r["step"] for r in not_run), file=sys.stderr)
+        if failed or not_run:
+            return 1
+        print("all required checks passed on this machine")
+        return 0
+
+
+def step_attachments(package):
+    if package is None:
+        return None, "no --package given"
+    manifest = Path(package) / "MANIFEST.sha256"
+    if not manifest.is_file():
+        return False, "the package has no MANIFEST.sha256"
     problems = []
-    for line in (PKG / "MANIFEST.sha256").read_text().splitlines():
+    for line in manifest.read_text().splitlines():
         if not line.strip():
             continue
         digest, name = line.split(None, 1)
-        path = PKG / name.strip()
+        path = Path(package) / name.strip()
         if not path.is_file() or sha256(path) != digest:
             problems.append(name.strip())
-    return (not problems), f"{len(problems)} mismatches" + (f": {problems[:5]}" if problems else "")
+    return (not problems), (f"{len(problems)} mismatches: {problems[:5]}" if problems
+                            else "manifest verified")
 
 
-def step_provenance(repo):
-    lock = json.loads((repo / "engine_lock.json").read_text(encoding="utf-8"))
-    on_disk = sorted(p.name for p in (repo / "native" / "patches").glob("*.patch"))
-    declared = sorted(Path(p["file"]).name for p in lock.get("patches", []))
-    if on_disk != declared:
-        return False, f"patch files {on_disk} vs lock {declared}"
-    for entry in lock["patches"]:
-        if sha256(repo / entry["file"]) != entry["sha256"]:
-            return False, f"hash mismatch for {entry['file']}"
-    return True, f"{len(declared)} patches, revision {lock['revision'][:12]}"
+def step_build(repo, sources, work):
+    receipt = work / "native_build_receipt.json"
+    result = python(str(HERE / "offline_native_build.py"), "--repo", str(repo), "--sources",
+                    str(sources), "--receipt", str(receipt), cwd=PKG)
+    tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
+    detail = json.loads(receipt.read_text()) if receipt.is_file() else {}
+    if result.returncode == 2:
+        return None, f"NOT_RUN: {detail.get('missing_tool', 'toolchain missing')}", detail
+    if result.returncode != 0:
+        return False, detail.get("error", tail[-1] if tail else "build failed"), detail
+    return True, f"built and installed {Path(detail['module_path']).name}", detail
 
 
-def step_intent(repo, monster_cpp=None):
-    """Regenerate the table from the locked source and compare with the shipped one.
+def step_import(repo, build_detail):
+    if not build_detail.get("module_path"):
+        return None, "the module was not built"
+    code = ("import json,sys;sys.path.insert(0,sys.argv[1]);"
+            "from stsai import _lightspeed as m;print(json.dumps(m.build_info()))")
+    result = python("-c", code, str(Path(repo) / "src"))
+    if result.returncode != 0:
+        return False, result.stderr.strip().splitlines()[-1] if result.stderr.strip() else "import failed"
+    info = json.loads(result.stdout.strip())
+    return (info == build_detail.get("build_info")), f"revision {info['revision'][:12]}, {len(info['patches'])} patches"
 
-    A clone has no third_party/ (it is not tracked), so the locked source is
-    taken from the offline snapshot when one is available.
-    """
-    cmd = [sys.executable, "scripts/gen_intent_table.py", "--verify"]
-    if monster_cpp is not None:
-        cmd += ["--monster-cpp", str(monster_cpp)]
-    result = subprocess.run(cmd, cwd=repo, capture_output=True, text=True)
-    tail = (result.stdout + result.stderr).strip().splitlines()
+
+def step_intent(repo, build_detail):
+    source = build_detail.get("engine_source_dir")
+    if not source:
+        return None, "no verified engine source from the build step"
+    monster_cpp = Path(source) / "src" / "combat" / "MonsterSpecific.cpp"
+    if not monster_cpp.is_file():
+        return False, f"the patched source is missing {monster_cpp}"
+    result = python("scripts/gen_intent_table.py", "--verify", "--monster-cpp", str(monster_cpp),
+                    cwd=repo)
+    tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
     return result.returncode == 0, tail[-1] if tail else ""
 
 
-def step_audit():
-    audit = json.loads((PKG / "sampler/field_audit.json").read_text(encoding="utf-8"))
-    ok = ("COVERAGE STATISTIC ONLY" in audit["coverage_scan"]["role"]
-          and bool(audit["incomplete_evidence"])
-          and any(f["category"] == "PUBLIC_DETERMINED" for f in audit["fields"]))
-    louse = [f for f in audit["fields"] if "LOUSE" in f["monster"]]
-    ok = ok and bool(louse) and louse[0]["category"] == "RESAMPLED"
-    return ok, f"{len(audit['fields'])} fields, louse={louse[0]['category'] if louse else 'MISSING'}"
-
-
-def step_counterfactual():
-    checks = json.loads((PKG / "sampler/distribution_checks.json").read_text(encoding="utf-8"))
-    summary = checks["summary"]
-    ok = (summary["valid_counterfactuals"] > 0 and summary["all_fixed_samplers_agree"]
-          and summary["all_controls_diverge"])
-    return ok, json.dumps(summary)
-
-
-def step_tests(repo):
+def step_tests(repo, work, build_detail):
+    if not build_detail.get("module_path"):
+        return None, "the native module was not built, so the native tests would skip"
+    junit = work / "junit.xml"
     env = dict(os.environ)
-    env["PYTHONPATH"] = str(repo / "src")
-    result = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests"], cwd=repo,
+    env["PYTHONPATH"] = str(Path(repo) / "src")
+    # The cloned checkout has no third_party (it is not tracked); point the intent
+    # generator at the patched source the build step just verified instead.
+    if build_detail.get("engine_source_dir"):
+        env["STSAI_ENGINE_SOURCE_DIR"] = build_detail["engine_source_dir"]
+    result = subprocess.run([sys.executable, "-m", "pytest", "tests", "-q",
+                             f"--junitxml={junit}"], cwd=repo, capture_output=True, text=True,
+                            env=env)
+    if not junit.is_file():
+        return False, "pytest produced no report"
+    import xml.etree.ElementTree as ET
+    suite = ET.parse(junit).getroot().find("testsuite")
+    skipped = int(suite.get("skipped", 0)); tests = int(suite.get("tests", 0))
+    failures = int(suite.get("failures", 0)) + int(suite.get("errors", 0))
+    native = [c for c in suite.iter("testcase")
+              if "native" in (c.get("classname") or "") or "louse" in (c.get("classname") or "")
+              or "ambiguity" in (c.get("classname") or "") or "gate" in (c.get("classname") or "")]
+    note = (f"{tests} tests, {failures} failed, {skipped} skipped, "
+            f"{len(native)} native/regression cases")
+    if failures:
+        return False, note
+    if skipped or not native:
+        # A skipped native test means the module was not actually exercised.
+        return False, note + " - the native module was not exercised"
+    return True, note
+
+
+def step_counterfactual(repo, work, build_detail):
+    """Replay the shipped public trace and recompute its observation hashes."""
+    if not build_detail.get("module_path"):
+        return None, "the native module was not built; the counterfactual cannot be replayed"
+    trace = Path(repo) / "tests" / "fixtures" / "ambiguity_public_trace.json"
+    if not trace.is_file():
+        return None, "this package does not ship the public trace"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(Path(repo) / "src")
+    out = work / "counterfactual.json"
+    result = subprocess.run([sys.executable, str(HERE / "counterfactual_replay.py"),
+                             "--repo", str(repo), "--trace", str(trace), "--out", str(out)],
+                            cwd=repo, capture_output=True, text=True, env=env)
+    tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
+    if not out.is_file():
+        return False, tail[-1] if tail else "the replay produced no result"
+    detail = json.loads(out.read_text())
+    return result.returncode == 0, (f"{detail['steps_replayed']} steps replayed, "
+                                    f"{detail['sampler_seeds']} sampler seeds, "
+                                    f"root stable={detail['root_stable']}")
+
+
+def step_model(repo, model, work, build_detail):
+    if model is None:
+        return None, "no --model given (expected when the round did not train)"
+    if not build_detail.get("module_path"):
+        return None, "the native module was not built"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(Path(repo) / "src")
+    result = subprocess.run([sys.executable, str(HERE / "model_smoke.py"), "--model", str(model),
+                             "--out", str(work / "model_smoke.json")], cwd=repo,
                             capture_output=True, text=True, env=env)
-    tail = [l for l in result.stdout.strip().splitlines() if l.strip()][-1:] or [""]
-    return result.returncode == 0, tail[0]
-
-
-def step_native(repo, sources):
-    if sources is None:
-        return None, "no --sources given"
-    if not (os.environ.get("PATH") and any(
-            (Path(p) / "cmake").exists() or (Path(p) / "cmake.exe").exists()
-            for p in os.environ["PATH"].split(os.pathsep))):
-        return None, "cmake not on PATH"
-    result = subprocess.run([sys.executable, "review/offline_native_build.py", "--repo", str(repo),
-                             "--sources", str(sources)], cwd=PKG, capture_output=True, text=True)
-    tail = [l for l in (result.stdout + result.stderr).strip().splitlines() if l.strip()][-1:]
-    return result.returncode == 0, tail[0] if tail else ""
+    tail = [line for line in (result.stdout + result.stderr).strip().splitlines() if line.strip()]
+    return result.returncode == 0, tail[-1] if tail else ""
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", required=True)
-    parser.add_argument("--sources", default=None)
-    parser.add_argument("--skip-tests", action="store_true")
+    parser.add_argument("--sources", default=None, help="native_sources.tar.gz")
+    parser.add_argument("--package", default=None, help="the unpacked review package")
+    parser.add_argument("--model", default=None, help="a selected inference checkpoint")
+    parser.add_argument("--work", default=None)
     args = parser.parse_args()
+
     repo = Path(args.repo).resolve()
+    if args.work:
+        work = Path(args.work).resolve(); work.mkdir(parents=True, exist_ok=True)
+    else:
+        import tempfile
+        work = Path(tempfile.mkdtemp(prefix="stsai-review-"))
 
-    monster_cpp = None
-    if args.sources:
-        import tarfile, tempfile
-        scratch = Path(tempfile.mkdtemp(prefix="stsai-review-src-"))
-        with tarfile.open(Path(args.sources)) as tar:
-            tar.extractall(scratch)
-        candidate = scratch / "native_sources/sts_lightspeed/src/combat/MonsterSpecific.cpp"
-        if candidate.is_file():
-            monster_cpp = candidate
+    report = Report()
+    ok, note = step_attachments(args.package)
+    report.add("attachments", ok, note, required=args.package is not None)
 
-    results = {}
-    results["manifest"] = step_manifest()
-    results["provenance"] = step_provenance(repo)
-    results["intent"] = step_intent(repo, monster_cpp)
-    results["audit"] = step_audit()
-    results["counterfactual"] = step_counterfactual()
-    if not args.skip_tests:
-        results["tests"] = step_tests(repo)
-    results["native"] = step_native(repo, Path(args.sources) if args.sources else None)
+    if args.sources is None:
+        report.add("native_build", None, "no --sources given", required=True)
+        build_ok, build_note, detail = None, "no --sources given", {}
+    else:
+        build_ok, build_note, detail = step_build(repo, Path(args.sources).resolve(), work)
+        report.add("native_build", build_ok, build_note)
 
-    failed = []
-    for name, (ok, note) in results.items():
-        label = "NOT_RUN" if ok is None else ("PASS" if ok else "FAIL")
-        print(f"{label:8s} {name:16s} {note}")
-        if ok is False:
-            failed.append(name)
-    if failed:
-        print("FAILED:", ", ".join(failed), file=sys.stderr)
-        raise SystemExit(1)
-    print("all runnable checks passed")
+    ok, note = step_import(repo, detail)
+    report.add("import", ok, note)
+    ok, note = step_intent(repo, detail)
+    report.add("intent", ok, note)
+    ok, note = step_tests(repo, work, detail)
+    report.add("tests", ok, note)
+    ok, note = step_counterfactual(repo, work, detail)
+    report.add("counterfactual", ok, note)
+    ok, note = step_model(repo, Path(args.model).resolve() if args.model else None, work, detail)
+    report.add("model_smoke", ok, note, required=args.model is not None)
+
+    (work / "review_receipt.json").write_text(json.dumps(
+        {"repo": str(repo), "sources": args.sources, "package": args.package,
+         "steps": report.rows}, indent=2) + "\n", encoding="utf-8")
+    print(f"receipt: {work / 'review_receipt.json'}")
+    raise SystemExit(report.exit_code())
 
 
 if __name__ == "__main__":

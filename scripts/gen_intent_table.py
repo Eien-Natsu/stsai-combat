@@ -14,6 +14,7 @@ only to compute it and is never exported.
 import argparse
 import csv
 import json
+import os
 import re
 from pathlib import Path
 
@@ -88,13 +89,28 @@ def classify(body):
     return "UNKNOWN"
 
 
+def resolve_source(monster_cpp=None):
+    """Where the locked MonsterSpecific.cpp is.
+
+    Three sources, in order: an explicit --monster-cpp, the STSAI_ENGINE_SOURCE_DIR
+    environment variable (set by review/run_review.py to the patched source the
+    build just verified), or the vendored checkout.
+    """
+    if monster_cpp:
+        return Path(monster_cpp)
+    from_env = os.environ.get("STSAI_ENGINE_SOURCE_DIR")
+    if from_env:
+        return Path(from_env) / "src" / "combat" / "MonsterSpecific.cpp"
+    return MONSTER_CPP
+
+
 def derive(monster_cpp=None):
     # The source can come from the offline snapshot when the review machine has no
     # checkout of the upstream repository.
-    source_path = Path(monster_cpp) if monster_cpp else MONSTER_CPP
+    source_path = resolve_source(monster_cpp)
     if not source_path.is_file():
-        raise SystemExit(f"upstream source not found at {source_path}; pass --monster-cpp or run "
-                         "fetch_engine.py")
+        raise SystemExit(f"upstream source not found at {source_path}; pass --monster-cpp, set "
+                         "STSAI_ENGINE_SOURCE_DIR or run fetch_engine.py")
     lines = source_path.read_text().splitlines()
     start = next(i for i, l in enumerate(lines) if l.startswith("void Monster::takeTurn"))
     cases = []
