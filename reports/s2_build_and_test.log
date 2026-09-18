@@ -1,0 +1,98 @@
+# S2 cold-build and test verification, in a clean clone of this repository
+
+# written 2026-09-18T21:20:41
+
+
+## toolchain
+
+$ g++ --version
+g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+
+$ cmake --version
+[Errno 2] No such file or directory: 'cmake'
+
+$ /workspaces/stsai_web/.venv/bin/python --version
+Python 3.12.14
+
+
+## review chain (unpacked clone, PRE_PATCH snapshot + 5-patch series)
+
+NOT_RUN  attachments    no --package given
+PASS     native_build   built and installed _lightspeed.cpython-312-x86_64-linux-gnu.so
+PASS     import         revision 7476a8195402, 5 patches
+PASS     intent         native/intent_table.def matches the derivation (50 rows)
+PASS     tests          277 tests, 0 failed, 0 skipped, 155 native/regression cases
+PASS     counterfactual 5 steps replayed, 1024 sampler seeds, root stable=True
+PASS     model_smoke    12 observations loaded and run; max probability delta 0.00e+00; 0 failures
+receipt: /tmp/s2verify/work/review_receipt.json
+all required checks passed on this machine
+
+
+## configure.log
+$ cmake -S /tmp/s2verify/repo/native -B /tmp/stsai-native-3tk2boli/build -DCMAKE_BUILD_TYPE=Release -DSTS_ENGINE_DIR=/tmp/stsai-native-3tk2boli/engine -DSTSAI_ENGINE_REVISION=7476a81954020087da31d41d16fddf475746ec2d -DSTSAI_ENGINE_PATCHES=6494c6015eb91af382d99e268c42a5b1fd6efb6b33c379947d9540f5ec8d69db,1c53ccf62bcd80e827821ee9417914996965e3d7d0dd6a9e9177a2509b5a4bab,312f0598bba4de82462aa37a585977fd07fc43791ff1ef6446b4bebd044a2ef5,bb1f17c77e9d56b521a6a94d3039895447d37fe8222397e0622e30addd2ca796,762902d9816a3601c47ed4203a0804c6972581cba03136f5d932ea5d1131cd4f -DPython_EXECUTABLE=/workspaces/stsai_web/.venv/bin/python -Dpybind11_DIR=/tmp/stsai-native-3tk2boli/src/native_sources/pybind11/share/cmake/pybind11 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/tmp/stsai-native-3tk2boli/module -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=/tmp/stsai-native-3tk2boli/module
+exit code: 0
+
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python: /workspaces/stsai_web/.venv/bin/python (found version "3.12.14") found components: Interpreter Development.Module
+-- Performing Test HAS_FLTO
+-- Performing Test HAS_FLTO - Success
+-- Found pybind11: /tmp/stsai-native-3tk2boli/src/native_sources/pybind11/include (found version "2.13.6")
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/stsai-native-3tk2boli/build
+
+
+
+## build.log
+$ cmake --build /tmp/stsai-native-3tk2boli/build --config Release --parallel 4
+exit code: 0
+
+[  3%] Building CXX object CMakeFiles/_lightspeed.dir/bridge.cpp.o
+[  6%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Actions.cpp.o
+[  9%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardInstance.cpp.o
+[ 12%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/BattleContext.cpp.o
+[ 16%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardManager.cpp.o
+[ 19%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/CardQueue.cpp.o
+[ 22%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Monster.cpp.o
+[ 29%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterGroup.cpp.o
+[ 29%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterMoveDamage.cpp.o
+[ 32%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/MonsterSpecific.cpp.o
+[ 35%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/combat/Player.cpp.o
+[ 38%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Card.cpp.o
+[ 41%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/CombatReward.cpp.o
+[ 45%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Deck.cpp.o
+[ 48%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Game.cpp.o
+[ 51%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/GameContext.cpp.o
+[ 54%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Map.cpp.o
+[ 58%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Neow.cpp.o
+[ 61%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/SaveFile.cpp.o
+[ 64%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/game/Shop.cpp.o
+[ 67%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/BattleSimulator.cpp.o
+[ 70%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/ConsoleSimulator.cpp.o
+[ 74%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/PrintHelpers.cpp.o
+[ 77%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/SimHelpers.cpp.o
+[ 80%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/Action.cpp.o
+[ 83%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/BattleScumSearcher2.cpp.o
+[ 87%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/ExpertKnowledge.cpp.o
+[ 90%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/GameAction.cpp.o
+[ 93%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/ScumSearchAgent2.cpp.o
+[ 96%] Building CXX object CMakeFiles/_lightspeed.dir/tmp/stsai-native-3tk2boli/engine/src/sim/search/SimpleAgent.cpp.o
+[100%] Linking CXX shared module /tmp/stsai-native-3tk2boli/module/_lightspeed.cpython-312-x86_64-linux-gnu.so
+[100%] Built target _lightspeed
+
+lto-wrapper: warning: using serial compilation of 11 LTRANS jobs
+lto-wrapper: note: see the '-flto' option documentation for more information
+
+
+## pytest.log
+........................................................................ [ 25%]
+........................................................................ [ 51%]
+........................................................................ [ 77%]
+.............................................................            [100%]
+--------------- generated xml file: /tmp/s2verify/work/junit.xml ---------------
+277 passed in 7.50s
